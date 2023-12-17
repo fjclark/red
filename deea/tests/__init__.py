@@ -3,7 +3,7 @@ Setup fixtures for the tests.
 """
 
 import tempfile
-from importlib import resources
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -11,26 +11,18 @@ import pytest
 
 @pytest.fixture(scope="session")
 def example_timeseries():
-    timeseries_bytes = (
-        resources.files("deea.data").joinpath("example_timeseries.npy").read_bytes()
-    )
-    with tempfile.NamedTemporaryFile(delete=True) as tmp:
-        tmp.write(timeseries_bytes)
-        tmp.seek(0)
-        timeseries = np.load(tmp.name)
-    yield timeseries
+    # This is not nice, but the suggested setuptools approach does not work for python
+    # 3.9 (worked fine for 3.12).
+    timeseries_path = Path(__file__).parent.parent / "data" / "example_timeseries.npy"
+    yield np.load(timeseries_path)
 
 
 @pytest.fixture(scope="session")
 def example_times():
-    times_bytes = (
-        resources.files("deea.data").joinpath("example_times.npy").read_bytes()
-    )
-    with tempfile.NamedTemporaryFile(delete=True) as tmp:
-        tmp.write(times_bytes)
-        tmp.seek(0)
-        times = np.load(tmp.name)
-    yield times
+    # This is not nice, but the suggested setuptools approach does not work for python
+    # 3.9 (worked fine for 3.12).
+    times_path = Path(__file__).parent.parent / "data" / "example_times.npy"
+    yield np.load(times_path)
 
 
 # Generate 5 runs of 1000 samples of Gaussian noise.
