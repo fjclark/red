@@ -35,11 +35,11 @@ my_timeseries = ...
 # based on the lugsail replicated batch means method.
 # idx is the index of the first sample after equilibration, g is the
 # statistical inefficiency, and ess is the effective sample size.
-idx, g, ess = detect_equilibration_max_ess(my_timeseries, method="lugsail", plot=True)
+idx, g, ess = deea.detect_equilibration_max_ess(my_timeseries, method="lugsail", plot=True)
 
 # Detect equilibration using a paired t-test.
 # idx is the index of the first sample after equilibration.
-idx = detect_equilibration_ttest(my_timeseries, plot=True)
+idx = deea.detect_equilibration_ttest(my_timeseries, plot=True)
 ```
 
 ### Copyright
