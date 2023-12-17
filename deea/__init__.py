@@ -2,6 +2,7 @@
 
 # Add imports here
 from ._version import __version__
+from .data import *
 from .equilibration import *
 from .ess import *
 from .gelman_rubin import *

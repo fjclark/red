@@ -133,7 +133,7 @@ def detect_equilibration_max_ess(
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
 ) -> _Tuple[int, float, float]:
-    """
+    r"""
     Detect the equilibration time of a time series by finding the maximum
     effective sample size (ESS) of the time series. This is done by
     computing the ESS at each time point, discarding all samples before
@@ -395,7 +395,7 @@ def detect_equilibration_paired_t_test(
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
 ) -> int:
-    """
+    r"""
     Detect the equilibration time of a time series by performing a paired
     t-test between initial and final portions of the time series. This is repeated
     , discarding more data from the time series between repeats. If the p-value
