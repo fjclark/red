@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from .exceptions import InvalidInputError
+from ._exceptions import InvalidInputError
 
 
 def check_data(data: np.ndarray, one_dim_allowed: bool = False) -> np.ndarray:

@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from ..exceptions import InvalidInputError
+from .._exceptions import InvalidInputError
 from ..gelman_rubin import gelman_rubin, stable_gelman_rubin
 from . import example_timeseries, gaussian_noise, gaussian_noise_offset
 

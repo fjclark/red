@@ -2,13 +2,13 @@
 
 import pytest
 
+from .._exceptions import InvalidInputError
 from ..ess import (
     ess_inter_variance,
     ess_lugsail_variance,
     statistical_inefficiency_inter_variance,
     statistical_inefficiency_lugsail_variance,
 )
-from ..exceptions import InvalidInputError
 from . import example_times, example_timeseries, gaussian_noise, gaussian_noise_offset
 
 

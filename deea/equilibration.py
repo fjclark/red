@@ -10,6 +10,7 @@ import numpy as np
 from matplotlib import gridspec
 from scipy.stats import ttest_rel
 
+from ._exceptions import AnalysisError, EquilibrationNotDetectedError, InvalidInputError
 from ._validation import check_data
 from .ess import (
     ess_inter_variance,
@@ -17,7 +18,6 @@ from .ess import (
     statistical_inefficiency_inter_variance,
     statistical_inefficiency_lugsail_variance,
 )
-from .exceptions import AnalysisError, EquilibrationNotDetectedError, InvalidInputError
 from .plot import plot_equilibration_max_ess, plot_equilibration_paired_t_test
 
 

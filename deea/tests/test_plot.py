@@ -7,7 +7,7 @@ from matplotlib import gridspec
 
 from deea.equilibration import get_ess_series, get_paired_t_p_timeseries
 
-from ..exceptions import InvalidInputError
+from .._exceptions import InvalidInputError
 from ..plot import (
     plot_equilibration_max_ess,
     plot_equilibration_paired_t_test,

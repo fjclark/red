@@ -2,8 +2,8 @@
 
 import numpy as np
 
+from ._exceptions import AnalysisError, InvalidInputError
 from ._validation import check_data
-from .exceptions import AnalysisError, InvalidInputError
 
 
 def replicated_batch_means_variance(data: np.ndarray, batch_size: int) -> float:

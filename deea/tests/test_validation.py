@@ -5,8 +5,8 @@ Unit and regression test for the validation module.
 import numpy as np
 import pytest
 
+from deea._exceptions import InvalidInputError
 from deea._validation import check_data
-from deea.exceptions import InvalidInputError
 
 
 def test_not_numpy_array():

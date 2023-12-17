@@ -4,7 +4,7 @@ Unit and regression test for the variance module.
 
 import pytest
 
-from deea.exceptions import AnalysisError, InvalidInputError
+from deea._exceptions import AnalysisError, InvalidInputError
 from deea.variance import (
     inter_run_variance,
     intra_run_variance,

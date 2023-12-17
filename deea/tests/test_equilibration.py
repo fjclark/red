@@ -12,7 +12,11 @@ from deea.equilibration import (
     get_paired_t_p_timeseries,
 )
 
-from ..exceptions import AnalysisError, EquilibrationNotDetectedError, InvalidInputError
+from .._exceptions import (
+    AnalysisError,
+    EquilibrationNotDetectedError,
+    InvalidInputError,
+)
 from . import example_times, example_timeseries, gaussian_noise, tmpdir
 
 

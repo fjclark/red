@@ -11,8 +11,8 @@ from typing import Tuple as _Tuple
 import numpy as np
 import scipy.stats as _stats
 
+from ._exceptions import InvalidInputError
 from ._validation import check_data
-from .exceptions import InvalidInputError
 
 
 def plot_timeseries(
