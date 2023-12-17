@@ -4,7 +4,7 @@ deea
 [![GitHub Actions Build Status](https://github.com/fjclark/deea/workflows/CI/badge.svg)](https://github.com/fjclark/deea/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/fjclark/deea/branch/main/graph/badge.svg)](https://codecov.io/gh/fjclark/deea/branch/main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)]
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 Detection of Equilibration by Ensemble Analysis
 
