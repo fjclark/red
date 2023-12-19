@@ -1,6 +1,7 @@
 """Functions to calculate the statistical inefficiency and effective sample size."""
 
 import numpy as np
+import pymbar
 
 from ._validation import check_data
 from .variance import inter_run_variance, intra_run_variance, lugsail_variance
@@ -58,6 +59,29 @@ def statistical_inefficiency_lugsail_variance(
     return max(g, 1)
 
 
+def statistical_inefficiency_chodera(data: np.ndarray) -> float:
+    """
+    Compute the statistical inefficiency of a time series using the
+    Chodera method. This is applicable to a single run.
+
+    Parameters
+    ----------
+    data : np.ndarray
+        The time series data. This should have shape
+        (n_runs, n_samples) or (n_samples,).
+
+    Returns
+    -------
+    float
+        The statistical inefficiency.
+    """
+    data = check_data(data, one_dim_allowed=True)
+    if data.shape[0] == 1:
+        return pymbar.timeseries.statistical_inefficiency(data[0], fast=False)
+    else:
+        return pymbar.timeseries.statistical_inefficiency(data.mean(axis=0), fast=False)
+
+
 def ess_inter_variance(data: np.ndarray) -> float:
     """
     Compute the effective sample size of a time series by dividing
@@ -110,3 +134,26 @@ def ess_lugsail_variance(data: np.ndarray, n_pow: float = 1 / 3) -> float:
     n_runs, n_samples = data.shape
     total_samples = n_runs * n_samples
     return total_samples / statistical_inefficiency_lugsail_variance(data, n_pow=n_pow)
+
+
+def ess_chodera(data: np.ndarray) -> float:
+    """
+    Compute the effective sample size of a time series by dividing
+    the total number of samples by the statistical inefficiency, where
+    the statistical inefficiency is calculated using the Chodera method.
+
+    Parameters
+    ----------
+    data : np.ndarray
+        The time series data. This should have shape
+        (n_runs, n_samples) or (n_samples,).
+
+    Returns
+    -------
+    float
+        The effective sample size.
+    """
+    data = check_data(data, one_dim_allowed=True)
+    n_runs, n_samples = data.shape
+    total_samples = n_runs * n_samples
+    return total_samples / statistical_inefficiency_chodera(data)

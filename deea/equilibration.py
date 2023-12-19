@@ -13,8 +13,10 @@ from scipy.stats import ttest_rel
 from ._exceptions import AnalysisError, EquilibrationNotDetectedError, InvalidInputError
 from ._validation import check_data
 from .ess import (
+    ess_chodera,
     ess_inter_variance,
     ess_lugsail_variance,
+    statistical_inefficiency_chodera,
     statistical_inefficiency_inter_variance,
     statistical_inefficiency_lugsail_variance,
 )
@@ -72,11 +74,11 @@ def get_ess_series(
     """
     # Check that method is valid.
     method = method.lower()
-    if method not in ["lugsail", "inter"]:
-        raise InvalidInputError("method must be either 'lugsail' or 'inter'.")
+    if method not in ["lugsail", "inter", "chodera"]:
+        raise InvalidInputError("method must be 'lugsail', 'inter', or 'chodera'.")
 
     # Check that the data is valid.
-    one_dim_allowed = method == "lugsail"
+    one_dim_allowed = method in ["lugsail", "chodera"]
     data = check_data(data, one_dim_allowed=one_dim_allowed)
     n_runs, n_samples = data.shape
 
@@ -114,6 +116,8 @@ def get_ess_series(
         # Compute the ESS.
         if method == "lugsail":
             ess_vals[i] = ess_lugsail_variance(truncated_data, n_pow=n_pow)
+        elif method == "chodera":
+            ess_vals[i] = ess_chodera(truncated_data)
         else:  # method == 'inter'
             ess_vals[i] = ess_inter_variance(truncated_data)
         # Get the time.
@@ -222,6 +226,8 @@ def detect_equilibration_max_ess(
     equil_data = data[:, equil_idx:]
     if method == "lugsail":
         equil_g = statistical_inefficiency_lugsail_variance(equil_data, n_pow=n_pow)
+    elif method == "chodera":
+        equil_g = statistical_inefficiency_chodera(equil_data)
     else:  # method == 'inter'
         equil_g = statistical_inefficiency_inter_variance(equil_data)
 
