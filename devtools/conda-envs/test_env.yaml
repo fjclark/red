@@ -11,11 +11,13 @@ dependencies:
   - numpy
   - scipy
   - matplotlib
+  - statsmodels
 
     # Testing
   - pytest
   - pytest-cov
   - codecov
+  - rpy2
 
     # Pip-only installs
   #- pip:

@@ -1,5 +1,7 @@
 """Functions for data validation."""
 
+from warnings import warn as _warn
+
 import numpy as np
 
 from ._exceptions import InvalidInputError
@@ -45,8 +47,9 @@ def check_data(data: np.ndarray, one_dim_allowed: bool = False) -> np.ndarray:
     if n_dims == 2:
         n_chains, n_samples = data.shape
         if n_chains > n_samples:
-            raise InvalidInputError(
-                "Data must have shape (n_chains, n_samples) where n_chains >= n_samples."
+            _warn(
+                "Data has more chains than samples. This is allowed but may not be what you intended.",
+                RuntimeWarning,
             )
 
     # If the array is one dimensional, reshape it to (1, n_samples).

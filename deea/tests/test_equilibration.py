@@ -3,11 +3,14 @@
 from pathlib import Path
 
 import numpy as np
+import pymbar
 import pytest
 
 from deea.equilibration import (
+    detect_equilibration_init_seq,
     detect_equilibration_max_ess,
     detect_equilibration_paired_t_test,
+    detect_equilibration_window,
     get_ess_series,
     get_paired_t_p_timeseries,
 )
@@ -18,6 +21,137 @@ from .._exceptions import (
     InvalidInputError,
 )
 from . import example_times, example_timeseries, gaussian_noise, tmpdir
+
+
+def test_detect_equilibration_init_seq(example_timeseries, example_times, tmpdir):
+    """
+    Test equilibration detection based on the minimum sum of squared errors,
+    using initial sequence methods to estimate the variance.
+    """
+    # Use the mean time to make this faster.
+    example_timeseries = example_timeseries.mean(axis=0)
+
+    # Compute the equilibration index.
+    equil_idx, equil_g, equil_ess = detect_equilibration_init_seq(
+        data=example_timeseries
+    )
+
+    # Check that the equilibration index is correct.
+    assert equil_idx == 398
+    assert equil_g == pytest.approx(4.292145845594654, abs=1e-4)
+    assert equil_ess == pytest.approx(518.85468949889, abs=1e-4)
+
+    # Try also supplying the times. Plot in a temporary directory.
+    tmp_output = Path(tmpdir) / "test_plots_min_sse_init_seq"
+    # tmp_output = "./test_plots_min_sse_init_seq"
+    equil_time, equil_g, equil_ess = detect_equilibration_init_seq(
+        data=example_timeseries,
+        times=example_times,
+        method="min_sse",
+        plot=True,
+        plot_name=tmp_output,
+        sequence_estimator="initial_convex",
+        smooth_lag_times=True,  # To speed up the test.
+    )
+    assert equil_time == 0.3312
+    assert equil_g == pytest.approx(4.206494270439359, abs=1e-4)
+    assert equil_ess == pytest.approx(525.8535630357488, abs=1e-4)
+    # Check that test_plots_min_sse.png exists.
+    assert tmp_output.with_suffix(".png").exists()
+
+
+def test_detect_equilibration_init_seq_max_ess(example_timeseries, example_times):
+    """
+    Test equilibration detection based on the maximum effective sample size,
+    using initial sequence methods to estimate the variance.
+    """
+    # Compute the equilibration index.
+    equil_idx, equil_g, equil_ess = detect_equilibration_init_seq(
+        data=example_timeseries, method="max_ess", smooth_lag_times=True
+    )
+
+    # Check that the equilibration index is correct.
+    assert equil_idx == 486
+    assert equil_g == pytest.approx(6.8237419281169265, abs=1e-4)
+    assert equil_ess == pytest.approx(1567.321875982989, abs=1e-4)
+
+
+def test_detect_equilibration_init_seq_raises(example_timeseries):
+    """
+    Test that invalid inputs raise errors.
+    """
+    with pytest.raises(InvalidInputError):
+        equil_idx, equil_g, equil_ess = detect_equilibration_init_seq(
+            method="non_existent",
+            data=example_timeseries,
+            sequence_estimator="positive",
+        )
+
+
+def test_detect_equilibration_window(example_timeseries, example_times, tmpdir):
+    """
+    Test equilibration detection based on the minimum sum of squared errors,
+    using window methods to estimate the variance.
+    """
+    # Use the mean time to make this faster.
+    example_timeseries = example_timeseries.mean(axis=0)
+
+    # Compute the equilibration index.
+    equil_idx, equil_g, equil_ess = detect_equilibration_window(data=example_timeseries)
+
+    # Check that the equilibration index is correct.
+    assert equil_idx == 428
+    assert equil_g == pytest.approx(2.755411021809227, abs=1e-4)
+    assert equil_ess == pytest.approx(797.3402089962718, abs=1e-4)
+
+    # Try also supplying the times. Plot in a temporary directory.
+    tmp_output = Path(tmpdir) / "test_plots_min_sse_window"
+    # tmp_output = "./test_plots_min_sse_window"
+    equil_time, equil_sse, equil_ess = detect_equilibration_window(
+        data=example_timeseries,
+        times=example_times,
+        plot=True,
+        plot_name=tmp_output,
+        plot_window_size=True,
+    )
+    assert equil_time == 0.3432
+    assert equil_g == pytest.approx(2.755411021809227, abs=1e-4)
+    assert equil_ess == pytest.approx(797.3402089962718, abs=1e-4)
+    # Check that test_plots_min_sse.png exists.
+    assert tmp_output.with_suffix(".png").exists()
+
+
+def test_detect_equilibration_window_max_ess(example_timeseries, example_times):
+    """
+    Test equilibration detection based on the maximum effective sample size,
+    using window methods to estimate the variance.
+    """
+    # Compute the equilibration index.
+    equil_idx, equil_g, equil_ess = detect_equilibration_window(
+        data=example_timeseries, method="max_ess"
+    )
+
+    # Check that the equilibration index is correct.
+    assert equil_idx == 624
+    assert equil_g == pytest.approx(9.498261999314913, abs=1e-4)
+    assert equil_ess == pytest.approx(1053.350602533562, abs=1e-4)
+
+
+def test_compare_pymbar(example_timeseries):
+    """Check that we get the same result as pymbar when equivalent
+    methods are used."""
+    example_timeseries = example_timeseries.mean(axis=0)
+
+    (
+        equil_idx_chod,
+        equil_g_chod,
+        equil_ess_chod,
+    ) = pymbar.timeseries.detect_equilibration(example_timeseries, fast=False, nskip=1)
+    equil_idx, equil_g, equil_ess = detect_equilibration_init_seq(
+        example_timeseries, method="max_ess", sequence_estimator="positive"
+    )
+    assert equil_idx == equil_idx_chod
+    assert equil_g == pytest.approx(equil_g_chod, abs=1e-4)
 
 
 def test_detect_equilibration_max_ess_variance(gaussian_noise, example_timeseries):

@@ -50,7 +50,7 @@ def test_reshape_1d():
 def test_n_chains_greater_than_n_samples():
     """Test that an exception is raised if n_chains > n_samples."""
     data = np.array([[1, 2], [3, 4], [5, 6]])
-    with pytest.raises(InvalidInputError):
+    with pytest.warns(RuntimeWarning):
         check_data(data)
 
 
