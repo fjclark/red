@@ -1,12 +1,14 @@
 """
-Functions to calculate the variance of a time series.
+Functions to calculate the variance of a time series, accounting for autocorrelation.
 
 Methods implemented:
 
 - Initial sequence methods (see Geyer, 1992: https://www.jstor.org/stable/2246094)
 - Window estimators (see summary in see Geyer, 1992: https://www.jstor.org/stable/2246094)
-- Overlapping batch means (see Meketon and Schmeiser, 1984: 
-  https://repository.lib.ncsu.edu/bitstream/handle/1840.4/7707/1984_0041.pdf?sequence=1)
+
+Did not implement overlapping batch means (see Meketon and Schmeiser, 1984: 
+https://repository.lib.ncsu.edu/bitstream/handle/1840.4/7707/1984_0041.pdf?sequence=1), as this
+is equivalent to using a Bartlett window.
 
 """
 
