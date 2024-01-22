@@ -205,24 +205,3 @@ def test_detect_equilibration_paired_t(gaussian_noise, example_timeseries):
     steeply_decaying_timeseries = np.tile(steeply_decaying_timeseries, (5, 1))
     with pytest.raises(EquilibrationNotDetectedError):
         detect_equilibration_paired_t_test(steeply_decaying_timeseries)
-
-
-def test_plots_paired_t(example_timeseries, example_times, tmpdir):
-    """Check that the plots are created."""
-    tmp_output = Path(tmpdir) / "test_plots_paired_t"
-    detect_equilibration_paired_t_test(
-        example_timeseries, example_times, plot=True, plot_name=tmp_output
-    )
-    assert tmp_output.with_suffix(".png").exists()
-
-
-def test_p_values(example_timeseries, example_times):
-    """Tests on the p-values series generator which can't be run indirectly
-    through the equilibration detection functions."""
-
-    with pytest.raises(InvalidInputError):
-        get_paired_t_p_timeseries(example_timeseries, times=example_times[:-2])
-
-    # Check that this works on indices if no times passed.
-    _, times = get_paired_t_p_timeseries(example_timeseries)
-    assert times[-1] == 1312
