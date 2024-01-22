@@ -112,7 +112,7 @@ def detect_equilibration_init_seq(
     """
     # Check that data is valid.
     data = check_data(data, one_dim_allowed=True)
-    n_runs, n_samples = data.shape
+    _, n_samples = data.shape
 
     # Check that method is valid.
     valid_methods = ["min_sse", "max_ess"]

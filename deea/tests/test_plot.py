@@ -140,7 +140,7 @@ def test_plot_p_values(example_timeseries, example_times):
     """Test plotting the p-values of the paired t-test."""
     # Create a figure.
     fig, ax = plt.subplots()
-    n_runs, n_samples = example_timeseries.shape
+    _, n_samples = example_timeseries.shape
 
     # Compute the p-values for the example timeseries.
     p_values, times_used = get_paired_t_p_timeseries(
