@@ -1,4 +1,8 @@
-red
+
+
+<img src="https://github.com/fjclark/red/assets/90148170/5b0cf397-f902-4a43-9323-6414aa408d1a" width="400">
+
+Robust Equilibration Detection
 ==============================
 [//]: # (Badges)
 [![GitHub Actions Build Status](https://github.com/fjclark/red/workflows/CI/badge.svg)](https://github.com/fjclark/red/actions?query=workflow%3ACI)
@@ -6,11 +10,6 @@ red
 [![codecov](https://codecov.io/gh/fjclark/red/branch/main/graph/badge.svg)](https://codecov.io/gh/fjclark/red/branch/main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
-Robust Equilibration Detection
-
-<img src="red_logo.png" alt="red_logo" width="400"/>
-
 
 A Python package for detecting equilibration in timeseries data where an initial transient is followed by a stationary distribution. Two main methods are implemented, which differ in the way they account for autocorrelation: 
 
