@@ -443,7 +443,7 @@ def plot_equilibration_min_sse(
     fig : plt.Figure
         The figure to plot on.
 
-    gridspec_obj : plt.GridSpec
+    subplot_spec : plt.GridSpec
         The gridspec to use for the plot.
 
     data : np.ndarray
