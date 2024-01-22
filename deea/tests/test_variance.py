@@ -4,7 +4,6 @@ Unit and regression test for the variance module.
 
 import numpy as np
 import numpy.testing as npt
-import pymbar
 import pytest
 from statsmodels.tsa.stattools import acovf
 
@@ -116,28 +115,6 @@ def test_variance_initial_sequence(example_timeseries):
     )
 
 
-def test_variance_initial_sequence_chodera(example_timeseries):
-    """
-    Check that the variance estimated by the initial sequence estimator is
-    with the 'positive' method is the same as the variance estimated by
-    the Chodera method.
-    """
-    # Take the mean of the timeseries.
-    example_timeseries = example_timeseries.mean(axis=0)
-
-    # Get the variance estimate with the initial sequence estimator.
-    variance_initial_sequence = get_variance_initial_sequence(
-        example_timeseries, sequence_estimator="positive"
-    )[0]
-
-    # Get the variance estimate with the Chodera method.
-    g = pymbar.timeseries.statistical_inefficiency(example_timeseries)
-    variance_chodera = g * example_timeseries.var()
-
-    # Check that the results are the same.
-    assert variance_initial_sequence == pytest.approx(variance_chodera, abs=0.01)
-
-
 def test_variance_initial_sequence_multiple_runs(example_timeseries):
     """Regression test for the get_variance_initial_sequence function
     with multiple runs."""
@@ -235,29 +212,6 @@ def test_get_variance_series_initial_sequence_raises(example_timeseries):
         get_variance_series_initial_sequence(
             example_timeseries, sequence_estimator="initial_positive", frac_padding=0.6
         )
-
-
-def test_get_variance_series_initial_sequence_chodera(example_timeseries):
-    """
-    Check that the variance estimated by the initial sequence estimator is
-    with the 'positive' method is the same as the variance estimated by
-    the Chodera method for the whole series.
-    """
-    # Take the mean of the timeseries, but use a slimmed down version to speed
-    # up the test.
-    example_timeseries = example_timeseries.mean(axis=0)
-
-    # Get the variance estimate with the initial sequence estimator.
-    var_seq = get_variance_series_initial_sequence(
-        example_timeseries, sequence_estimator="positive", min_max_lag_time=3
-    )[0]
-
-    # Compare the results to the Chodera method.
-    chod_var_seq = np.zeros_like(var_seq)
-    for i in range(len(var_seq)):
-        g = pymbar.timeseries.statistical_inefficiency(example_timeseries[i:])
-        chod_var_seq[i] = g * example_timeseries[i:].var()
-    assert var_seq == pytest.approx(chod_var_seq, abs=0.01)
 
 
 def test_smoothen_lags():

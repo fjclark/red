@@ -3,7 +3,6 @@
 from pathlib import Path
 
 import numpy as np
-import pymbar
 import pytest
 
 from deea.equilibration import (
@@ -142,11 +141,14 @@ def test_compare_pymbar(example_timeseries):
     methods are used."""
     example_timeseries = example_timeseries.mean(axis=0)
 
-    (
-        equil_idx_chod,
-        equil_g_chod,
-        equil_ess_chod,
-    ) = pymbar.timeseries.detect_equilibration(example_timeseries, fast=False, nskip=1)
+    # Results below were obtained with:
+    # ( equil_idx_chod,
+    #     equil_g_chod,
+    #     equil_ess_chod,
+    # ) = pymbar.timeseries.detect_equilibration(example_timeseries, fast=False, nskip=1)
+    equil_idx_chod = 877
+    equil_g_chod = 4.111825
+    # equil_ess_chod = 425.35858
     equil_idx, equil_g, equil_ess = detect_equilibration_init_seq(
         example_timeseries, method="max_ess", sequence_estimator="positive"
     )
