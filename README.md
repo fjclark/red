@@ -8,12 +8,13 @@ deea
 
 Detection of Equilibration by Ensemble Analysis
 
-A lightweight Python package for detecting equilibration in timeseries data where an initial transient is followed by a stationary distribution. Currently, two equilibration detection methods are implemented:
+A Python package for detecting equilibration in timeseries data where an initial transient is followed by a stationary distribution. Two main methods are implemented, which differ in the way they account for autocorrelation: 
 
-- Maximum effective sample size based on the lugsail replicated batch means method. See [here](https://projecteuclid.org/journals/statistical-science/volume-36/issue-4/Revisiting-the-GelmanRubin-Diagnostic/10.1214/20-STS812.full) and [here](https://academic.oup.com/biomet/article/109/3/735/6395353).
+  - `detect_equilibration_init_seq`: This uses the initial sequence methods of Geyer ([Geyer, 1992](https://www.jstor.org/stable/2246094)) to determine the truncation point of the sum of autocovariances.
+  - `detect_equilibration_window`: This uses window methods (see [Geyer](https://www.jstor.org/stable/2246094) again) when calculating the 
+autocorrelation. 
 
-- Paired t-test. This checks for significant differences between the first 10 %, and last 50 % of the data. The test is repeated while sequentially removing more initial data. The first time point at which no significant difference is found is taken as the equilibration time.
-
+For both, the equilibration point can be determined either according to the minimum of the squared standard error (the default), or the maximum effective sample size, by specifying `method="min_sse"` or `method="max_ess"`.
 
 ### Installation
 
@@ -29,18 +30,23 @@ pip install -e .
 import deea
 
 # Load your timeseries of interest.
-# This should be a 2D numpy array with shape (n_runs, n_samples)
+# This should be a 2D numpy array with shape (n_runs, n_samples),
+# or a 1D numpy array with shape (n_samples).
 my_timeseries = ...
 
-# Detect equilibration based on the maximum effective sample size 
-# based on the lugsail replicated batch means method.
-# idx is the index of the first sample after equilibration, g is the
-# statistical inefficiency, and ess is the effective sample size.
-idx, g, ess = deea.detect_equilibration_max_ess(my_timeseries, method="lugsail", plot=True)
+# Detect equilibration based on the minimum squared standard error
+# using Geyer's initial convex sequence method to account for
+# autocorrelation. idx is the index of the first sample after
+# equilibration, g is the statistical inefficiency of the equilibrated 
+# sample, and ess is the effective sample size of the equilibrated sample.
+idx, g, ess = deea.detect_equilibration_init_seq(my_timeseries, method="min_sse", plot=True)
 
-# Detect equilibration using a paired t-test.
-# idx is the index of the first sample after equilibration.
-idx = deea.detect_equilibration_ttest(my_timeseries, plot=True)
+# Alternatively, use the window method to account for autocorrelation.
+# By default, this uses a Bartlett kernel and a window size of round(n_samples**0.5).
+idx, g, ess = deea.detect_equilibration_window(my_timeseries, method="min_sse", plot=True)
+
+# We can also determine equilibration in the same way as in pymbar.timeseries.detect_equilibration.
+idx, g, ess = deea.detect_equilibration_init_seq(my_timeseries, method="max_ess", sequence_estimator="positive")
 ```
 
 ### Copyright

@@ -6,101 +6,157 @@ import numpy as np
 import pytest
 
 from deea.equilibration import (
-    detect_equilibration_max_ess,
+    detect_equilibration_init_seq,
     detect_equilibration_paired_t_test,
-    get_ess_series,
+    detect_equilibration_window,
     get_paired_t_p_timeseries,
 )
 
-from .._exceptions import (
-    AnalysisError,
-    EquilibrationNotDetectedError,
-    InvalidInputError,
-)
+from .._exceptions import EquilibrationNotDetectedError, InvalidInputError
 from . import example_times, example_timeseries, gaussian_noise, tmpdir
 
 
-def test_detect_equilibration_max_ess_variance(gaussian_noise, example_timeseries):
+def test_detect_equilibration_init_seq(example_timeseries, example_times, tmpdir):
     """
-    Test equilibration detection based on maximum effective sample size estimated
-    from the ratio of the inter-run to intra-run variance.
+    Test equilibration detection based on the minimum sum of squared errors,
+    using initial sequence methods to estimate the variance.
     """
+    # Use the mean time to make this faster.
+    example_timeseries = example_timeseries.mean(axis=0)
+
     # Compute the equilibration index.
-    idx, g, ess = detect_equilibration_max_ess(gaussian_noise, method="inter")
-
-    # Check that the equilibration index is correct.
-    assert idx < 6000
-    assert g == pytest.approx(1, abs=2)
-    assert ess == pytest.approx(50_000, abs=40_000)
-
-    # Check that it fails for a single run.
-    with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_max_ess(gaussian_noise[0], method="inter")
-
-    # Check that the equilibration index is correct for the correlated timeseries.
-    idx, g, ess = detect_equilibration_max_ess(example_timeseries)
-    assert idx == 431
-    assert g == pytest.approx(2.69474, abs=0.00001)
-    assert ess == pytest.approx(4070.8931, abs=0.0001)
-
-    with pytest.raises(InvalidInputError):
-        idx, g, ess = detect_equilibration_max_ess(gaussian_noise, method="asd")
-
-    with pytest.raises(InvalidInputError):
-        idx, g, ess = detect_equilibration_max_ess(gaussian_noise, min_ess=0)
-
-    # Feed in very short timeseries and check that it fails.
-    with pytest.raises(AnalysisError):
-        idx, g, ess = detect_equilibration_max_ess(gaussian_noise[:, :10])
-
-
-def test_detect_equilibration_max_ess_lugsail(gaussian_noise, example_timeseries):
-    """
-    Test equilibration detection based on maximum effective sample size estimated
-    from the ratio of the lugsail to intra-run variance.
-    """
-    # Compute the equilibration index.
-    idx, g, ess = detect_equilibration_max_ess(gaussian_noise, method="lugsail")
-
-    # Check that the equilibration index is correct.
-    assert idx < 5000
-    assert g == pytest.approx(1, abs=2)
-    assert ess == pytest.approx(50_000, abs=40_000)
-
-    # Check result for a single run.
-    idx, g, ess = detect_equilibration_max_ess(gaussian_noise[0], method="lugsail")
-    assert idx == pytest.approx(0, abs=3000)
-    assert g == pytest.approx(1, abs=2)
-    assert ess == pytest.approx(10_000, abs=3000)
-
-    # Check that the equilibration index is correct for the correlated timeseries.
-    idx, g, ess = detect_equilibration_max_ess(example_timeseries)
-    assert idx == 431
-    assert g == pytest.approx(2.69474, abs=0.00001)
-    assert ess == pytest.approx(4070.8931, abs=0.0001)
-
-    # Make a dummy timeseries which will cause the ESS to be small and detection to fail.
-    # Do this by concatentating arrays of zeros and ones so that the first half of the
-    # timeseries is all zeros and the second half is all ones.
-    dummy_timeseries = np.concatenate(
-        (np.zeros_like(example_timeseries), np.ones_like(example_timeseries))
+    equil_idx, equil_g, equil_ess = detect_equilibration_init_seq(
+        data=example_timeseries
     )
-    dummy_timeseries = np.array(dummy_timeseries)
-    with pytest.raises(EquilibrationNotDetectedError):
-        idx, g, ess = detect_equilibration_max_ess(dummy_timeseries)
+
+    # Check that the equilibration index is correct.
+    assert equil_idx == 398
+    assert equil_g == pytest.approx(4.292145845594654, abs=1e-4)
+    assert equil_ess == pytest.approx(518.85468949889, abs=1e-4)
+
+    # Try also supplying the times. Plot in a temporary directory.
+    tmp_output = Path(tmpdir) / "test_plots_min_sse_init_seq"
+    # tmp_output = "./test_plots_min_sse_init_seq"
+    equil_time, equil_g, equil_ess = detect_equilibration_init_seq(
+        data=example_timeseries,
+        times=example_times,
+        method="min_sse",
+        plot=True,
+        plot_name=tmp_output,
+        sequence_estimator="initial_convex",
+        smooth_lag_times=True,  # To speed up the test.
+    )
+    assert equil_time == 0.3312
+    assert equil_g == pytest.approx(4.206494270439359, abs=1e-4)
+    assert equil_ess == pytest.approx(525.8535630357488, abs=1e-4)
+    # Check that test_plots_min_sse.png exists.
+    assert tmp_output.with_suffix(".png").exists()
+
+
+def test_detect_equilibration_init_seq_max_ess(example_timeseries, example_times):
+    """
+    Test equilibration detection based on the maximum effective sample size,
+    using initial sequence methods to estimate the variance.
+    """
+    # Compute the equilibration index.
+    equil_idx, equil_g, equil_ess = detect_equilibration_init_seq(
+        data=example_timeseries, method="max_ess", smooth_lag_times=True
+    )
+
+    # Check that the equilibration index is correct.
+    assert equil_idx == 486
+    assert equil_g == pytest.approx(6.8237419281169265, abs=1e-4)
+    assert equil_ess == pytest.approx(1567.321875982989, abs=1e-4)
+
+
+def test_detect_equilibration_init_seq_raises(example_timeseries):
+    """
+    Test that invalid inputs raise errors.
+    """
+    with pytest.raises(InvalidInputError):
+        detect_equilibration_init_seq(
+            method="non_existent",
+            data=example_timeseries,
+            sequence_estimator="positive",
+        )
+
+
+def test_detect_equilibration_window(example_timeseries, example_times, tmpdir):
+    """
+    Test equilibration detection based on the minimum sum of squared errors,
+    using window methods to estimate the variance.
+    """
+    # Use the mean time to make this faster.
+    example_timeseries = example_timeseries.mean(axis=0)
+
+    # Compute the equilibration index.
+    equil_idx, equil_g, equil_ess = detect_equilibration_window(data=example_timeseries)
+
+    # Check that the equilibration index is correct.
+    assert equil_idx == 428
+    assert equil_g == pytest.approx(2.755411021809227, abs=1e-4)
+    assert equil_ess == pytest.approx(797.3402089962718, abs=1e-4)
+
+    # Try also supplying the times. Plot in a temporary directory.
+    tmp_output = Path(tmpdir) / "test_plots_min_sse_window"
+    # tmp_output = "./test_plots_min_sse_window"
+    equil_time, equil_g, equil_ess = detect_equilibration_window(
+        data=example_timeseries,
+        times=example_times,
+        plot=True,
+        plot_name=tmp_output,
+        plot_window_size=True,
+    )
+    assert equil_time == 0.3432
+    assert equil_g == pytest.approx(2.755411021809227, abs=1e-4)
+    assert equil_ess == pytest.approx(797.3402089962718, abs=1e-4)
+    # Check that test_plots_min_sse.png exists.
+    assert tmp_output.with_suffix(".png").exists()
+
+
+def test_detect_equilibration_window_max_ess(example_timeseries, example_times):
+    """
+    Test equilibration detection based on the maximum effective sample size,
+    using window methods to estimate the variance.
+    """
+    # Compute the equilibration index.
+    equil_idx, equil_g, equil_ess = detect_equilibration_window(
+        data=example_timeseries, method="max_ess"
+    )
+
+    # Check that the equilibration index is correct.
+    assert equil_idx == 624
+    assert equil_g == pytest.approx(9.498261999314913, abs=1e-4)
+    assert equil_ess == pytest.approx(1053.350602533562, abs=1e-4)
+
+
+def test_compare_pymbar(example_timeseries):
+    """Check that we get the same result as pymbar when equivalent
+    methods are used."""
+    example_timeseries = example_timeseries.mean(axis=0)
+
+    # Results below were obtained with:
+    # ( equil_idx_chod,
+    #     equil_g_chod,
+    #     equil_ess_chod,
+    # ) = pymbar.timeseries.detect_equilibration(example_timeseries, fast=False, nskip=1)
+    equil_idx_chod = 877
+    equil_g_chod = 4.111825
+    # equil_ess_chod = 425.35858
+    equil_idx, equil_g, _ = detect_equilibration_init_seq(
+        example_timeseries, method="max_ess", sequence_estimator="positive"
+    )
+    assert equil_idx == equil_idx_chod
+    assert equil_g == pytest.approx(equil_g_chod, abs=1e-4)
 
 
 def test_detect_equilibration_paired_t(gaussian_noise, example_timeseries):
     """
     Test equilibration detection based on the paired t-test.
     """
-    # Compute the equilibration index.
-    idx = detect_equilibration_paired_t_test(gaussian_noise)
-    assert idx == 0
-
     # Check that it fails for a single run.
     with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_paired_t_test(gaussian_noise[0])
+        detect_equilibration_paired_t_test(gaussian_noise[0])
 
     # Check the index for the correlated timeseries.
     idx = detect_equilibration_paired_t_test(example_timeseries)
@@ -108,47 +164,43 @@ def test_detect_equilibration_paired_t(gaussian_noise, example_timeseries):
 
     # Try stupid inputs and check that we get input errors.
     with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_paired_t_test(gaussian_noise, p_threshold=0)
+        detect_equilibration_paired_t_test(gaussian_noise, p_threshold=0)
 
     with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_paired_t_test(gaussian_noise, p_threshold=1)
+        detect_equilibration_paired_t_test(gaussian_noise, p_threshold=1)
 
     with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_paired_t_test(
-            gaussian_noise, fractional_block_size=0
-        )
+        detect_equilibration_paired_t_test(gaussian_noise, fractional_block_size=0)
 
     with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_paired_t_test(
-            gaussian_noise, fractional_block_size=1
-        )
+        detect_equilibration_paired_t_test(gaussian_noise, fractional_block_size=1)
 
     with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_paired_t_test(gaussian_noise, t_test_sidedness="asd")
+        detect_equilibration_paired_t_test(gaussian_noise, t_test_sidedness="asd")
 
     with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_paired_t_test(gaussian_noise, fractional_test_end=0)
+        detect_equilibration_paired_t_test(gaussian_noise, fractional_test_end=0)
 
     with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_paired_t_test(
+        detect_equilibration_paired_t_test(
             gaussian_noise, fractional_test_end=0.3, initial_block_size=0.5
         )
     with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_paired_t_test(
+        detect_equilibration_paired_t_test(
             gaussian_noise, fractional_test_end=0.3, initial_block_size=0.3
         )
     with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_paired_t_test(gaussian_noise, initial_block_size=1.2)
+        detect_equilibration_paired_t_test(gaussian_noise, initial_block_size=1.2)
 
     with pytest.raises(InvalidInputError):
-        idx = detect_equilibration_paired_t_test(gaussian_noise, final_block_size=1.2)
+        detect_equilibration_paired_t_test(gaussian_noise, final_block_size=1.2)
 
     # Generate steeply decaying timeseries and check that it fails to equilibrate.
     # Generate 5 very similar exponential decays.
     steeply_decaying_timeseries = np.exp(-np.arange(1000))
     steeply_decaying_timeseries = np.tile(steeply_decaying_timeseries, (5, 1))
     with pytest.raises(EquilibrationNotDetectedError):
-        idx = detect_equilibration_paired_t_test(steeply_decaying_timeseries)
+        detect_equilibration_paired_t_test(steeply_decaying_timeseries)
 
 
 def test_plots_paired_t(example_timeseries, example_times, tmpdir):
@@ -160,36 +212,13 @@ def test_plots_paired_t(example_timeseries, example_times, tmpdir):
     assert tmp_output.with_suffix(".png").exists()
 
 
-def test_plots_max_ess(example_timeseries, example_times, tmpdir):
-    """Check that the plots are created."""
-    tmp_output = Path(tmpdir) / "test_plots_max_ess"
-    detect_equilibration_max_ess(
-        example_timeseries, example_times, plot=True, plot_name=tmp_output
-    )
-    assert tmp_output.with_suffix(".png").exists()
-
-
-def test_ess_series(example_timeseries, example_times):
-    """Tests on the ESS series generator which can't be run indirectly
-    through the equilibration detection functions."""
-
-    with pytest.raises(InvalidInputError):
-        ess_vals, times = get_ess_series(example_timeseries, times=example_times[:-2])
-
-    # Check that this works on indices if no times passed.
-    ess_vals, times = get_ess_series(example_timeseries)
-    assert times[-1] == 2493
-
-
 def test_p_values(example_timeseries, example_times):
     """Tests on the p-values series generator which can't be run indirectly
     through the equilibration detection functions."""
 
     with pytest.raises(InvalidInputError):
-        p_vals, times = get_paired_t_p_timeseries(
-            example_timeseries, times=example_times[:-2]
-        )
+        get_paired_t_p_timeseries(example_timeseries, times=example_times[:-2])
 
     # Check that this works on indices if no times passed.
-    p_vals, times = get_paired_t_p_timeseries(example_timeseries)
+    _, times = get_paired_t_p_timeseries(example_timeseries)
     assert times[-1] == 1312

@@ -7,4 +7,5 @@ from .equilibration import *
 from .ess import *
 from .gelman_rubin import *
 from .plot import *
+from .sse import *
 from .variance import *

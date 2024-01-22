@@ -5,14 +5,15 @@ import numpy as np
 import pytest
 from matplotlib import gridspec
 
-from deea.equilibration import get_ess_series, get_paired_t_p_timeseries
+from deea.equilibration import get_paired_t_p_timeseries
 
 from .._exceptions import InvalidInputError
+from ..equilibration import get_sse_series_init_seq
 from ..plot import (
-    plot_equilibration_max_ess,
+    plot_equilibration_min_sse,
     plot_equilibration_paired_t_test,
-    plot_ess,
     plot_p_values,
+    plot_sse,
     plot_timeseries,
 )
 from . import example_times, example_timeseries
@@ -54,34 +55,85 @@ def test_plot_timeseries(example_timeseries, example_times):
         plot_timeseries(ax, example_timeseries, example_timeseries)
 
 
-def test_plot_ess(example_timeseries, example_times):
-    """Test plotting the effective sample size."""
+def test_plot_sse(example_timeseries, example_times):
+    """Test plotting the sum of squared errors."""
     # Create a figure.
     fig, ax = plt.subplots()
-    n_runs, n_samples = example_timeseries.shape
 
-    # Compute the ESS for the example timeseries with
-    # the lugsail variance estimator.
-    ess_vals, times = get_ess_series(
-        example_timeseries, times=example_times, method="lugsail"
+    # Compute the SSE for the example timeseries.
+    sse_vals, lag_times = get_sse_series_init_seq(
+        data=example_timeseries, smooth_lag_times=True
     )
+    times = example_times[: len(sse_vals)]
 
-    # Plot the ESS.
-    plot_ess(ax, ess_vals, times)
+    # Plot the SSE.
+    plot_sse(ax=ax, sse=sse_vals, max_lags=lag_times, window_sizes=None, times=times)
 
     if SAVE_PLOTS:
-        fig.savefig("test_plot_ess.png")
+        fig.savefig("test_plot_sse.png")
 
     # Check that invalid input raises an error.
     with pytest.raises(InvalidInputError):
-        plot_ess(ax, ess_vals, example_times[:-2])
+        plot_sse(ax, sse_vals, max_lags=None, window_sizes=None, times=times[:-2])
 
     with pytest.raises(InvalidInputError):
-        plot_ess(ax, ess_vals, list(example_timeseries))
+        # Make sse_vals a 2D array.
+        plot_sse(
+            ax,
+            np.array([sse_vals, sse_vals]),
+            max_lags=lag_times,
+            window_sizes=lag_times,
+            times=times,
+        )
 
     with pytest.raises(InvalidInputError):
-        # Make ess_vals a 2D array.
-        plot_ess(ax, np.array([ess_vals, ess_vals]), example_timeseries)
+        plot_sse(
+            ax,
+            list(sse_vals),
+            max_lags=None,
+            window_sizes=None,
+            times=times,
+        )
+
+    with pytest.raises(InvalidInputError):
+        plot_sse(
+            ax,
+            sse_vals,
+            max_lags=lag_times,
+            window_sizes=lag_times,
+            times=times,
+        )
+
+
+def test_plot_equilibration_min_sse(example_timeseries, example_times):
+    """Test plotting the equilibration detection based on the minimum SSE."""
+    # Take mean to speed things up, but plot the original data to
+    # test this works.
+    example_timeseries_mean = example_timeseries.mean(axis=0)
+
+    # Create a figure.
+    fig = plt.figure(figsize=(6, 4))
+    gridspec_obj = gridspec.GridSpec(1, 1, figure=fig)
+
+    # Compute the SSE for the example timeseries.
+    sse_vals, _ = get_sse_series_init_seq(
+        data=example_timeseries_mean, smooth_lag_times=True
+    )
+    times = example_times[: len(sse_vals)]
+
+    # Plot the equilibration detection.
+    plot_equilibration_min_sse(
+        fig=fig,
+        subplot_spec=gridspec_obj[0],
+        data=example_timeseries,
+        sse_series=sse_vals,
+        max_lag_series=None,
+        data_times=example_times,
+        sse_times=times,
+    )
+
+    if SAVE_PLOTS:
+        fig.savefig("test_plot_equilibration_min_sse.png", bbox_inches="tight")
 
 
 def test_plot_p_values(example_timeseries, example_times):
@@ -111,27 +163,6 @@ def test_plot_p_values(example_timeseries, example_times):
     with pytest.raises(InvalidInputError):
         # Make p_values a 2D array.
         plot_p_values(ax, np.array([p_values, p_values]), example_timeseries)
-
-
-def test_plot_equilibration_max_ess(example_timeseries, example_times):
-    """Test plotting the equilibration detection based on maximum ESS."""
-    # Create a figure.
-    fig = plt.figure(figsize=(6, 4))
-    gridspec_obj = gridspec.GridSpec(1, 1, figure=fig)
-
-    # Compute the ESS for the example timeseries with
-    # the lugsail variance estimator.
-    ess_vals, times_used = get_ess_series(
-        example_timeseries, example_times, method="inter"
-    )
-
-    # Plot the equilibration detection.
-    plot_equilibration_max_ess(
-        fig, gridspec_obj[0], example_timeseries, ess_vals, example_times, times_used
-    )
-
-    if SAVE_PLOTS:
-        fig.savefig("test_plot_equilibration_max_ess.png", bbox_inches="tight")
 
 
 def test_plot_equilibration_paired_t_test(example_timeseries, example_times):

@@ -17,7 +17,7 @@ def test_gelman_rubin_gaussian(gaussian_noise):
     assert gr == pytest.approx(1, abs=0.001)
     # Check that it fails for a single run.
     with pytest.raises(InvalidInputError):
-        gr = gelman_rubin(gaussian_noise[0])
+        gelman_rubin(gaussian_noise[0])
 
 
 def test_stable_gelman_rubin_gaussian(gaussian_noise):
