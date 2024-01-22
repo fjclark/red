@@ -59,7 +59,7 @@ def test_statistical_inefficiency_inter_variance(gaussian_noise, example_timeser
 
     # Check that it fails for a single run.
     with pytest.raises(InvalidInputError):
-        si = statistical_inefficiency_inter_variance(gaussian_noise[0])
+        statistical_inefficiency_inter_variance(gaussian_noise[0])
 
     # Check that statistical inefficiency is higher for the correlated timeseries.
     si = statistical_inefficiency_inter_variance(example_timeseries)
@@ -93,7 +93,7 @@ def test_effective_sample_size_inter_variance(gaussian_noise, example_timeseries
 
     # Check that it fails for a single run.
     with pytest.raises(InvalidInputError):
-        ess = ess_inter_variance(gaussian_noise[0])
+        ess_inter_variance(gaussian_noise[0])
 
     # Check that effective sample size is lower for the correlated timeseries.
     ess = ess_inter_variance(example_timeseries)

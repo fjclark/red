@@ -116,7 +116,7 @@ def test_plot_equilibration_min_sse(example_timeseries, example_times):
     gridspec_obj = gridspec.GridSpec(1, 1, figure=fig)
 
     # Compute the SSE for the example timeseries.
-    sse_vals, lag_times = get_sse_series_init_seq(
+    sse_vals, _ = get_sse_series_init_seq(
         data=example_timeseries_mean, smooth_lag_times=True
     )
     times = example_times[: len(sse_vals)]

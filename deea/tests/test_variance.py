@@ -54,7 +54,6 @@ def test_get_autocovariance(example_timeseries):
 def test_gamma_cap(example_timeseries):
     """Test the _get_gamma_cap function."""
     example_timeseries = example_timeseries.mean(axis=0)
-    example_timeseries_demeaned = example_timeseries - example_timeseries.mean()
 
     # Compute the autocovariance function with no truncation.
     autocovariance = _get_autocovariance(example_timeseries)
@@ -360,7 +359,7 @@ def test_lugsail_variance(gaussian_noise):
         lugsail_variance(gaussian_noise, 100_000)
 
     with pytest.raises(AnalysisError):
-        variance = lugsail_variance(gaussian_noise, 0.1)
+        lugsail_variance(gaussian_noise, 0.1)
 
 
 def test_get_variance_series_window_raises(example_timeseries):

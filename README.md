@@ -10,8 +10,8 @@ Detection of Equilibration by Ensemble Analysis
 
 A Python package for detecting equilibration in timeseries data where an initial transient is followed by a stationary distribution. Two main methods are implemented, which differ in the way they account for autocorrelation: 
 
-- `detect_equilibration_init_seq`: This uses the initial sequence methods of Geyer ([Geyer, 1992](https://www.jstor.org/stable/2246094)) to determine the truncation point of the sum of autocovariances.
-- `detect_equilibration_window`: This uses window methods (see [Geyer](https://www.jstor.org/stable/2246094) again) when calculating the 
+  - `detect_equilibration_init_seq`: This uses the initial sequence methods of Geyer ([Geyer, 1992](https://www.jstor.org/stable/2246094)) to determine the truncation point of the sum of autocovariances.
+  - `detect_equilibration_window`: This uses window methods (see [Geyer](https://www.jstor.org/stable/2246094) again) when calculating the 
 autocorrelation. 
 
 For both, the equilibration point can be determined either according to the minimum of the squared standard error (the default), or the maximum effective sample size, by specifying `method="min_sse"` or `method="max_ess"`.

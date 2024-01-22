@@ -422,7 +422,7 @@ def get_variance_initial_sequence(
         "initial_monotone",
         "initial_convex",
     ]
-    if not sequence_estimator in implemented_sequence_estimators:
+    if sequence_estimator not in implemented_sequence_estimators:
         raise InvalidInputError(
             f"Sequence_estimator must be one of {implemented_sequence_estimators}."
         )

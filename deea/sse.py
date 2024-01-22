@@ -7,13 +7,7 @@ from typing import Tuple as _Tuple
 import numpy as _np
 
 from ._validation import check_data
-from .variance import (
-    get_variance_series_initial_sequence,
-    get_variance_series_window,
-    inter_run_variance,
-    intra_run_variance,
-    lugsail_variance,
-)
+from .variance import get_variance_series_initial_sequence, get_variance_series_window
 
 
 def get_sse_series_init_seq(

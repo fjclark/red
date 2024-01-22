@@ -226,7 +226,7 @@ def plot_sse(
     variance_y_label: str = r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
     reciprocal: bool = True,
 ) -> _Tuple[_List[Line2D], _List[str]]:
-    """
+    r"""
     Plot the squared standard error (SSE) estimate against time.
 
     Parameters
@@ -251,7 +251,7 @@ def plot_sse(
 
     variance_y_label : str, optional
         The y-axis label for the variance. The default is
-        r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$".
+        "$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$".
 
     reciprocal : bool, optional, default=True
         Whether to plot the reciprocal of the SSE.
@@ -474,7 +474,7 @@ def plot_equilibration_min_sse(
 
     variance_y_label : str, optional
         The y-axis label for the variance. The default is
-        r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$".
+        "$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$".
 
     reciprocal : bool, optional, default=True
         Whether to plot the reciprocal of the SSE.

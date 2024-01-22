@@ -11,18 +11,11 @@ import numpy as _np
 from matplotlib import gridspec
 from scipy.stats import ttest_rel
 
-from ._exceptions import AnalysisError, EquilibrationNotDetectedError, InvalidInputError
+from ._exceptions import EquilibrationNotDetectedError, InvalidInputError
 from ._validation import check_data
-from .ess import (
-    convert_sse_series_to_ess_series,
-    ess_inter_variance,
-    ess_lugsail_variance,
-    statistical_inefficiency_inter_variance,
-    statistical_inefficiency_lugsail_variance,
-)
+from .ess import convert_sse_series_to_ess_series
 from .plot import plot_equilibration_min_sse, plot_equilibration_paired_t_test
 from .sse import get_sse_series_init_seq, get_sse_series_window
-from .variance import get_variance_initial_sequence, get_variance_window
 
 ######################################## New #######################################
 
@@ -42,7 +35,7 @@ def detect_equilibration_init_seq(
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
     plot_max_lags: bool = True,
 ) -> _Tuple[_Union[float, int], float, float]:
-    """
+    r"""
     Detect the equilibration time of a time series by finding the minimum
     squared standard error (SSE), or maximum effective sample size (ESS)
     of the time series, using initial sequence estimators of the variance.
@@ -208,7 +201,7 @@ def detect_equilibration_window(
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
     plot_window_size: bool = True,
 ) -> _Tuple[_Union[float, int], float, float]:
-    """
+    r"""
     Detect the equilibration time of a time series by finding the minimum
     squared standard error (SSE) or maximum effective sample size (ESS)
     of the time series, using window estimators of the variance. This is
@@ -560,7 +553,6 @@ def detect_equilibration_paired_t_test(
         raise InvalidInputError("p_threshold must be between 0 and 0.7.")
 
     # Get the p value timeseries and n_discard.
-    indices = _np.arange(n_samples)
     p_vals, times_used = get_paired_t_p_timeseries(
         data=data,
         times=times,
