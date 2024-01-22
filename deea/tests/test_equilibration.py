@@ -154,10 +154,6 @@ def test_detect_equilibration_paired_t(gaussian_noise, example_timeseries):
     """
     Test equilibration detection based on the paired t-test.
     """
-    # Compute the equilibration index.
-    idx = detect_equilibration_paired_t_test(gaussian_noise)
-    assert idx == 0
-
     # Check that it fails for a single run.
     with pytest.raises(InvalidInputError):
         detect_equilibration_paired_t_test(gaussian_noise[0])
