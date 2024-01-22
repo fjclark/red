@@ -1,15 +1,15 @@
 """Functions for selecting the equilibration time of a time series."""
 
-from pathlib import Path
+from pathlib import Path as _Path
 from typing import Callable as _Callable
 from typing import Optional as _Optional
 from typing import Tuple as _Tuple
 from typing import Union as _Union
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as _plt
 import numpy as _np
-from matplotlib import gridspec
-from scipy.stats import ttest_rel
+from matplotlib import gridspec as _gridspec
+from scipy.stats import ttest_rel as _ttest_rel
 
 from ._exceptions import EquilibrationNotDetectedError, InvalidInputError
 from ._validation import check_data
@@ -30,7 +30,7 @@ def detect_equilibration_init_seq(
     smooth_lag_times: bool = False,
     frac_padding: float = 0.1,
     plot: bool = False,
-    plot_name: _Union[str, Path] = "equilibration_sse_init_seq.png",
+    plot_name: _Union[str, _Path] = "equilibration_sse_init_seq.png",
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
     plot_max_lags: bool = True,
@@ -163,8 +163,8 @@ def detect_equilibration_init_seq(
 
     if plot:
         # Create a figure.
-        fig = plt.figure(figsize=(6, 4))
-        gridspec_obj = gridspec.GridSpec(1, 1, figure=fig)
+        fig = _plt.figure(figsize=(6, 4))
+        gridspec_obj = _gridspec.GridSpec(1, 1, figure=fig)
 
         # Plot the ESS.
         plot_equilibration_min_sse(
@@ -196,7 +196,7 @@ def detect_equilibration_window(
     window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**1 / 2),
     window_size: _Optional[int] = None,
     plot: bool = False,
-    plot_name: _Union[str, Path] = "equilibration_sse_window.png",
+    plot_name: _Union[str, _Path] = "equilibration_sse_window.png",
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
     plot_window_size: bool = True,
@@ -307,8 +307,8 @@ def detect_equilibration_window(
 
     if plot:
         # Create a figure.
-        fig = plt.figure(figsize=(6, 4))
-        gridspec_obj = gridspec.GridSpec(1, 1, figure=fig)
+        fig = _plt.figure(figsize=(6, 4))
+        gridspec_obj = _gridspec.GridSpec(1, 1, figure=fig)
 
         # Plot the ESS.
         plot_equilibration_min_sse(
@@ -456,9 +456,9 @@ def get_paired_t_p_timeseries(
             :, -round(n_truncated_samples * final_block_size) :
         ].mean(axis=1)
         # Compute the paired t-test.
-        p_vals[i] = ttest_rel(initial_block, final_block, alternative=t_test_sidedness)[
-            1
-        ]
+        p_vals[i] = _ttest_rel(
+            initial_block, final_block, alternative=t_test_sidedness
+        )[1]
         p_val_indices[i] = idx
         time_vals[i] = times[idx]
 
@@ -475,7 +475,7 @@ def detect_equilibration_paired_t_test(
     final_block_size: float = 0.5,
     t_test_sidedness: str = "two-sided",
     plot: bool = False,
-    plot_name: _Union[str, Path] = "equilibration_paired_t_test.png",
+    plot_name: _Union[str, _Path] = "equilibration_paired_t_test.png",
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
 ) -> int:
@@ -573,8 +573,8 @@ def detect_equilibration_paired_t_test(
 
     # Plot the p values.
     if plot:
-        fig = plt.figure(figsize=(6, 4))
-        gridspec_obj = gridspec.GridSpec(1, 1, figure=fig)
+        fig = _plt.figure(figsize=(6, 4))
+        gridspec_obj = _gridspec.GridSpec(1, 1, figure=fig)
         plot_equilibration_paired_t_test(
             fig=fig,
             subplot_spec=gridspec_obj[0],
