@@ -143,7 +143,7 @@ def test_compare_pymbar(example_timeseries):
     equil_idx_chod = 877
     equil_g_chod = 4.111825
     # equil_ess_chod = 425.35858
-    equil_idx, equil_g, equil_ess = detect_equilibration_init_seq(
+    equil_idx, equil_g, _ = detect_equilibration_init_seq(
         example_timeseries, method="max_ess", sequence_estimator="positive"
     )
     assert equil_idx == equil_idx_chod
