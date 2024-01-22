@@ -7,7 +7,9 @@ import pytest
 
 from deea.equilibration import (
     detect_equilibration_init_seq,
+    detect_equilibration_paired_t_test,
     detect_equilibration_window,
+    get_paired_t_p_timeseries,
 )
 
 from .._exceptions import EquilibrationNotDetectedError, InvalidInputError
