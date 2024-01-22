@@ -2,12 +2,12 @@
 
 from warnings import warn as _warn
 
-import numpy as np
+import numpy as _np
 
 from ._exceptions import InvalidInputError
 
 
-def check_data(data: np.ndarray, one_dim_allowed: bool = False) -> np.ndarray:
+def check_data(data: _np.ndarray, one_dim_allowed: bool = False) -> _np.ndarray:
     """
     Assert that data passed is a numpy array where
     the first dimension is the number of chains and
@@ -29,7 +29,7 @@ def check_data(data: np.ndarray, one_dim_allowed: bool = False) -> np.ndarray:
         Data with shape (n_chains, n_samples).
     """
     # Check that data is a numpy array.
-    if not isinstance(data, np.ndarray):
+    if not isinstance(data, _np.ndarray):
         raise InvalidInputError("Data must be a numpy array.")
 
     # Check that data has right number of dimensions.

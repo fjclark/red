@@ -898,7 +898,7 @@ def lugsail_variance(data: _np.ndarray, n_pow: float = 1 / 3) -> float:
         )
 
     # Get the two batch sizes.
-    n_chains, n_samples = data.shape
+    _, n_samples = data.shape
     batch_size_large = int(_np.floor(n_samples**n_pow))  # type: ignore
     batch_size_small = int(_np.floor(batch_size_large / 3))  # type: ignore
 

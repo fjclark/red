@@ -2,25 +2,26 @@
 
 from typing import List as _List
 
-import matplotlib.pyplot as plt
-from matplotlib import figure, gridspec
-from matplotlib.axes import Axes
+import matplotlib.pyplot as _plt
+from matplotlib import figure as _figure
+from matplotlib import gridspec as _gridspec
+from matplotlib.axes import Axes as _Axes
 
-plt.style.use("ggplot")
+_plt.style.use("ggplot")
 from typing import Optional as _Optional
 from typing import Tuple as _Tuple
 
-import numpy as np
-from matplotlib.lines import Line2D
+import numpy as _np
+from matplotlib.lines import Line2D as _Line2D
 
 from ._exceptions import InvalidInputError
 from ._validation import check_data
 
 
 def plot_timeseries(
-    ax: Axes,
-    data: np.ndarray,
-    times: np.ndarray,
+    ax: _Axes,
+    data: _np.ndarray,
+    times: _np.ndarray,
     show_ci: bool = True,
     n_blocks: int = 100,
     time_units: str = "ns",
@@ -62,7 +63,7 @@ def plot_timeseries(
     n_runs, n_samples = data.shape
 
     # Check that times is valid.
-    if not isinstance(times, np.ndarray):
+    if not isinstance(times, _np.ndarray):
         raise InvalidInputError("Times must be a numpy array.")
 
     if times.ndim != 1:
@@ -130,12 +131,12 @@ def plot_timeseries(
 
 
 def plot_p_values(
-    ax: Axes,
-    p_values: np.ndarray,
-    times: np.ndarray,
+    ax: _Axes,
+    p_values: _np.ndarray,
+    times: _np.ndarray,
     p_threshold: float = 0.05,
     time_units: str = "ns",
-    threshold_times: _Optional[np.ndarray] = None,
+    threshold_times: _Optional[_np.ndarray] = None,
 ) -> None:
     """
     Plot the p-values of the paired t-test.
@@ -163,7 +164,7 @@ def plot_p_values(
         using this plot underneath a time series plot.
     """
     # Check that p_values is valid.
-    if not isinstance(p_values, np.ndarray) or not isinstance(times, np.ndarray):
+    if not isinstance(p_values, _np.ndarray) or not isinstance(times, _np.ndarray):
         raise InvalidInputError("p_values and times must be numpy arrays.")
 
     if p_values.ndim != 1:
@@ -183,7 +184,7 @@ def plot_p_values(
     # Plot the p-value threshold.
     ax.plot(
         threshold_times,
-        np.full(threshold_times.shape, p_threshold),
+        _np.full(threshold_times.shape, p_threshold),
         color="black",
         linestyle="-",
         linewidth=0.5,
@@ -217,15 +218,15 @@ def plot_p_values(
 
 
 def plot_sse(
-    ax: Axes,
-    sse: np.ndarray,
-    max_lags: _Optional[np.ndarray],
-    window_sizes: _Optional[np.ndarray],
-    times: np.ndarray,
+    ax: _Axes,
+    sse: _np.ndarray,
+    max_lags: _Optional[_np.ndarray],
+    window_sizes: _Optional[_np.ndarray],
+    times: _np.ndarray,
     time_units: str = "ns",
     variance_y_label: str = r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
     reciprocal: bool = True,
-) -> _Tuple[_List[Line2D], _List[str]]:
+) -> _Tuple[_List[_Line2D], _List[str]]:
     r"""
     Plot the squared standard error (SSE) estimate against time.
 
@@ -265,7 +266,7 @@ def plot_sse(
         The labels for the legend.
     """
     # Check that sse is valid.
-    if not isinstance(sse, np.ndarray) or not isinstance(times, np.ndarray):
+    if not isinstance(sse, _np.ndarray) or not isinstance(times, _np.ndarray):
         raise InvalidInputError("sse and times must be numpy arrays.")
 
     if sse.ndim != 1:
@@ -291,7 +292,9 @@ def plot_sse(
         to_plot = max_lags if window_sizes is None else window_sizes
         ax2 = ax.twinx()
         # Get the second colour from the colour cycle.
-        ax2.set_prop_cycle(color=[plt.rcParams["axes.prop_cycle"].by_key()["color"][1]])
+        ax2.set_prop_cycle(
+            color=[_plt.rcParams["axes.prop_cycle"].by_key()["color"][1]]
+        )
         ax2.plot(times, to_plot, alpha=0.8, label=label)
         ax2.set_ylabel(label)
 
@@ -320,16 +323,16 @@ def plot_sse(
 
 
 def plot_equilibration_paired_t_test(
-    fig: figure.Figure,
-    subplot_spec: gridspec.SubplotSpec,
-    data: np.ndarray,
-    p_values: np.ndarray,
-    data_times: np.ndarray,
-    p_times: np.ndarray,
+    fig: _figure.Figure,
+    subplot_spec: _gridspec.SubplotSpec,
+    data: _np.ndarray,
+    p_values: _np.ndarray,
+    data_times: _np.ndarray,
+    p_times: _np.ndarray,
     p_threshold: float = 0.05,
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
-) -> _Tuple[Axes, Axes]:
+) -> _Tuple[_Axes, _Axes]:
     r"""
     Plot the p-values of the paired t-test against time, underneath the
     time series data.
@@ -376,7 +379,9 @@ def plot_equilibration_paired_t_test(
     """
     # We need to split the gridspec into two subplots, one for the time series data (above)
     # and one for the p-values (below). Share x-axis but not y-axis.
-    gs0 = gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec=subplot_spec, hspace=0.05)
+    gs0 = _gridspec.GridSpecFromSubplotSpec(
+        2, 1, subplot_spec=subplot_spec, hspace=0.05
+    )
     ax_top = fig.add_subplot(gs0[0])
     ax_bottom = fig.add_subplot(gs0[1], sharex=ax_top)
 
@@ -407,7 +412,7 @@ def plot_equilibration_paired_t_test(
     ax_bottom.legend(bbox_to_anchor=(1.05, 0.5), loc="center left")
 
     # Hide the x tick labels for the top axis.
-    plt.setp(ax_top.get_xticklabels(), visible=False)
+    _plt.setp(ax_top.get_xticklabels(), visible=False)
     ax_top.spines["bottom"].set_visible(False)
     ax_top.tick_params(axis="x", which="both", length=0)
     ax_top.set_xlabel("")
@@ -416,19 +421,19 @@ def plot_equilibration_paired_t_test(
 
 
 def plot_equilibration_min_sse(
-    fig: figure.Figure,
-    subplot_spec: gridspec.SubplotSpec,
-    data: np.ndarray,
-    sse_series: np.ndarray,
-    data_times: np.ndarray,
-    sse_times: np.ndarray,
-    max_lag_series: _Optional[np.ndarray] = None,
-    window_size_series: _Optional[np.ndarray] = None,
+    fig: _figure.Figure,
+    subplot_spec: _gridspec.SubplotSpec,
+    data: _np.ndarray,
+    sse_series: _np.ndarray,
+    data_times: _np.ndarray,
+    sse_times: _np.ndarray,
+    max_lag_series: _Optional[_np.ndarray] = None,
+    window_size_series: _Optional[_np.ndarray] = None,
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
     variance_y_label=r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
     reciprocal: bool = True,
-) -> _Tuple[Axes, Axes]:
+) -> _Tuple[_Axes, _Axes]:
     r"""
     Plot the (reciprocal of the) squared standard error (SSE)
     estimates against time, underneath the time series data.
@@ -492,7 +497,9 @@ def plot_equilibration_min_sse(
 
     # We need to split the gridspec into two subplots, one for the time series data (above)
     # and one for the p-values (below). Share x-axis but not y-axis.
-    gs0 = gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec=subplot_spec, hspace=0.05)
+    gs0 = _gridspec.GridSpecFromSubplotSpec(
+        2, 1, subplot_spec=subplot_spec, hspace=0.05
+    )
     ax_top = fig.add_subplot(gs0[0])
     ax_bottom = fig.add_subplot(gs0[1], sharex=ax_top)
 
@@ -537,7 +544,7 @@ def plot_equilibration_min_sse(
     )
 
     # Hide the x tick labels for the top axis.
-    plt.setp(ax_top.get_xticklabels(), visible=False)
+    _plt.setp(ax_top.get_xticklabels(), visible=False)
     ax_top.spines["bottom"].set_visible(False)
     ax_top.tick_params(axis="x", which="both", length=0)
     ax_top.set_xlabel("")

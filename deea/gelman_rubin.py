@@ -1,12 +1,12 @@
 """Compute the Gelman-Rubin diagnostic."""
 
-import numpy as np
+import numpy as _np
 
 from ._validation import check_data
 from .variance import inter_run_variance, intra_run_variance, lugsail_variance
 
 
-def gelman_rubin(data: np.ndarray) -> float:
+def gelman_rubin(data: _np.ndarray) -> float:
     """
     Compute the Gelman-Rubin diagnostic according to
     equation 4 in  Statist. Sci. 36(4): 518-529
@@ -38,12 +38,12 @@ def gelman_rubin(data: np.ndarray) -> float:
     ) / n_samples * intra_run_variance_est + inter_run_variance_est / n_samples
 
     # Compute GR diagnostic.
-    gelman_rubin_diagnostic = np.sqrt(combined_variance_est / intra_run_variance_est)
+    gelman_rubin_diagnostic = _np.sqrt(combined_variance_est / intra_run_variance_est)
 
     return gelman_rubin_diagnostic
 
 
-def stable_gelman_rubin(data: np.ndarray, n_pow: float = 1 / 3) -> float:
+def stable_gelman_rubin(data: _np.ndarray, n_pow: float = 1 / 3) -> float:
     """
     Compute the stable Gelman-Rubin diagnostic according to
     equation 7 in  Statist. Sci. 36(4): 518-529
@@ -64,6 +64,6 @@ def stable_gelman_rubin(data: np.ndarray, n_pow: float = 1 / 3) -> float:
     ) / n_samples * intra_run_variance_est + lugsail_variance_est / n_samples
 
     # Compute GR diagnostic.
-    gelman_rubin_diagnostic = np.sqrt(combined_variance_est / intra_run_variance_est)
+    gelman_rubin_diagnostic = _np.sqrt(combined_variance_est / intra_run_variance_est)
 
     return gelman_rubin_diagnostic

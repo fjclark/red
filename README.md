@@ -2,6 +2,7 @@ deea
 ==============================
 [//]: # (Badges)
 [![GitHub Actions Build Status](https://github.com/fjclark/deea/workflows/CI/badge.svg)](https://github.com/fjclark/deea/actions?query=workflow%3ACI)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/fff40e5573f847399bee98eef495f8c6)](https://app.codacy.com/gh/fjclark/deea/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![codecov](https://codecov.io/gh/fjclark/deea/branch/main/graph/badge.svg)](https://codecov.io/gh/fjclark/deea/branch/main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

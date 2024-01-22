@@ -1,6 +1,5 @@
 """Tests for the Gelman-Rubin convergence diagnostic."""
 
-import numpy as np
 import pytest
 
 from .._exceptions import InvalidInputError
