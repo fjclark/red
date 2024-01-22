@@ -6,8 +6,6 @@ import numpy as np
 import numpy.testing as npt
 import pymbar
 import pytest
-import rpy2.robjects as robjects
-from rpy2.robjects.packages import importr
 from statsmodels.tsa.stattools import acovf
 
 from deea._exceptions import AnalysisError, InvalidInputError
@@ -27,10 +25,6 @@ from deea.variance import (
 )
 
 from . import example_times, example_timeseries, gaussian_noise, gaussian_noise_offset
-
-# Import some stuff from MCMC
-mcmc = importr("mcmc")
-initseq = robjects.r["initseq"]
 
 
 def test_get_autocovariance(example_timeseries):
@@ -102,15 +96,11 @@ def test_variance_initial_sequence(example_timeseries):
         for method in methods
     }
 
-    # Check that the results are correct by comparing to Geyer's implementation
-    # in the MCMC package.
-    example_timeseries_list = robjects.FloatVector(example_timeseries)
-    mcmc_variance = initseq(example_timeseries_list)
+    # Geyer results obtained from R package mcmc.
     geyer_res = {
-        "initial_positive": mcmc_variance[4][0],  # 27304.776049686046
-        "initial_monotone": mcmc_variance[5][0],  # 24216.32288181667
-        # "initial_convex": mcmc_variance[6][0],  # 21898.6178149005
-        "initial_convex": 21904.973713096544,
+        "initial_positive": 27304.776049686046,
+        "initial_monotone": 24216.32288181667,
+        "initial_convex": 21904.973713096544,  # Actual MCMC result is 21898.6178149005, but very close.
     }
 
     # Check that the results are correct.

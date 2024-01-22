@@ -37,7 +37,6 @@ test = [
   "pytest>=6.1.2",
   "pytest-runner",
   "statsmodels>=0.12.0",
-  "rpy2",
 ]
 
 [tool.setuptools]
