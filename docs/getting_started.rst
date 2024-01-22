@@ -1,4 +1,4 @@
 Getting Started
 ===============
 
-This page details how to get started with deea. 
+This page details how to get started with red. 

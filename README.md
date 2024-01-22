@@ -1,9 +1,9 @@
-deea
+red
 ==============================
 [//]: # (Badges)
-[![GitHub Actions Build Status](https://github.com/fjclark/deea/workflows/CI/badge.svg)](https://github.com/fjclark/deea/actions?query=workflow%3ACI)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/fff40e5573f847399bee98eef495f8c6)](https://app.codacy.com/gh/fjclark/deea/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![codecov](https://codecov.io/gh/fjclark/deea/branch/main/graph/badge.svg)](https://codecov.io/gh/fjclark/deea/branch/main)
+[![GitHub Actions Build Status](https://github.com/fjclark/red/workflows/CI/badge.svg)](https://github.com/fjclark/red/actions?query=workflow%3ACI)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/fff40e5573f847399bee98eef495f8c6)](https://app.codacy.com/gh/fjclark/red/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![codecov](https://codecov.io/gh/fjclark/red/branch/main/graph/badge.svg)](https://codecov.io/gh/fjclark/red/branch/main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -20,15 +20,15 @@ For both, the equilibration point can be determined either according to the mini
 ### Installation
 
 ```bash
-git clone https://github.com/fjclark/deea.git
-cd deea
+git clone https://github.com/fjclark/red.git
+cd red
 pip install -e .
 ```
 
 ### Usage
 
 ```python
-import deea
+import red
 
 # Load your timeseries of interest.
 # This should be a 2D numpy array with shape (n_runs, n_samples),
@@ -40,14 +40,14 @@ my_timeseries = ...
 # autocorrelation. idx is the index of the first sample after
 # equilibration, g is the statistical inefficiency of the equilibrated 
 # sample, and ess is the effective sample size of the equilibrated sample.
-idx, g, ess = deea.detect_equilibration_init_seq(my_timeseries, method="min_sse", plot=True)
+idx, g, ess = red.detect_equilibration_init_seq(my_timeseries, method="min_sse", plot=True)
 
 # Alternatively, use the window method to account for autocorrelation.
 # By default, this uses a Bartlett kernel and a window size of round(n_samples**0.5).
-idx, g, ess = deea.detect_equilibration_window(my_timeseries, method="min_sse", plot=True)
+idx, g, ess = red.detect_equilibration_window(my_timeseries, method="min_sse", plot=True)
 
 # We can also determine equilibration in the same way as in pymbar.timeseries.detect_equilibration.
-idx, g, ess = deea.detect_equilibration_init_seq(my_timeseries, method="max_ess", sequence_estimator="positive")
+idx, g, ess = red.detect_equilibration_init_seq(my_timeseries, method="max_ess", sequence_estimator="positive")
 ```
 
 ### Copyright

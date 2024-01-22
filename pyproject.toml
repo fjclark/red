@@ -5,8 +5,8 @@ build-backend = "setuptools.build_meta"
 # Self-descriptive entries which should always be present
 # https://packaging.python.org/en/latest/specifications/declaring-project-metadata/
 [project]
-name = "deea"
-description = "Detection of Equilibration by Ensemble Analysis"
+name = "red"
+description = "Robust Equilibration Detection"
 dynamic = ["version"]
 readme = "README.md"
 authors = [
@@ -29,8 +29,8 @@ dependencies = [
 
 # Update the urls once the hosting is set up.
 #[project.urls]
-#"Source" = "https://github.com/<username>/deea/"
-#"Documentation" = "https://deea.readthedocs.io/"
+#"Source" = "https://github.com/fjclark/red/"
+#"Documentation" = "https://red.readthedocs.io/"
 
 [project.optional-dependencies]
 test = [
@@ -66,7 +66,7 @@ where = ["."]
 
 # Ref https://setuptools.pypa.io/en/latest/userguide/datafiles.html#package-data
 [tool.setuptools.package-data]
-deea = [
+red = [
     "py.typed",
     "data/*.npy",
 ]
@@ -87,4 +87,4 @@ match = ["*"]
 default-tag = "0.1.0"
 
 [tool.versioningit.write]
-file = "deea/_version.py"
+file = "red/_version.py"

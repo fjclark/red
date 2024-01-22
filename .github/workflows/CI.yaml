@@ -52,7 +52,7 @@ jobs:
         # conda setup requires this special shell
         shell: bash -l {0}
         run: |
-          pytest -v --cov=deea --cov-report=xml --color=yes deea/tests/
+          pytest -v --cov=red --cov-report=xml --color=yes red/tests/
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

@@ -1,4 +1,4 @@
-"""Exceptions for the deea package."""
+"""Exceptions for the red package."""
 
 
 class AnalysisError(Exception):
