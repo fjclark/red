@@ -78,10 +78,15 @@ def plot_timeseries(
     if n_blocks == 0:
         n_blocks = n_samples
 
-    # Block-average the data. Need to trim the data so that it is divisible by
-    # the number of blocks.
+    # Get the block size based on the number of blocks requested.
     block_size = n_samples // n_blocks
-    n_samples_end = n_samples - (n_samples % n_blocks)
+    # Pick the final sample based on the block size, rather than the number of blocks.
+    # We might end up with more blocks than requested, but this is better than failing
+    # to show too much of the data.
+    n_samples_end = n_samples - (n_samples % block_size)
+    # Update the number of blocks according to the block size.
+    n_blocks = n_samples_end // block_size
+    # Trim the data and times so that they are divisible by the block size.
     times = times[:n_samples_end]
     data = data[:, :n_samples_end]
     data = data.reshape(n_runs, n_blocks, block_size).mean(axis=2)  # type: ignore
