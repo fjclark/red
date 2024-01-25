@@ -22,6 +22,6 @@ def test_get_sse_series_window(example_timeseries):
     # Get the squared standard error series.
     sse_series, _ = get_sse_series_window(example_timeseries)
 
-    assert sse_series[0] == pytest.approx(3.549012057748636, abs=1e-4)
-    assert sse_series[1] == pytest.approx(3.5341649172948486, abs=1e-4)
-    assert sse_series[-1] == pytest.approx(4.1203730796278455, abs=1e-4)
+    assert sse_series[0] == pytest.approx(0.6912977518313307, abs=1e-4)
+    assert sse_series[1] == pytest.approx(0.6896663937370537, abs=1e-4)
+    assert sse_series[-1] == pytest.approx(1.962073132107981, abs=1e-4)

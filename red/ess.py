@@ -112,7 +112,7 @@ def get_ess_series_init_seq(
 def get_ess_series_window(
     data: _np.ndarray,
     kernel: _Callable[[int], _np.ndarray] = _np.bartlett,  # type: ignore
-    window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**1 / 2),
+    window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
     window_size: _Optional[int] = None,
 ) -> _Tuple[_np.ndarray, _np.ndarray]:
     """
@@ -128,7 +128,7 @@ def get_ess_series_window(
     kernel : callable, optional, default=numpy.bartlett
         A function that takes a window size and returns a window function.
 
-    window_size_fn : callable, optional, default=lambda x: round(x**1 / 2)
+    window_size_fn : callable, optional, default=lambda x: round(x**0.5)
         A function that takes the length of the time series and returns the window size
         to use. If this is not None, window_size must be None.
 

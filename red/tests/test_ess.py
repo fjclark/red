@@ -36,9 +36,9 @@ def test_get_ess_series_window(example_timeseries):
     # Get the effective sample size series.
     ess_series, _ = get_ess_series_window(example_timeseries)
 
-    assert ess_series[0] == pytest.approx(379.12068962847957, abs=1e-2)
-    assert ess_series[1] == pytest.approx(380.58198750621483, abs=1e-2)
-    assert ess_series[-1] == pytest.approx(299.57923748670623, abs=1e-2)
+    assert ess_series[0] == pytest.approx(1946.3449653482178, abs=1e-2)
+    assert ess_series[1] == pytest.approx(1950.275554403233, abs=1e-2)
+    assert ess_series[-1] == pytest.approx(629.1193764166628, abs=1e-2)
 
     # Create artificial dataset with 5 runs of widely spaced gaussian noise.
     # Should give an effective sample size of ~5.
@@ -46,7 +46,7 @@ def test_get_ess_series_window(example_timeseries):
     ess_series, _ = get_ess_series_window(data)
     # However, window method misses a lot of auto-correlation, so ess estimate
     # is larger.
-    assert ess_series[0] == pytest.approx(12.777306723784625, abs=0.5)
+    assert ess_series[0] == pytest.approx(54.357400316107, abs=0.5)
 
 
 def test_statistical_inefficiency_inter_variance(gaussian_noise, example_timeseries):

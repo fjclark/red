@@ -93,9 +93,9 @@ def test_detect_equilibration_window(example_timeseries, example_times, tmpdir):
     equil_idx, equil_g, equil_ess = detect_equilibration_window(data=example_timeseries)
 
     # Check that the equilibration index is correct.
-    assert equil_idx == 428
-    assert equil_g == pytest.approx(2.755411021809227, abs=1e-4)
-    assert equil_ess == pytest.approx(797.3402089962718, abs=1e-4)
+    assert equil_idx == 398
+    assert equil_g == pytest.approx(3.840409864530417, abs=1e-4)
+    assert equil_ess == pytest.approx(579.8860222103675, abs=1e-4)
 
     # Try also supplying the times. Plot in a temporary directory.
     tmp_output = Path(tmpdir) / "test_plots_min_sse_window"
@@ -107,9 +107,9 @@ def test_detect_equilibration_window(example_timeseries, example_times, tmpdir):
         plot_name=tmp_output,
         plot_window_size=True,
     )
-    assert equil_time == 0.3432
-    assert equil_g == pytest.approx(2.755411021809227, abs=1e-4)
-    assert equil_ess == pytest.approx(797.3402089962718, abs=1e-4)
+    assert equil_time == 0.3192
+    assert equil_g == pytest.approx(3.840409864530417, abs=1e-4)
+    assert equil_ess == pytest.approx(579.8860222103675, abs=1e-4)
     # Check that test_plots_min_sse.png exists.
     assert tmp_output.with_suffix(".png").exists()
 
@@ -125,9 +125,9 @@ def test_detect_equilibration_window_max_ess(example_timeseries, example_times):
     )
 
     # Check that the equilibration index is correct.
-    assert equil_idx == 624
-    assert equil_g == pytest.approx(9.498261999314913, abs=1e-4)
-    assert equil_ess == pytest.approx(1053.350602533562, abs=1e-4)
+    assert equil_idx == 369
+    assert equil_g == pytest.approx(3.864939192439241, abs=1e-4)
+    assert equil_ess == pytest.approx(2918.545270276546, abs=1e-4)
 
 
 def test_compare_pymbar(example_timeseries):

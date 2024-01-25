@@ -306,11 +306,11 @@ def test_get_variance_series_window(example_timeseries):
 
     # Now try with the window size function.
     var_seq = get_variance_series_window(
-        example_timeseries, window_size=None, window_size_fn=lambda x: round(x**1 / 2)
+        example_timeseries, window_size=None, window_size_fn=lambda x: round(x**0.5)
     )[0]
-    assert var_seq[0] == pytest.approx(22847.968699878777, abs=0.01)
-    assert var_seq[1] == pytest.approx(22701.2073132481, abs=0.01)
-    assert var_seq[-1] == pytest.approx(664.5874784139719, abs=0.01)
+    assert var_seq[0] == pytest.approx(4262.823818412766, abs=0.01)
+    assert var_seq[1] == pytest.approx(4243.115237432978, abs=0.01)
+    assert var_seq[-1] == pytest.approx(580.7484698310258, abs=0.01)
 
 
 def test_replicated_batch_means_variance(gaussian_noise):
