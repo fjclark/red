@@ -22,7 +22,6 @@ def plot_timeseries(
     ax: _Axes,
     data: _np.ndarray,
     times: _np.ndarray,
-    show_ci: bool = True,
     n_blocks: int = 100,
     time_units: str = "ns",
     y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
@@ -43,9 +42,6 @@ def plot_timeseries(
     times : np.ndarray
         The times at which the data was sampled. This
         should have shape (n_samples,).
-
-    show_ci : bool, optional
-        Whether to show the 95%  t-based confidence interval.
 
     n_blocks : int, optional
         The number of blocks to use for block averaging. This
@@ -102,24 +98,6 @@ def plot_timeseries(
     # If we have more than one run, plot the mean.
     if n_runs > 1:
         ax.plot(times, data.mean(axis=0), color="black", label="Mean")
-
-    ## Plot the confidence interval.
-    # if show_ci and n_runs > 1:
-    # means = data.mean(axis=0)
-    # conf_int = (
-    # _stats.t.interval(
-    # 0.95,
-    # n_runs - 1,
-    # means,
-    # scale=_stats.sem(data),
-    # )[1]
-    # - means
-    # )  # 95 % C.I.
-
-    ## Plot the confidence interval.
-    # ax.fill_between(
-    # times, means - conf_int, means + conf_int, alpha=0.3, color="grey"
-    # )
 
     # Only show the legend if there is more than one run.
     if n_runs > 1:
