@@ -195,6 +195,7 @@ def detect_equilibration_window(
     kernel: _Callable[[int], _np.ndarray] = _np.bartlett,  # type: ignore
     window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
     window_size: _Optional[int] = None,
+    frac_padding: float = 0.1,
     plot: bool = False,
     plot_name: _Union[str, _Path] = "equilibration_sse_window.png",
     time_units: str = "ns",
@@ -235,6 +236,12 @@ def detect_equilibration_window(
     window_size : int, optional, default=None
         The size of the window to use, defined in terms of time lags in the
         forwards direction. If this is not None, window_size_fn must be None.
+
+    frac_padding : float, optional, default=0.1
+        The fraction of the end of the timeseries to avoid calculating the variance
+        for. For example, if frac_padding = 0.1, the variance will be calculated
+        for the first 90% of the time series. This helps to avoid noise in the
+        variance when there are few data points.
 
     plot : bool, optional
         Whether to plot the ESS curve. The default is False.
@@ -283,6 +290,7 @@ def detect_equilibration_window(
         kernel=kernel,
         window_size_fn=window_size_fn,
         window_size=window_size,
+        frac_padding=frac_padding,
     )
 
     # Get the corresponding times (or indices).
