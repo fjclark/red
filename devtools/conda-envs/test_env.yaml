@@ -9,6 +9,7 @@ dependencies:
   - python
   - pip
   - numpy
+  - numba
   - scipy
   - matplotlib
   - statsmodels
@@ -16,9 +17,5 @@ dependencies:
     # Testing
   - pytest
   - pytest-cov
+  - pytest-env
   - codecov
-
-    # Pip-only installs
-  #- pip:
-  #  - codecov
-

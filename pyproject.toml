@@ -25,6 +25,8 @@ dependencies = [
     "numpy>=1.20.0",
     "scipy>=1.6.0",
     "matplotlib>=3.3.0",
+    "statsmodels>=0.12.0",
+    "numba>=0.52.0",
 ]
 
 # Update the urls once the hosting is set up.
@@ -36,7 +38,7 @@ dependencies = [
 test = [
   "pytest>=6.1.2",
   "pytest-runner",
-  "statsmodels>=0.12.0",
+  "pytest-env",
 ]
 
 [tool.setuptools]

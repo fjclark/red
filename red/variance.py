@@ -12,7 +12,6 @@ is equivalent to using a Bartlett window.
 
 """
 
-from copy import deepcopy as _deepcopy
 from typing import Callable as _Callable
 from typing import Optional as _Optional
 from typing import Tuple as _Tuple
@@ -20,6 +19,8 @@ from typing import Union as _Union
 from warnings import warn as _warn
 
 import numpy as _np
+import numba as _numba
+from statsmodels.tsa.stattools import acovf as _acovf
 
 from ._exceptions import AnalysisError, InvalidInputError
 from ._validation import check_data as _check_data
@@ -27,11 +28,70 @@ from ._validation import check_data as _check_data
 ####### Private functions #######
 # No need to thoroughly validate input as this is done in the public functions.
 
+@_numba.njit
+def _compute_autocovariance_no_fft(data: _np.ndarray, max_lag: int) -> _np.ndarray:
+    """
+    Calculate the auto-covariance as a function of lag time for a time series.
+    Avoids using statsmodel's acovf function as using numpy's dot function and jit
+    gives a substantial speedup.
+
+    Parameters
+    ----------
+    data : numpy.ndarray
+        A time series of data with shape (n_samples,).
+
+    max_lag : int, optional, default=None
+        The maximum lag time to use when calculating the auto-correlation function.
+        If None, the maximum lag time will be the length of the time series.
+        The default is None.
+
+    Returns
+    -------
+    numpy.ndarray
+        The auto-correlation function of the time series.
+    """
+    # Don't use statsmodel's acovf as we can get a substantial speedup by using
+    # numpy's dot function and jit.
+    n_samples = data.shape[0]
+
+    # Initialise the auto-correlation function.
+    auto_cov = _np.zeros(max_lag + 1)
+
+    # Calculate the auto-correlation function.
+    auto_cov[0] = data.dot(data)
+    for t in range(1, max_lag + 1):
+        auto_cov[t] = data[t:].dot(data[:-t])
+    auto_cov /= n_samples  # "Biased" estimate, rather than n - 1.
+
+    return auto_cov
+
+def _compute_autocovariance_fft(data: _np.ndarray, max_lag: int) -> _np.ndarray:
+    """
+    Calculate the autocovariance using the FFT method, as implemented in statsmodels.
+    Note that we can speed this up for large arrays by rewriting to directly use numpy's fft
+    function and using jit with rocket-fft https://github.com/styfenschaer/rocket-fft.
+    Parameters
+    ----------
+    data : numpy.ndarray
+        A time series of data with shape (n_samples,).
+
+    max_lag : int, optional, default=None
+        The maximum lag time to use when calculating the auto-correlation function.
+        If None, the maximum lag time will be the length of the time series.
+        The default is None.
+
+    Returns
+    -------
+    numpy.ndarray
+    The auto-correlation function of the time series.
+    """
+    return _acovf(data, adjusted=False, nlag=max_lag, fft=True, demean=False)
 
 def _get_autocovariance(
     data: _np.ndarray,
     max_lag: _Union[None, int] = None,
     mean: _Union[None, float] = None,
+    fft: bool = False
 ) -> _np.ndarray:
     """
     Calculate the auto-covariance as a function of lag time for a time series.
@@ -51,40 +111,38 @@ def _get_autocovariance(
         time series. This is useful when the mean has been calculated from an
         ensemble of time series.
 
+    fft: bool, optional, default=False
+        Whether to use the FFT method to calculate the auto-covariance. The FFT method is faster
+        for large arrays and slower for shorter arrays.
+
     Returns
     -------
     numpy.ndarray
         The auto-correlation function of the time series.
     """
     # Copy the data so we don't modify the original.
-    data = _deepcopy(data)
+    data = data.copy()
 
     # Get the length of the time series.
     n_samples: int = data.shape[0]
 
-    # If max_lag_time is None, set it to the length of the time series.
+    # If max_lag_time is None, set it according to the length of the time series.
     if max_lag is None:
         max_lag = n_samples - 1
 
     # If mean is None, calculate it from the time series.
-    if mean is None:
-        mean = data.mean()
+    valid_mean = mean if mean is not None else data.mean()
 
     # Subtract the mean from the data.
-    data -= mean  # type: ignore
+    data -= valid_mean
 
-    # Initialise the auto-correlation function.
-    auto_cov = _np.zeros(max_lag + 1)
+    # FFT is faster for large arrays and slower for shorter arrays.
+    compute_autocov_fn = _compute_autocovariance_fft if fft else _compute_autocovariance_no_fft
 
-    # Calculate the auto-correlation function.
-    auto_cov[0] = data.dot(data)
-    for t in range(1, max_lag + 1):
-        auto_cov[t] = data[t:].dot(data[:-t])
-    auto_cov /= n_samples  # "Biased" estimate, rather than n - 1.
-
-    return auto_cov
+    return compute_autocov_fn(data, max_lag)
 
 
+@_numba.njit
 def _get_gamma_cap(autocov_series: _np.ndarray) -> _np.ndarray:
     """
     Compute the capitial gamma function from the auto-covariance function.
@@ -101,7 +159,7 @@ def _get_gamma_cap(autocov_series: _np.ndarray) -> _np.ndarray:
     """
     # Get the length of the time series.
     n_samples = autocov_series.shape[0]
-    max_gamma = _np.floor(n_samples / 2).astype(int)  # type: ignore
+    max_gamma = round(_np.floor(n_samples / 2))
 
     # Check that max_gamma is valid.
     if max_gamma < 1:
@@ -119,6 +177,7 @@ def _get_gamma_cap(autocov_series: _np.ndarray) -> _np.ndarray:
     return gamma
 
 
+@_numba.njit
 def _get_initial_positive_sequence(
     gamma_cap: _np.ndarray,
     min_max_lag_time: int = 3,
@@ -142,7 +201,8 @@ def _get_initial_positive_sequence(
         The initial positive sequence.
     """
     # Make a copy of gamma_cap so we don't modify the original.
-    gamma_cap = _deepcopy(gamma_cap)
+    # gamma_cap = _deepcopy(gamma_cap)
+    gamma_cap = gamma_cap.copy()
 
     # Truncate so that cap gamma is positive.
     for t in range(gamma_cap.shape[0]):
@@ -153,6 +213,7 @@ def _get_initial_positive_sequence(
     return gamma_cap
 
 
+@_numba.njit
 def _get_initial_monotone_sequence(
     gamma_cap: _np.ndarray,
     min_max_lag_time: int = 3,
@@ -175,7 +236,7 @@ def _get_initial_monotone_sequence(
         The initial monotone sequence.
     """
     # Make a copy of gamma_cap so we don't modify the original.
-    gamma_cap = _deepcopy(gamma_cap)
+    gamma_cap = gamma_cap.copy()
 
     # Get the initial positive sequence.
     gamma_cap = _get_initial_positive_sequence(
@@ -190,6 +251,7 @@ def _get_initial_monotone_sequence(
     return gamma_cap
 
 
+@_numba.njit
 def _get_initial_convex_sequence(
     gamma_cap: _np.ndarray,
     min_max_lag_time: int = 3,
@@ -219,7 +281,7 @@ def _get_initial_convex_sequence(
     COPYRIGHT HOLDER: Charles J. Geyer and Leif T. Johnson
     """
     # Make a copy of gamma_cap so we don't modify the original.
-    gamma_con = _deepcopy(gamma_cap)
+    gamma_con = gamma_cap.copy()
 
     # Get initial monotone sequence.
     gamma_con = _get_initial_monotone_sequence(
@@ -235,7 +297,7 @@ def _get_initial_convex_sequence(
 
     # Now reduce to the initial convex sequence. Use the PAVA algorithm.
     pooled_values = _np.zeros(len_gamma)
-    value_counts = _np.zeros(len_gamma, dtype=int)
+    value_counts = _np.zeros(len_gamma, dtype=_np.int32)
     nstep = 0
 
     # Iterate over the elements in gamma_cap_diff.
@@ -307,10 +369,11 @@ def _get_autocovariance_window(
     window = kernel(2 * window_size + 1)[window_size:]
 
     # Get the mean autocovariance as a function of lag time across all runs,
-    # using the shared mean.
+    # using the shared mean. Do not use FFT as we are usually calculating the autocovariance
+    # for relatively small arrays where the FFT method would be slower.
     autocov = _np.mean(
         [
-            _get_autocovariance(data[run], max_lag=window_size, mean=data.mean())
+            _get_autocovariance(data[run], max_lag=window_size, mean=data.mean(), fft=False)
             for run in range(n_runs)
         ],
         axis=0,
@@ -483,11 +546,12 @@ def get_variance_initial_sequence(
 
     if autocov is None:
         # Get the mean autocovariance as a function of lag time across all runs,
-        # using the shared mean.
+        # using the shared mean. Use FFT as we are usually calculating the autocovariance
+        # for large arrays.
         autocov_valid = _np.mean(
             [
                 _get_autocovariance(
-                    data[run], mean=data.mean(), max_lag=max_max_lag_time
+                    data[run], mean=data.mean(), max_lag=max_max_lag_time, fft=True,
                 )
                 for run in range(n_runs)
             ],
