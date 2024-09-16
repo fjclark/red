@@ -17,8 +17,6 @@ from .ess import convert_sse_series_to_ess_series
 from .plot import plot_equilibration_min_sse, plot_equilibration_paired_t_test
 from .sse import get_sse_series_init_seq, get_sse_series_window
 
-######################################## New #######################################
-
 
 def detect_equilibration_init_seq(
     data: _np.ndarray,
