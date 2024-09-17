@@ -1,7 +1,7 @@
 
-<div style="text-align: center;">
+<p align="center">
   <img src="https://github.com/fjclark/red/assets/90148170/5b0cf397-f902-4a43-9323-6414aa408d1a" width="400">
-</div>
+</p>
 
 <h3 align="center">Robust Equilibration Detection</h3>
 
