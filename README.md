@@ -1,9 +1,9 @@
 
 <p align="center">
-  <img src="https://github.com/fjclark/red/assets/90148170/5b0cf397-f902-4a43-9323-6414aa408d1a" width="400">
+  <img src="https://github.com/fjclark/red/assets/90148170/5b0cf397-f902-4a43-9323-6414aa408d1a" width="500">
 </p>
 
-<h3 align="center">Robust Equilibration Detection</h3>
+<h2 align="center">Robust Equilibration Detection</h2>
 
 <p align="center">
   <a href="https://github.com/fjclark/red/actions?query=workflow%3ACI">
