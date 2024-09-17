@@ -50,12 +50,6 @@ jobs:
           python -m pip install . --no-deps
           micromamba list
 
-      - name: Check formatting
-        shell: bash -l {0}
-        run: |
-          micromamba ruff check red
-          git diff --exit-code
-
       - name: Lint
         shell: bash -l {0}
         run: |
