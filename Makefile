@@ -17,7 +17,7 @@ env:
 	$(CONDA_ENV_RUN) pre-commit install || true
 
 lint:
-	# $(CONDA_ENV_RUN) ruff check $(PACKAGE_DIR)
+	$(CONDA_ENV_RUN) ruff check $(PACKAGE_DIR)
 
 format:
 	$(CONDA_ENV_RUN) ruff format $(PACKAGE_DIR)
