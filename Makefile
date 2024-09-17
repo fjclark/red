@@ -2,7 +2,7 @@ PACKAGE_NAME := red
 PACKAGE_DIR  := red
 
 # If we're running in GitHub Actions, we need to use micromamba instead of conda.
-CONDA_ENV_RUN   = $(if $(GITHUB_ACTIONS),micromamba run -n $(PACKAGE_NAME),conda run --no-capture-output --name $(PACKAGE_NAME))
+CONDA_ENV_RUN   = $(if $(GITHUB_ACTIONS),"",conda run --no-capture-output --name $(PACKAGE_NAME))
 
 TEST_ARGS := -v --cov=$(PACKAGE_NAME) --cov-report=term --cov-report=xml --junitxml=unit.xml --color=yes
 
