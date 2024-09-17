@@ -9,7 +9,8 @@ Robust Equilibration Detection
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/fff40e5573f847399bee98eef495f8c6)](https://app.codacy.com/gh/fjclark/red/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![codecov](https://codecov.io/gh/fjclark/red/branch/main/graph/badge.svg)](https://codecov.io/gh/fjclark/red/branch/main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 
 A Python package for detecting equilibration in timeseries data where an initial transient is followed by a stationary distribution. Two main methods are implemented, which differ in the way they account for autocorrelation:
 
