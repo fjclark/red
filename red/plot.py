@@ -16,7 +16,7 @@ from matplotlib.axes import Axes as _Axes
 from ._exceptions import InvalidInputError
 from ._validation import check_data
 
-_plt.style.use("ggplot")
+PLT_STYLE = "ggplot"
 
 
 def plot_timeseries(
@@ -259,42 +259,43 @@ def plot_sse(
     if max_lags is not None and window_sizes is not None:
         raise InvalidInputError("Only one of max_lags and window_sizes can be supplied.")
 
-    # Plot the SSE.
-    to_plot = 1 / sse if reciprocal else sse
-    ax.plot(times, to_plot, color="black", label="1/SSE")
+    with _plt.style.context(PLT_STYLE):
+        # Plot the SSE.
+        to_plot = 1 / sse if reciprocal else sse
+        ax.plot(times, to_plot, color="black", label="1/SSE")
 
-    # If lags is not None, plot the lag times on a different y axis.
-    if max_lags is not None or window_sizes is not None:
-        label = "Max Lag Index" if window_sizes is None else "Window Size"
-        to_plot = max_lags if window_sizes is None else window_sizes  # type: ignore
-        ax2 = ax.twinx()
-        # Get the second colour from the colour cycle.
-        ax2.set_prop_cycle(color=[_plt.rcParams["axes.prop_cycle"].by_key()["color"][1]])
-        ax2.plot(times, to_plot, alpha=0.8, label=label)
-        ax2.set_ylabel(label)
+        # If lags is not None, plot the lag times on a different y axis.
+        if max_lags is not None or window_sizes is not None:
+            label = "Max Lag Index" if window_sizes is None else "Window Size"
+            to_plot = max_lags if window_sizes is None else window_sizes  # type: ignore
+            ax2 = ax.twinx()
+            # Get the second colour from the colour cycle.
+            ax2.set_prop_cycle(color=[_plt.rcParams["axes.prop_cycle"].by_key()["color"][1]])
+            ax2.plot(times, to_plot, alpha=0.8, label=label)
+            ax2.set_ylabel(label)
 
-    # Plot a vertical dashed line at the minimum SSE.
-    ax.axvline(
-        x=times[sse.argmin()],
-        color="black",
-        linestyle="--",
-        label=f"Equilibration Time = {times[sse.argmin()]:.3g} {time_units}",
-    )
+        # Plot a vertical dashed line at the minimum SSE.
+        ax.axvline(
+            x=times[sse.argmin()],
+            color="black",
+            linestyle="--",
+            label=f"Equilibration Time = {times[sse.argmin()]:.3g} {time_units}",
+        )
 
-    # Combine the legends from both axes.
-    handles, labels = ax.get_legend_handles_labels()
-    if max_lags is not None or window_sizes is not None:
-        handles2, labels2 = ax2.get_legend_handles_labels()
-        handles += handles2
-        labels += labels2
+        # Combine the legends from both axes.
+        handles, labels = ax.get_legend_handles_labels()
+        if max_lags is not None or window_sizes is not None:
+            handles2, labels2 = ax2.get_legend_handles_labels()
+            handles += handles2
+            labels += labels2
 
-    ax.legend(handles, labels)
+        ax.legend(handles, labels)
 
-    # Set the axis labels.
-    ax.set_xlabel(f"Time / {time_units}")
-    ax.set_ylabel(variance_y_label)
+        # Set the axis labels.
+        ax.set_xlabel(f"Time / {time_units}")
+        ax.set_ylabel(variance_y_label)
 
-    return handles, labels
+        return handles, labels
 
 
 def plot_equilibration_paired_t_test(
@@ -352,45 +353,46 @@ def plot_equilibration_paired_t_test(
     ax_bottom : Axes
         The axes for the p-values.
     """
-    # We need to split the gridspec into two subplots, one for the time series data (above)
-    # and one for the p-values (below). Share x-axis but not y-axis.
-    gs0 = _gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec=subplot_spec, hspace=0.05)
-    ax_top = fig.add_subplot(gs0[0])
-    ax_bottom = fig.add_subplot(gs0[1], sharex=ax_top)
+    with _plt.style.context(PLT_STYLE):
+        # We need to split the gridspec into two subplots, one for the time series data (above)
+        # and one for the p-values (below). Share x-axis but not y-axis.
+        gs0 = _gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec=subplot_spec, hspace=0.05)
+        ax_top = fig.add_subplot(gs0[0])
+        ax_bottom = fig.add_subplot(gs0[1], sharex=ax_top)
 
-    # Plot the time series data on the top axis.
-    plot_timeseries(ax_top, data, data_times)
-    # Add dashed vertical line at the equilibration time.
-    ax_top.axvline(
-        x=p_times[p_values > p_threshold][0],
-        color="black",
-        linestyle="--",
-    )
+        # Plot the time series data on the top axis.
+        plot_timeseries(ax_top, data, data_times)
+        # Add dashed vertical line at the equilibration time.
+        ax_top.axvline(
+            x=p_times[p_values > p_threshold][0],
+            color="black",
+            linestyle="--",
+        )
 
-    # Plot the p-values on the bottom axis.
-    plot_p_values(
-        ax_bottom,
-        p_values,
-        p_times,
-        p_threshold=p_threshold,
-        threshold_times=data_times,
-    )
+        # Plot the p-values on the bottom axis.
+        plot_p_values(
+            ax_bottom,
+            p_values,
+            p_times,
+            p_threshold=p_threshold,
+            threshold_times=data_times,
+        )
 
-    # Set the axis labels.
-    ax_top.set_xlabel(f"Time / {time_units}")
-    ax_top.set_ylabel(data_y_label)
+        # Set the axis labels.
+        ax_top.set_xlabel(f"Time / {time_units}")
+        ax_top.set_ylabel(data_y_label)
 
-    # Move the legends to the side of the plot.
-    ax_top.legend(bbox_to_anchor=(1.05, 0.5), loc="center left")
-    ax_bottom.legend(bbox_to_anchor=(1.05, 0.5), loc="center left")
+        # Move the legends to the side of the plot.
+        ax_top.legend(bbox_to_anchor=(1.05, 0.5), loc="center left")
+        ax_bottom.legend(bbox_to_anchor=(1.05, 0.5), loc="center left")
 
-    # Hide the x tick labels for the top axis.
-    _plt.setp(ax_top.get_xticklabels(), visible=False)
-    ax_top.spines["bottom"].set_visible(False)
-    ax_top.tick_params(axis="x", which="both", length=0)
-    ax_top.set_xlabel("")
+        # Hide the x tick labels for the top axis.
+        _plt.setp(ax_top.get_xticklabels(), visible=False)
+        ax_top.spines["bottom"].set_visible(False)
+        ax_top.tick_params(axis="x", which="both", length=0)
+        ax_top.set_xlabel("")
 
-    return ax_top, ax_bottom
+        return ax_top, ax_bottom
 
 
 def plot_equilibration_min_sse(
@@ -465,59 +467,60 @@ def plot_equilibration_min_sse(
     ax_bottom : Axes
         The axes for the p-values.
     """
-    data = check_data(data, one_dim_allowed=True)
-    n_runs, _ = data.shape
+    with _plt.style.context(PLT_STYLE):
+        data = check_data(data, one_dim_allowed=True)
+        n_runs, _ = data.shape
 
-    # We need to split the gridspec into two subplots, one for the time series data (above)
-    # and one for the p-values (below). Share x-axis but not y-axis.
-    gs0 = _gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec=subplot_spec, hspace=0.05)
-    ax_top = fig.add_subplot(gs0[0])
-    ax_bottom = fig.add_subplot(gs0[1], sharex=ax_top)
+        # We need to split the gridspec into two subplots, one for the time series data (above)
+        # and one for the p-values (below). Share x-axis but not y-axis.
+        gs0 = _gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec=subplot_spec, hspace=0.05)
+        ax_top = fig.add_subplot(gs0[0])
+        ax_bottom = fig.add_subplot(gs0[1], sharex=ax_top)
 
-    # Plot the time series data on the top axis.
-    plot_timeseries(ax_top, data, data_times)
-    # Add dashed vertical line at the equilibration time.
-    ax_top.axvline(
-        x=sse_times[sse_series.argmin()],
-        color="black",
-        linestyle="--",
-    )
+        # Plot the time series data on the top axis.
+        plot_timeseries(ax_top, data, data_times)
+        # Add dashed vertical line at the equilibration time.
+        ax_top.axvline(
+            x=sse_times[sse_series.argmin()],
+            color="black",
+            linestyle="--",
+        )
 
-    # Plot the sse on the bottom axis.
-    sse_handles, sse_labels = plot_sse(
-        ax_bottom,
-        sse_series,
-        max_lag_series,
-        window_size_series,
-        sse_times,
-        variance_y_label=variance_y_label,
-        reciprocal=reciprocal,
-    )
+        # Plot the sse on the bottom axis.
+        sse_handles, sse_labels = plot_sse(
+            ax_bottom,
+            sse_series,
+            max_lag_series,
+            window_size_series,
+            sse_times,
+            variance_y_label=variance_y_label,
+            reciprocal=reciprocal,
+        )
 
-    # Set the axis labels.
-    ax_top.set_xlabel(f"Time / {time_units}")
-    ax_top.set_ylabel(data_y_label)
+        # Set the axis labels.
+        ax_top.set_xlabel(f"Time / {time_units}")
+        ax_top.set_ylabel(data_y_label)
 
-    # Move the legends to the side of the plot.
-    if n_runs > 1:
-        ax_top.legend(bbox_to_anchor=(1.05, 0.5), loc="center left")
-    is_second_axis = max_lag_series is not None or window_size_series is not None
-    side_shift_bottom = 1.15 if is_second_axis else 1.05
-    # Remove the 1/SSE label if there isn't a second axis.
-    if not is_second_axis:
-        sse_labels.pop(0)
-        sse_handles.pop(0)
-    ax_bottom.legend(
-        sse_handles,
-        sse_labels,
-        bbox_to_anchor=(side_shift_bottom, 0.5),
-        loc="center left",
-    )
+        # Move the legends to the side of the plot.
+        if n_runs > 1:
+            ax_top.legend(bbox_to_anchor=(1.05, 0.5), loc="center left")
+        is_second_axis = max_lag_series is not None or window_size_series is not None
+        side_shift_bottom = 1.15 if is_second_axis else 1.05
+        # Remove the 1/SSE label if there isn't a second axis.
+        if not is_second_axis:
+            sse_labels.pop(0)
+            sse_handles.pop(0)
+        ax_bottom.legend(
+            sse_handles,
+            sse_labels,
+            bbox_to_anchor=(side_shift_bottom, 0.5),
+            loc="center left",
+        )
 
-    # Hide the x tick labels for the top axis.
-    _plt.setp(ax_top.get_xticklabels(), visible=False)
-    ax_top.spines["bottom"].set_visible(False)
-    ax_top.tick_params(axis="x", which="both", length=0)
-    ax_top.set_xlabel("")
+        # Hide the x tick labels for the top axis.
+        _plt.setp(ax_top.get_xticklabels(), visible=False)
+        ax_top.spines["bottom"].set_visible(False)
+        ax_top.tick_params(axis="x", which="both", length=0)
+        ax_top.set_xlabel("")
 
-    return ax_top, ax_bottom
+        return ax_top, ax_bottom
