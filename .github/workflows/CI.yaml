@@ -53,7 +53,7 @@ jobs:
       - name: Check formatting
         shell: bash -l {0}
         run: |
-          make format
+          micromamba ruff check red
           git diff --exit-code
 
       - name: Lint

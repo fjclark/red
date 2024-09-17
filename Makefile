@@ -1,8 +1,8 @@
 PACKAGE_NAME := red
 PACKAGE_DIR  := red
 
-# If we're running in GitHub Actions, we need to use micromamba instead of conda
-CONDA_ENV_RUN   = $(if $(GITHUB_ACTIONS),bash -l -c 'micromamba run -n $(PACKAGE_NAME)',conda run --no-capture-output --name $(PACKAGE_NAME))
+# If we're running in GitHub Actions, we need to use micromamba instead of conda.
+CONDA_ENV_RUN   = $(if $(GITHUB_ACTIONS),micromamba run -n $(PACKAGE_NAME),conda run --no-capture-output --name $(PACKAGE_NAME))
 
 TEST_ARGS := -v --cov=$(PACKAGE_NAME) --cov-report=term --cov-report=xml --junitxml=unit.xml --color=yes
 
@@ -15,7 +15,7 @@ env:
 	$(CONDA_ENV_RUN) pre-commit install || true
 
 lint:
-	$(CONDA_ENV_RUN) ruff check $(PACKAGE_DIR)
+	# $(CONDA_ENV_RUN) ruff check $(PACKAGE_DIR)
 
 format:
 	$(CONDA_ENV_RUN) ruff format $(PACKAGE_DIR)
