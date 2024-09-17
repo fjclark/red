@@ -43,9 +43,7 @@ def test_get_autocovariance(example_timeseries):
     assert len(autocovariance) == 11
 
     # Test with different mean.
-    autocovariance = _get_autocovariance(
-        example_timeseries, mean=50
-    )  # Actual mean 54.9
+    autocovariance = _get_autocovariance(example_timeseries, mean=50)  # Actual mean 54.9
     assert autocovariance[:3] == pytest.approx(
         np.array([342.65922098, 132.30372161, 120.22912133]), abs=0.01
     )
@@ -68,9 +66,7 @@ def test_gamma_cap(example_timeseries):
     assert gamma_cap[:3] == pytest.approx(
         np.array([427.04712998, 193.80629572, 183.46922874]), abs=0.01
     )
-    assert gamma_cap[-3:] == pytest.approx(
-        np.array([0.54119574, 0.04336649, 0.68390851]), abs=0.01
-    )
+    assert gamma_cap[-3:] == pytest.approx(np.array([0.54119574, 0.04336649, 0.68390851]), abs=0.01)
 
     # Check that an analysis error is raised if input sequence too short.
     with pytest.raises(AnalysisError):
@@ -98,7 +94,8 @@ def test_variance_initial_sequence(example_timeseries):
     geyer_res = {
         "initial_positive": 27304.776049686046,
         "initial_monotone": 24216.32288181667,
-        "initial_convex": 21904.973713096544,  # Actual MCMC result is 21898.6178149005, but very close.
+        # Actual MCMC result for initial convex is 21898.6178149005, but very close.
+        "initial_convex": 21904.973713096544,
     }
 
     # Check that the results are correct.
@@ -297,9 +294,7 @@ def test_get_variance_series_window(example_timeseries):
     # Take mean of timeseries.
     example_timeseries = example_timeseries.mean(axis=0)
 
-    var_seq = get_variance_series_window(
-        example_timeseries, window_size=1, window_size_fn=None
-    )[0]
+    var_seq = get_variance_series_window(example_timeseries, window_size=1, window_size_fn=None)[0]
     assert var_seq[0] == pytest.approx(318.6396575172195, abs=0.01)
     assert var_seq[1] == pytest.approx(318.3955761337024, abs=0.01)
     assert var_seq[-1] == pytest.approx(243.41472988044396, abs=0.01)
@@ -371,14 +366,10 @@ def test_get_variance_series_window_raises(example_timeseries):
         )
 
     with pytest.raises(InvalidInputError):
-        get_variance_series_window(
-            example_timeseries, window_size=None, window_size_fn=None
-        )
+        get_variance_series_window(example_timeseries, window_size=None, window_size_fn=None)
 
     with pytest.raises(InvalidInputError):
-        get_variance_series_window(
-            example_timeseries, window_size=None, window_size_fn=4
-        )
+        get_variance_series_window(example_timeseries, window_size=None, window_size_fn=4)
 
     for frac_pad in [-0.1, 1.1]:
         with pytest.raises(InvalidInputError):
@@ -394,9 +385,7 @@ def test_inter_run_variance(gaussian_noise):
     variance = inter_run_variance(gaussian_noise)
 
     # Check that the variance is correct.
-    assert variance == pytest.approx(
-        0.1, abs=0.5
-    )  # Wide tolerance due to high variance.
+    assert variance == pytest.approx(0.1, abs=0.5)  # Wide tolerance due to high variance.
 
     # Check that it raises an invalid input error if the data is one dimensional.
     with pytest.raises(InvalidInputError):

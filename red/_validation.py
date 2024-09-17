@@ -3,11 +3,14 @@
 from warnings import warn as _warn
 
 import numpy as _np
+import numpy.typing as _npt
 
 from ._exceptions import InvalidInputError
 
 
-def check_data(data: _np.ndarray, one_dim_allowed: bool = False) -> _np.ndarray:
+def check_data(
+    data: _npt.NDArray[_np.float64], one_dim_allowed: bool = False
+) -> _npt.NDArray[_np.float64]:
     """
     Assert that data passed is a numpy array where
     the first dimension is the number of chains and
@@ -48,8 +51,10 @@ def check_data(data: _np.ndarray, one_dim_allowed: bool = False) -> _np.ndarray:
         n_chains, n_samples = data.shape
         if n_chains > n_samples:
             _warn(
-                "Data has more chains than samples. This is allowed but may not be what you intended.",
+                "Data has more chains than samples. This is allowed but may not"
+                " be what you intended.",
                 RuntimeWarning,
+                stacklevel=2,
             )
 
     # If the array is one dimensional, reshape it to (1, n_samples).

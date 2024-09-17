@@ -11,11 +11,11 @@ Robust Equilibration Detection
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-A Python package for detecting equilibration in timeseries data where an initial transient is followed by a stationary distribution. Two main methods are implemented, which differ in the way they account for autocorrelation: 
+A Python package for detecting equilibration in timeseries data where an initial transient is followed by a stationary distribution. Two main methods are implemented, which differ in the way they account for autocorrelation:
 
   - `detect_equilibration_init_seq`: This uses the initial sequence methods of Geyer ([Geyer, 1992](https://www.jstor.org/stable/2246094)) to determine the truncation point of the sum of autocovariances.
-  - `detect_equilibration_window`: This uses window methods (see [Geyer](https://www.jstor.org/stable/2246094) again) when calculating the 
-autocorrelation. 
+  - `detect_equilibration_window`: This uses window methods (see [Geyer](https://www.jstor.org/stable/2246094) again) when calculating the
+autocorrelation.
 
 For both, the equilibration point can be determined either according to the minimum of the squared standard error (the default), or the maximum effective sample size, by specifying `method="min_sse"` or `method="max_ess"`.
 
@@ -40,7 +40,7 @@ my_timeseries = ...
 # Detect equilibration based on the minimum squared standard error
 # using Geyer's initial convex sequence method to account for
 # autocorrelation. idx is the index of the first sample after
-# equilibration, g is the statistical inefficiency of the equilibrated 
+# equilibration, g is the statistical inefficiency of the equilibrated
 # sample, and ess is the effective sample size of the equilibrated sample.
 idx, g, ess = red.detect_equilibration_init_seq(my_timeseries, method="min_sse", plot=True)
 
@@ -58,6 +58,6 @@ Copyright (c) 2023, Finlay Clark
 
 
 #### Acknowledgements
- 
-Project based on the 
+
+Project based on the
 [Computational Molecular Science Python Cookiecutter](https://github.com/molssi/cookiecutter-cms) version 1.1.

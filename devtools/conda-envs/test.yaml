@@ -1,0 +1,25 @@
+name: red
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+    # Base depends
+  - python
+  - pip
+  - numpy
+  - numba
+  - scipy
+  - matplotlib
+  - statsmodels
+
+    # Testing / Development
+  - pytest
+  - pytest-cov
+  - pytest-env
+  - codecov
+  - ruff
+  - pre-commit
+  - mypy
+  - types-PyYAML

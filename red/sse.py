@@ -5,19 +5,20 @@ from typing import Optional as _Optional
 from typing import Tuple as _Tuple
 
 import numpy as _np
+import numpy.typing as _npt
 
 from ._validation import check_data
 from .variance import get_variance_series_initial_sequence, get_variance_series_window
 
 
 def get_sse_series_init_seq(
-    data: _np.ndarray,
+    data: _npt.NDArray[_np.float64],
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
     max_max_lag_time: _Optional[int] = None,
     smooth_lag_times: bool = False,
     frac_padding: float = 0.1,
-) -> _Tuple[_np.ndarray, _np.ndarray]:
+) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """
     Compute a series of squared standard errors for a time series as data
     is discarded from the beginning of the time series. The squared standard
@@ -84,12 +85,12 @@ def get_sse_series_init_seq(
 
 
 def get_sse_series_window(
-    data: _np.ndarray,
-    kernel: _Callable[[int], _np.ndarray] = _np.bartlett,  # type: ignore
+    data: _npt.NDArray[_np.float64],
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
     window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
     window_size: _Optional[int] = None,
     frac_padding: float = 0.1,
-) -> _Tuple[_np.ndarray, _np.ndarray]:
+) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """
     Compute a series of squared standard errors for a time series as data
     is discarded from the beginning of the time series. The squared standard

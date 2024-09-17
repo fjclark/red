@@ -5,6 +5,7 @@ from typing import Optional as _Optional
 from typing import Tuple as _Tuple
 
 import numpy as _np
+import numpy.typing as _npt
 
 from ._validation import check_data
 from .sse import get_sse_series_init_seq as _get_sse_series_init_seq
@@ -13,8 +14,8 @@ from .variance import inter_run_variance, intra_run_variance, lugsail_variance
 
 
 def convert_sse_series_to_ess_series(
-    data: _np.ndarray, sse_series: _np.ndarray
-) -> _np.ndarray:
+    data: _npt.NDArray[_np.float64], sse_series: _npt.NDArray[_np.float64]
+) -> _npt.NDArray[_np.float64]:
     """
     Convert a series of squared standard errors to a series of effective sample sizes.
 
@@ -45,13 +46,13 @@ def convert_sse_series_to_ess_series(
 
 
 def get_ess_series_init_seq(
-    data: _np.ndarray,
+    data: _npt.NDArray[_np.float64],
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
     max_max_lag_time: _Optional[int] = None,
     smooth_lag_times: bool = False,
     frac_padding: float = 0.1,
-) -> _Tuple[_np.ndarray, _np.ndarray]:
+) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """
     Compute a series of effective sample sizes for a time series as data
     is discarded from the beginning of the time series. The autocorrelation
@@ -110,11 +111,11 @@ def get_ess_series_init_seq(
 
 
 def get_ess_series_window(
-    data: _np.ndarray,
-    kernel: _Callable[[int], _np.ndarray] = _np.bartlett,  # type: ignore
+    data: _npt.NDArray[_np.float64],
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
     window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
     window_size: _Optional[int] = None,
-) -> _Tuple[_np.ndarray, _np.ndarray]:
+) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """
     Compute a series of effective sample sizes for a time series as data
     is discarded from the beginning of the time series. The squared standard
@@ -153,7 +154,7 @@ def get_ess_series_window(
     return ess_series, max_lag_times
 
 
-def statistical_inefficiency_inter_variance(data: _np.ndarray) -> float:
+def statistical_inefficiency_inter_variance(data: _npt.NDArray[_np.float64]) -> float:
     """
     Compute the statistical inefficiency of a time series by dividing
     the inter-run variance estimate by the intra-run variance estimate.
@@ -177,7 +178,7 @@ def statistical_inefficiency_inter_variance(data: _np.ndarray) -> float:
 
 
 def statistical_inefficiency_lugsail_variance(
-    data: _np.ndarray, n_pow: float = 1 / 3
+    data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3
 ) -> float:
     """
     Compute the statistical inefficiency of a time series by dividing
@@ -205,7 +206,7 @@ def statistical_inefficiency_lugsail_variance(
     return max(g, 1)
 
 
-def ess_inter_variance(data: _np.ndarray) -> float:
+def ess_inter_variance(data: _npt.NDArray[_np.float64]) -> float:
     """
     Compute the effective sample size of a time series by dividing
     the total number of samples by the statistical inefficiency, where
@@ -230,7 +231,7 @@ def ess_inter_variance(data: _np.ndarray) -> float:
     return total_samples / statistical_inefficiency_inter_variance(data)
 
 
-def ess_lugsail_variance(data: _np.ndarray, n_pow: float = 1 / 3) -> float:
+def ess_lugsail_variance(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) -> float:
     """
     Compute the effective sample size of a time series by dividing
     the total number of samples by the statistical inefficiency, where

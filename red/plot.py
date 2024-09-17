@@ -1,27 +1,28 @@
 """Plotting functions."""
 
+from typing import Any as _Any
 from typing import List as _List
-
-import matplotlib.pyplot as _plt
-from matplotlib import figure as _figure
-from matplotlib import gridspec as _gridspec
-from matplotlib.axes import Axes as _Axes
-
-_plt.style.use("ggplot")
 from typing import Optional as _Optional
 from typing import Tuple as _Tuple
 
+import matplotlib.pyplot as _plt
 import numpy as _np
-from matplotlib.lines import Line2D as _Line2D
+import numpy.typing as _npt
+from matplotlib import figure as _figure
+from matplotlib import gridspec as _gridspec
+from matplotlib.artist import Artist as _Artist
+from matplotlib.axes import Axes as _Axes
 
 from ._exceptions import InvalidInputError
 from ._validation import check_data
 
+_plt.style.use("ggplot")
+
 
 def plot_timeseries(
     ax: _Axes,
-    data: _np.ndarray,
-    times: _np.ndarray,
+    data: _npt.NDArray[_np.float64],
+    times: _npt.NDArray[_np.float64],
     n_blocks: int = 100,
     time_units: str = "ns",
     y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
@@ -66,13 +67,12 @@ def plot_timeseries(
         raise InvalidInputError("Times must be one dimensional.")
 
     if times.shape[0] != n_samples:
-        raise InvalidInputError(
-            "Times must have the same length as the number of samples."
-        )
+        raise InvalidInputError("Times must have the same length as the number of samples.")
 
     if n_blocks < 0 or n_blocks > n_samples:
         raise InvalidInputError(
-            "n_blocks must be greater than or equal to 0 and less than or equal to the number of samples."
+            "n_blocks must be greater than or equal to 0 and less than or equal to"
+            " the number of samples."
         )
 
     if n_blocks == 0:
@@ -115,11 +115,11 @@ def plot_timeseries(
 
 def plot_p_values(
     ax: _Axes,
-    p_values: _np.ndarray,
-    times: _np.ndarray,
+    p_values: _npt.NDArray[_np.float64],
+    times: _npt.NDArray[_np.float64],
     p_threshold: float = 0.05,
     time_units: str = "ns",
-    threshold_times: _Optional[_np.ndarray] = None,
+    threshold_times: _Optional[_npt.NDArray[_np.float64]] = None,
 ) -> None:
     """
     Plot the p-values of the paired t-test.
@@ -154,9 +154,7 @@ def plot_p_values(
         raise InvalidInputError("p_values must be one dimensional.")
 
     if p_values.shape[0] != times.shape[0]:
-        raise InvalidInputError(
-            "p_values must have the same length as the number of samples."
-        )
+        raise InvalidInputError("p_values must have the same length as the number of samples.")
 
     if threshold_times is None:
         threshold_times = times
@@ -202,14 +200,14 @@ def plot_p_values(
 
 def plot_sse(
     ax: _Axes,
-    sse: _np.ndarray,
-    max_lags: _Optional[_np.ndarray],
-    window_sizes: _Optional[_np.ndarray],
-    times: _np.ndarray,
+    sse: _npt.NDArray[_np.float64],
+    max_lags: _Optional[_npt.NDArray[_np.float64]],
+    window_sizes: _Optional[_npt.NDArray[_np.float64]],
+    times: _npt.NDArray[_np.float64],
     time_units: str = "ns",
     variance_y_label: str = r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
     reciprocal: bool = True,
-) -> _Tuple[_List[_Line2D], _List[str]]:
+) -> _Tuple[_List[_Artist], _List[_Any]]:
     r"""
     Plot the squared standard error (SSE) estimate against time.
 
@@ -256,14 +254,10 @@ def plot_sse(
         raise InvalidInputError("sse must be one dimensional.")
 
     if sse.shape[0] != times.shape[0]:
-        raise InvalidInputError(
-            "sse must have the same length as the number of samples."
-        )
+        raise InvalidInputError("sse must have the same length as the number of samples.")
 
     if max_lags is not None and window_sizes is not None:
-        raise InvalidInputError(
-            "Only one of max_lags and window_sizes can be supplied."
-        )
+        raise InvalidInputError("Only one of max_lags and window_sizes can be supplied.")
 
     # Plot the SSE.
     to_plot = 1 / sse if reciprocal else sse
@@ -272,12 +266,10 @@ def plot_sse(
     # If lags is not None, plot the lag times on a different y axis.
     if max_lags is not None or window_sizes is not None:
         label = "Max Lag Index" if window_sizes is None else "Window Size"
-        to_plot = max_lags if window_sizes is None else window_sizes
+        to_plot = max_lags if window_sizes is None else window_sizes  # type: ignore
         ax2 = ax.twinx()
         # Get the second colour from the colour cycle.
-        ax2.set_prop_cycle(
-            color=[_plt.rcParams["axes.prop_cycle"].by_key()["color"][1]]
-        )
+        ax2.set_prop_cycle(color=[_plt.rcParams["axes.prop_cycle"].by_key()["color"][1]])
         ax2.plot(times, to_plot, alpha=0.8, label=label)
         ax2.set_ylabel(label)
 
@@ -308,10 +300,10 @@ def plot_sse(
 def plot_equilibration_paired_t_test(
     fig: _figure.Figure,
     subplot_spec: _gridspec.SubplotSpec,
-    data: _np.ndarray,
-    p_values: _np.ndarray,
-    data_times: _np.ndarray,
-    p_times: _np.ndarray,
+    data: _npt.NDArray[_np.float64],
+    p_values: _npt.NDArray[_np.float64],
+    data_times: _npt.NDArray[_np.float64],
+    p_times: _npt.NDArray[_np.float64],
     p_threshold: float = 0.05,
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
@@ -362,9 +354,7 @@ def plot_equilibration_paired_t_test(
     """
     # We need to split the gridspec into two subplots, one for the time series data (above)
     # and one for the p-values (below). Share x-axis but not y-axis.
-    gs0 = _gridspec.GridSpecFromSubplotSpec(
-        2, 1, subplot_spec=subplot_spec, hspace=0.05
-    )
+    gs0 = _gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec=subplot_spec, hspace=0.05)
     ax_top = fig.add_subplot(gs0[0])
     ax_bottom = fig.add_subplot(gs0[1], sharex=ax_top)
 
@@ -406,15 +396,15 @@ def plot_equilibration_paired_t_test(
 def plot_equilibration_min_sse(
     fig: _figure.Figure,
     subplot_spec: _gridspec.SubplotSpec,
-    data: _np.ndarray,
-    sse_series: _np.ndarray,
-    data_times: _np.ndarray,
-    sse_times: _np.ndarray,
-    max_lag_series: _Optional[_np.ndarray] = None,
-    window_size_series: _Optional[_np.ndarray] = None,
+    data: _npt.NDArray[_np.float64],
+    sse_series: _npt.NDArray[_np.float64],
+    data_times: _npt.NDArray[_np.float64],
+    sse_times: _npt.NDArray[_np.float64],
+    max_lag_series: _Optional[_npt.NDArray[_np.float64]] = None,
+    window_size_series: _Optional[_npt.NDArray[_np.float64]] = None,
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
-    variance_y_label=r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
+    variance_y_label: str = r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
     reciprocal: bool = True,
 ) -> _Tuple[_Axes, _Axes]:
     r"""
@@ -480,9 +470,7 @@ def plot_equilibration_min_sse(
 
     # We need to split the gridspec into two subplots, one for the time series data (above)
     # and one for the p-values (below). Share x-axis but not y-axis.
-    gs0 = _gridspec.GridSpecFromSubplotSpec(
-        2, 1, subplot_spec=subplot_spec, hspace=0.05
-    )
+    gs0 = _gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec=subplot_spec, hspace=0.05)
     ax_top = fig.add_subplot(gs0[0])
     ax_bottom = fig.add_subplot(gs0[1], sharex=ax_top)
 

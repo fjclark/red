@@ -1,4 +1,4 @@
 Getting Started
 ===============
 
-This page details how to get started with red. 
+This page details how to get started with red.

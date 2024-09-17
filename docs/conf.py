@@ -18,7 +18,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(".."))
 
-import red
+import red  # noqa: F401
 
 # -- Project information -----------------------------------------------------
 
@@ -124,7 +124,7 @@ htmlhelp_basename = "reddoc"
 
 # -- Options for LaTeX output ------------------------------------------------
 
-latex_elements = {
+latex_elements = { # type: ignore[var-annotated]
     # The paper size ('letterpaper' or 'a4paper').
     #
     # 'papersize': 'letterpaper',

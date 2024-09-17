@@ -8,6 +8,7 @@ from typing import Union as _Union
 
 import matplotlib.pyplot as _plt
 import numpy as _np
+import numpy.typing as _npt
 from matplotlib import gridspec as _gridspec
 from scipy.stats import ttest_rel as _ttest_rel
 
@@ -19,8 +20,8 @@ from .sse import get_sse_series_init_seq, get_sse_series_window
 
 
 def detect_equilibration_init_seq(
-    data: _np.ndarray,
-    times: _Optional[_np.ndarray] = None,
+    data: _npt.NDArray[_np.float64],
+    times: _Optional[_npt.NDArray[_np.float64]] = None,
     method: str = "min_sse",
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
@@ -116,15 +117,13 @@ def detect_equilibration_init_seq(
     valid_methods = ["min_sse", "max_ess"]
     method = method.lower()
     if method not in valid_methods:
-        raise InvalidInputError(
-            f"method must be one of {valid_methods}, but got {method}."
-        )
+        raise InvalidInputError(f"method must be one of {valid_methods}, but got {method}.")
 
     # If times is None, units of time are indices.
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times_valid: _np.ndarray = _np.arange(n_samples)
+        times_valid: _npt.NDArray[_np.float64] = _np.arange(n_samples, dtype=_np.float64)
     else:
         # To satisfy type checking.
         times_valid = times
@@ -187,10 +186,10 @@ def detect_equilibration_init_seq(
 
 
 def detect_equilibration_window(
-    data: _np.ndarray,
-    times: _Optional[_np.ndarray] = None,
+    data: _npt.NDArray[_np.float64],
+    times: _Optional[_npt.NDArray[_np.float64]] = None,
     method: str = "min_sse",
-    kernel: _Callable[[int], _np.ndarray] = _np.bartlett,  # type: ignore
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
     window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
     window_size: _Optional[int] = None,
     frac_padding: float = 0.1,
@@ -277,7 +276,7 @@ def detect_equilibration_window(
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times_valid: _np.ndarray = _np.arange(n_samples)
+        times_valid: _npt.NDArray[_np.float64] = _np.arange(n_samples, dtype=_np.float64)
     else:
         # To satisfy type checking.
         times_valid = times
@@ -339,14 +338,14 @@ def detect_equilibration_window(
 
 
 def get_paired_t_p_timeseries(
-    data: _np.ndarray,
-    times: _Optional[_np.ndarray] = None,
+    data: _npt.NDArray[_np.float64],
+    times: _Optional[_npt.NDArray[_np.float64]] = None,
     fractional_block_size: float = 0.125,
     fractional_test_end: float = 0.5,
     initial_block_size: float = 0.1,
     final_block_size: float = 0.5,
     t_test_sidedness: str = "two-sided",
-) -> _Tuple[_np.ndarray, _np.ndarray]:
+) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """
     Get a timeseries of the p-values from a paired t-test on the differences
     between sample means between intial and final portions of the data. The timeseries
@@ -396,13 +395,11 @@ def get_paired_t_p_timeseries(
 
     # Convert times to indices if necessary.
     if times is None:
-        times = _np.arange(n_samples)
+        times = _np.arange(n_samples, dtype=_np.float64)
 
     # Check that times is match the number of samples.
     if n_samples != len(times):
-        raise InvalidInputError(
-            "Times must have the same length as the number of samples."
-        )
+        raise InvalidInputError("Times must have the same length as the number of samples.")
 
     # Check that user inputs are valid.
     if fractional_block_size <= 0 or fractional_block_size > 1:
@@ -418,9 +415,7 @@ def get_paired_t_p_timeseries(
 
     # Check that fractional test end is a multiple of fractional block size.
     if round((fractional_test_end / fractional_block_size) % 1.0, 3) != 0:
-        raise InvalidInputError(
-            "fractional_test_end must be a multiple of fractional_block_size."
-        )
+        raise InvalidInputError("fractional_test_end must be a multiple of fractional_block_size.")
 
     if initial_block_size <= 0 or initial_block_size > 1:
         raise InvalidInputError("initial_block_size must be between 0 and 1.")
@@ -435,9 +430,7 @@ def get_paired_t_p_timeseries(
         )
 
     # Calculate the number of repeats.
-    n_repeats = (
-        round(fractional_test_end / fractional_block_size) + 1
-    )  # + 1 for the initial block
+    n_repeats = round(fractional_test_end / fractional_block_size) + 1  # + 1 for the initial block
 
     # Calculate the number of samples to discard between repeats.
     n_discard = round(n_samples * fractional_block_size)
@@ -455,16 +448,14 @@ def get_paired_t_p_timeseries(
         # Get the number of samples in the truncated data.
         n_truncated_samples = truncated_data.shape[1]
         # Get the initial and final blocks.
-        initial_block = truncated_data[
-            :, : round(n_truncated_samples * initial_block_size)
-        ].mean(axis=1)
-        final_block = truncated_data[
-            :, -round(n_truncated_samples * final_block_size) :
-        ].mean(axis=1)
+        initial_block = truncated_data[:, : round(n_truncated_samples * initial_block_size)].mean(
+            axis=1
+        )
+        final_block = truncated_data[:, -round(n_truncated_samples * final_block_size) :].mean(
+            axis=1
+        )
         # Compute the paired t-test.
-        p_vals[i] = _ttest_rel(
-            initial_block, final_block, alternative=t_test_sidedness
-        )[1]
+        p_vals[i] = _ttest_rel(initial_block, final_block, alternative=t_test_sidedness)[1]
         p_val_indices[i] = idx
         time_vals[i] = times[idx]
 
@@ -472,8 +463,8 @@ def get_paired_t_p_timeseries(
 
 
 def detect_equilibration_paired_t_test(
-    data: _np.ndarray,
-    times: _Optional[_np.ndarray] = None,
+    data: _npt.NDArray[_np.float64],
+    times: _Optional[_npt.NDArray[_np.float64]] = None,
     p_threshold: float = 0.05,
     fractional_block_size: float = 0.125,
     fractional_test_end: float = 0.5,
@@ -552,7 +543,7 @@ def detect_equilibration_paired_t_test(
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times = _np.arange(n_samples)
+        times = _np.arange(n_samples, dtype=_np.float64)
 
     # Check that user options (not checked in get_paired_t_p_timeseries) are valid.
     if p_threshold <= 0 or p_threshold > 0.7:
@@ -595,4 +586,4 @@ def detect_equilibration_paired_t_test(
 
         fig.savefig(str(plot_name), dpi=300, bbox_inches="tight")
 
-    return equil_time
+    return equil_time  # type: ignore[no-any-return]

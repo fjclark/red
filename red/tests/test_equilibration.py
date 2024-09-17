@@ -25,9 +25,7 @@ def test_detect_equilibration_init_seq(example_timeseries, example_times, tmpdir
     example_timeseries = example_timeseries.mean(axis=0)
 
     # Compute the equilibration index.
-    equil_idx, equil_g, equil_ess = detect_equilibration_init_seq(
-        data=example_timeseries
-    )
+    equil_idx, equil_g, equil_ess = detect_equilibration_init_seq(data=example_timeseries)
 
     # Check that the equilibration index is correct.
     assert equil_idx == 398
