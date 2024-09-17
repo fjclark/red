@@ -45,14 +45,31 @@ jobs:
         # conda setup requires this special shell
         shell: bash -l {0}
         run: |
+          apt update && apt install -y git make
           python -m pip install . --no-deps
           micromamba list
+
+      - name: Check formatting
+        shell: bash -l {0}
+        run: |
+          make format
+          git diff --exit-code
+
+      - name: Lint
+        shell: bash -l {0}
+        run: |
+          make lint
+
+      - name: Type check
+        shell: bash -l {0}
+        run: |
+          make type-check
 
       - name: Run tests
         # conda setup requires this special shell
         shell: bash -l {0}
         run: |
-          pytest -v --cov=red --cov-report=xml --color=yes red/tests/
+          make test
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
