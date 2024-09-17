@@ -1,16 +1,33 @@
 
+<div style="text-align: center;">
+  <img src="https://github.com/fjclark/red/assets/90148170/5b0cf397-f902-4a43-9323-6414aa408d1a" width="400">
+</div>
 
-<img src="https://github.com/fjclark/red/assets/90148170/5b0cf397-f902-4a43-9323-6414aa408d1a" width="400">
+<h3 align="center">Robust Equilibration Detection</h3>
 
-Robust Equilibration Detection
-==============================
-[//]: # (Badges)
-[![GitHub Actions Build Status](https://github.com/fjclark/red/workflows/CI/badge.svg)](https://github.com/fjclark/red/actions?query=workflow%3ACI)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/fff40e5573f847399bee98eef495f8c6)](https://app.codacy.com/gh/fjclark/red/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![codecov](https://codecov.io/gh/fjclark/red/branch/main/graph/badge.svg)](https://codecov.io/gh/fjclark/red/branch/main)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
+<p align="center">
+  <a href="https://github.com/fjclark/red/actions?query=workflow%3ACI">
+    <img alt="ci" src="https://github.com/fjclark/red/workflows/CI/badge.svg" />
+  </a>
+  <a href="https://app.codacy.com/gh/fjclark/red/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
+    <img alt="Codacy Badge" src="https://app.codacy.com/project/badge/Grade/fff40e5573f847399bee98eef495f8c6" />
+  </a>
+  <a href="https://codecov.io/gh/fjclark/red/branch/main">
+    <img alt="codecov" src="https://codecov.io/gh/fjclark/red/branch/main/graph/badge.svg" />
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img alt="license" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+  </a>
+  <a href="https://github.com/astral-sh/ruff">
+    <img alt="Ruff" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" />
+  </a>
+  <a href="https://mypy-lang.org/">
+    <img alt="Checked with mypy" src="https://www.mypy-lang.org/static/mypy_badge.svg" />
+  </a>
+</p>
+
+---
+
 
 A Python package for detecting equilibration in timeseries data where an initial transient is followed by a stationary distribution. Two main methods are implemented, which differ in the way they account for autocorrelation:
 
