@@ -262,7 +262,10 @@ def plot_sse(
     with _plt.style.context(PLT_STYLE):
         # Plot the SSE.
         to_plot = 1 / sse if reciprocal else sse
-        ax.plot(times, to_plot, color="black", label="1/SSE")
+        label = "1/SSE" if reciprocal else "SSE"
+        if "ess" in variance_y_label.lower():
+            label = "ESS" if reciprocal else "1/ESS"
+        ax.plot(times, to_plot, color="black", label=label)
 
         # If lags is not None, plot the lag times on a different y axis.
         if max_lags is not None or window_sizes is not None:
@@ -272,7 +275,13 @@ def plot_sse(
             # Get the second colour from the colour cycle.
             ax2.set_prop_cycle(color=[_plt.rcParams["axes.prop_cycle"].by_key()["color"][1]])
             ax2.plot(times, to_plot, alpha=0.8, label=label)
-            ax2.set_ylabel(label)
+            # Remove the horizontal lines.
+            ax2.yaxis.grid(False)
+
+            # Set the grid ticks and label colour to match the line colour.
+            lag_colour = ax2.get_lines()[0].get_color()
+            ax2.tick_params(axis="y", labelcolor=lag_colour)
+            ax2.set_ylabel(label, color=lag_colour)
 
         # Plot a vertical dashed line at the minimum SSE.
         ax.axvline(
