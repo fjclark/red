@@ -15,7 +15,7 @@
 
 This package provides a range of methods for selecting the truncation point of a time series, where the aim is to remove an initial "unequilibrated" portion of the data. Functionality is also provided for estimating the variance of the mean of a time series, which is useful for uncertainty estimation. For details, please see the [theory](theory.md) page.
 
-For all examples, `my_timeseries` should be a numpy array with shape `(n_samples,)`, or `(n_samples, n_repeats)` if you have multiple repeats of the same simulation.
+For all examples, `my_timeseries` should be a numpy array with shape `(n_samples)`, or `(n_repeats, n_samples)` if you have multiple repeats of the same simulation.
 
 ???+ Warning
     These methods only been thoroughtly tested on-single run data. Using multi-run data is likely to be more robust, but we have not verified this.
