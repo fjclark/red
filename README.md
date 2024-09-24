@@ -29,7 +29,7 @@
 ---
 
 
-A Python package for detecting equilibration in timeseries data where an initial transient is followed by a stationary distribution. Two main approaches are implemented, which differ in the way they account for autocorrelation:
+A Python package for detecting equilibration in time series where an initial transient is followed by a stationary distribution. Two main approaches are implemented, which differ in the way they account for autocorrelation:
 
   - `detect_equilibration_init_seq`: This uses the initial sequence methods of Geyer ([Geyer, 1992](https://www.jstor.org/stable/2246094)) to determine the truncation point of the sum of autocovariances. Chodera's method ([Chodera, 2016](https://pubs.acs.org/doi/full/10.1021/acs.jctc.5b00784)) of simply truncating the autocovariance series at the first negative value is also implemented.
   - `detect_equilibration_window`: This uses window methods (see [Geyer](https://www.jstor.org/stable/2246094) again) when calculating the
