@@ -1,7 +1,7 @@
-"""Detection of Equilibration by Ensemble Analysis"""
+"""Robust Equilibration Detection"""
 
-# Add imports here
 from ._version import __version__
+from .confidence_intervals import get_conf_int_initial_sequence
 from .equilibration import (
     detect_equilibration_init_seq,
     detect_equilibration_paired_t_test,
