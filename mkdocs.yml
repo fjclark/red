@@ -43,13 +43,6 @@ theme:
   - search.suggest
   - toc.follow
   palette:
-  - media: "(prefers-color-scheme: dark)"
-    scheme: slate
-    primary: red
-    accent: purple
-    toggle:
-      icon: material/weather-night
-      name: Switch to light mode
   - media: "(prefers-color-scheme: light)"
     scheme: default
     primary: red
@@ -57,6 +50,13 @@ theme:
     toggle:
       icon: material/weather-sunny
       name: Switch to dark mode
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: red
+    accent: purple
+    toggle:
+      icon: material/weather-night
+      name: Switch to light mode
 
 markdown_extensions:
 - attr_list
