@@ -7,10 +7,9 @@
     my_truncated_timeseries = my_timeseries[idx:]
     ```
 
-    For **uncertainty_estimation**, we recommend using Geyer's initial convex sequence method ([Geyer, 1992](https://www.jstor.org/stable/2246094)), which is the default for [`get_variance_initial_sequence`][red.variance.get_variance_initial_sequence]:
+    For **uncertainty_estimation**, we recommend using Geyer's initial convex sequence method ([Geyer, 1992](https://www.jstor.org/stable/2246094)), which is the default for [`get_conf_int_init_seq`][red.variance.get_conf_int_init_seq]:
     ```python
-    var, max_lag, acovf = red.get_variance_initial_sequence(my_timeseries)
-    std_err = np.sqrt(var)
+    ci_95 = red.get_conf_int_init_seq(my_timeseries, alpha_two_tailed=0.05)
     ```
 
 This package provides a range of methods for selecting the truncation point of a time series, where the aim is to remove an initial "unequilibrated" portion of the data. Functionality is also provided for estimating the variance of the mean of a time series, which is useful for uncertainty estimation. For details, please see the [theory](theory.md) page.
