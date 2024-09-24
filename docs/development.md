@@ -22,3 +22,14 @@ To serve the documentation locally:
 ```shell
 mkdocs serve
 ```
+
+## Publishing
+
+### PyPI
+
+```shell
+pip install build twine
+python -m build
+twine check dist/*
+twine upload dist/*
+```
