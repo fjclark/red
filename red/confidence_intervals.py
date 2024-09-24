@@ -1,6 +1,7 @@
 """Convenience function for computing 95 % confidence intervals."""
 
 from typing import Optional as _Optional
+from warnings import warn as _warn
 
 import numpy as _np
 import numpy.typing as _npt
@@ -11,7 +12,7 @@ from .variance import get_variance_initial_sequence as _get_variance_initial_seq
 
 def get_conf_int_initial_sequence(
     data: _npt.NDArray[_np.float64],
-    conf_level_two_sided: float = 0.95,
+    alpha_two_tailed: float = 0.05,
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
     max_max_lag_time: _Optional[int] = None,
@@ -26,8 +27,8 @@ def get_conf_int_initial_sequence(
     data : numpy.ndarray
         A time series of data with shape (n_samples,).
 
-    conf_level_two_sided : float, optional
-        The two-sided confidence level. The default is 0.95.
+    alpha_two_tailed : float, optional
+        The two-tailed significance level to use. The default is 0.05.
 
     sequence_estimator : str, optional
         The initial sequence estimator to use. Can be "positive", "initial_positive",
@@ -63,8 +64,17 @@ def get_conf_int_initial_sequence(
     g = var_cor / acovf[0]
     ess = data.size / g
 
+    # Raise a warning for low effective sample size.
+    if ess < 50:  # Arbitrary, but matches pymbar timeseries
+        _warn(
+            f"Effective sample size is low: {ess}. Confidence intervals may be unreliable.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+
     # Get the 95 % confidence interval.
-    t_val = _t.ppf(1 - (1 - conf_level_two_sided) / 2, ess - 1)
+    t_val = _t.ppf(1 - alpha_two_tailed / 2, ess - 1)
+
     ci = t_val * sem
 
     return ci  # type: ignore[no-any-return]
