@@ -29,9 +29,8 @@ mkdocs serve
 
 ### PyPI
 
+There is a GitHub Actions workflow that will automatically publish to PyPI when a new tag is pushed:
 ```shell
-pip install build twine
-python -m build
-twine check dist/*
-twine upload dist/*
+git tag <new version>
+git push origin <new version>
 ```
