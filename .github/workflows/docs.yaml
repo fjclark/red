@@ -41,7 +41,7 @@ jobs:
 
         git fetch --all --prune
 
-        mamba create --file devtools/conda-envs/test.yaml
+        mamba env create --file devtools/conda-envs/test.yaml
         mamba activate red
         pip install --no-deps -e .
         pre-commit install || true
