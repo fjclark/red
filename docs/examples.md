@@ -7,7 +7,7 @@
     my_truncated_timeseries = my_timeseries[idx:]
     ```
 
-    For **uncertainty_estimation**, we recommend using Geyer's initial convex sequence method ([Geyer, 1992](https://www.jstor.org/stable/2246094)), which is the default for [`get_conf_int_init_seq`][red.variance.get_conf_int_init_seq]:
+    For **uncertainty_estimation**, we recommend using Geyer's initial convex sequence method ([Geyer, 1992](https://www.jstor.org/stable/2246094)), which is the default for [`get_conf_int_init_seq`][red.confidence_intervals.get_conf_int_init_seq]:
     ```python
     ci_95 = red.get_conf_int_init_seq(my_timeseries, alpha_two_tailed=0.05)
     ```
