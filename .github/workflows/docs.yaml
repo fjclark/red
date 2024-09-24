@@ -12,35 +12,46 @@ jobs:
     container: condaforge/mambaforge:latest
 
     steps:
-    - name: Prepare container
-      run: |
-        apt update && apt install -y git make
+      - uses: actions/checkout@v4
 
-    - name: Checkout
-      uses: actions/checkout@v4
+      - uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: devtools/conda-envs/test.yaml
+          environment-name: red
+          create-args: >- # beware the >- instead of |, we don't split on newlines but on spaces
+            python=3.12
 
-    - name: Determine Version
-      shell: bash
-      run: |
-        if [ "$GITHUB_REF" = "refs/heads/main" ]; then
-          echo "VERSION=latest" >> $GITHUB_ENV
-        elif [ "${GITHUB_REF#refs/tags/}" != "$GITHUB_REF" ]; then
-          VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
-          echo "VERSION=$VERSION stable" >> $GITHUB_ENV
-        else
-          echo "Invalid ref: $GITHUB_REF"
-          exit 1
-        fi
+      - name: Install package
+        # conda setup requires this special shell
+        shell: bash -l {0}
+        run: |
+          micromamba install -y -n red -c conda-forge -c defaults git make
+          apt update && apt install -y git make
+          python -m pip install . --no-deps
+          micromamba list
 
-    - name: Build and Deploy Documentation
-      run: |
-        git config --global user.name 'GitHub Actions'
-        git config --global user.email 'actions@github.com'
-        git config --global --add safe.directory "$PWD"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+      - name: Determine Version
+        shell: bash
+        run: |
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            echo "VERSION=latest" >> $GITHUB_ENV
+          elif [ "${GITHUB_REF#refs/tags/}" != "$GITHUB_REF" ]; then
+            VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
+            echo "VERSION=$VERSION stable" >> $GITHUB_ENV
+          else
+            echo "Invalid ref: $GITHUB_REF"
+            exit 1
+          fi
 
-        git fetch --all --prune
+      - name: Build and Deploy Documentation
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git config --global --add safe.directory "$PWD"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
-        make env
+          git fetch --all --prune
 
-        make docs-deploy VERSION="$VERSION"
+          make env
+
+          make docs-deploy VERSION="$VERSION"
