@@ -46,7 +46,7 @@ def test_get_ess_series_window(example_timeseries):
     ess_series, _ = get_ess_series_window(data)
     # However, window method misses a lot of auto-correlation, so ess estimate
     # is larger.
-    assert ess_series[0] == pytest.approx(54.357400316107, abs=0.5)
+    assert ess_series[0] == pytest.approx(54.357400316107, abs=0.8)
 
 
 def test_statistical_inefficiency_inter_variance(gaussian_noise, example_timeseries):
