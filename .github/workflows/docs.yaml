@@ -41,7 +41,7 @@ jobs:
 
         git fetch --all --prune
 
-        export SKIP_CONDA_ENV_RUN=1
+        export KEEP_CONDA_ENV_RUN=1
         make env
 
         make docs-deploy VERSION="$VERSION"
