@@ -17,7 +17,7 @@ jobs:
         apt update && apt install -y git make
 
     - name: Checkout
-      uses: actions/checkout@v3.3.0
+      uses: actions/checkout@v4
 
     - name: Determine Version
       shell: bash
