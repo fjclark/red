@@ -43,6 +43,16 @@ test = [
   "ruff",
   "pre-commit",
   "types-PyYAML",
+  "mkdocs",
+  "mkdocs-material",
+  "mkdocs-gen-files",
+  "mkdocs-literate-nav",
+  "mkdocs-jupyter",
+  "mkdocstrings",
+  "mkdocstrings-python",
+  "black",
+  "mike",
+  "mkdocs-bibtex",
 ]
 
 
@@ -52,6 +62,7 @@ follow_imports = "silent"
 ignore_missing_imports = true
 strict = true
 disable_error_code = "unused-ignore"
+plugins = "numpy.typing.mypy_plugin"
 
 [tool.ruff]
 line-length = 100

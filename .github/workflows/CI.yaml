@@ -51,6 +51,7 @@ jobs:
           micromamba list
 
       - name: Lint
+        # conda setup requires this special shell
         shell: bash -l {0}
         run: |
           make lint
@@ -61,10 +62,14 @@ jobs:
           make type-check
 
       - name: Run tests
-        # conda setup requires this special shell
         shell: bash -l {0}
         run: |
           make test
+
+      - name: Build Docs
+        shell: bash -l {0}
+        run: |
+          make docs-build
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

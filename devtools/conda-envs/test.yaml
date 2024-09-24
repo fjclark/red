@@ -5,7 +5,7 @@ channels:
   - defaults
 
 dependencies:
-    # Base depends
+  # Base depends
   - python
   - pip
   - numpy
@@ -14,7 +14,7 @@ dependencies:
   - matplotlib
   - statsmodels
 
-    # Testing / Development
+  # Testing / Development
   - pytest
   - pytest-cov
   - pytest-env
@@ -23,3 +23,17 @@ dependencies:
   - pre-commit
   - mypy
   - types-PyYAML
+
+  # Docs
+  - mkdocs
+  - mkdocs-material
+  - mkdocs-gen-files
+  - mkdocs-literate-nav
+  - mkdocs-jupyter
+  - mkdocstrings
+  - mkdocstrings-python
+  - black
+  - mike
+
+  - pip:
+      - mkdocs-bibtex

@@ -1,0 +1,120 @@
+site_name: "red"
+site_description: "Robust Equilibration Detection"
+site_url: "https://github.com/fjclark/red"
+repo_url: "https://github.com/fjclark/red"
+package_name: "fjclark/red"
+site_dir: "site"
+watch: [mkdocs.yml, README.md, red/, docs]
+copyright: Copyright &copy; 2024 Finlay Clark
+edit_uri: edit/main/docs/
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+
+extra:
+  version:
+    provider: mike
+
+nav:
+- Home:
+  - Overview: index.md
+- Theory: theory.md
+- Examples: examples.md
+- API reference: reference/
+- Development: development.md
+- Changelog: changelog.md
+
+theme:
+  name: material
+  features:
+  - announce.dismiss
+  - content.code.annotate
+  - content.code.copy
+  - content.tooltips
+  - navigation.footer
+  - navigation.indexes
+  - navigation.sections
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - navigation.top
+  - search.highlight
+  - search.suggest
+  - toc.follow
+  palette:
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: red
+    accent: purple
+    toggle:
+      icon: material/weather-night
+      name: Switch to light mode
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: red
+    accent: purple
+    toggle:
+      icon: material/weather-sunny
+      name: Switch to dark mode
+
+markdown_extensions:
+- attr_list
+- md_in_html
+- def_list
+- admonition
+- footnotes
+- pymdownx.highlight:
+    anchor_linenums: true
+    line_spans: __span
+    pygments_lang_class: true
+- pymdownx.inlinehilite
+- pymdownx.superfences
+- pymdownx.magiclink
+- pymdownx.snippets:
+    check_paths: true
+- pymdownx.details
+- pymdownx.arithmatex:
+    generic: true
+- pymdownx.tabbed:
+    alternate_style: true
+- toc:
+    permalink: "#"
+
+plugins:
+- autorefs
+- search
+- gen-files:
+    scripts:
+    - docs/scripts/gen_ref_pages.py
+- literate-nav:
+    nav_file: SUMMARY.md
+- mkdocstrings:
+    handlers:
+      python:
+        paths: [red/]
+        options:
+          docstring_style: numpy
+          docstring_options:
+            ignore_init_summary: true
+            returns_multiple_items: false
+            returns_named_value: false
+          docstring_section_style: list
+          heading_level: 1
+          inherited_members: true
+          merge_init_into_class: true
+          separate_signature: true
+          show_root_heading: true
+          show_root_full_path: false
+          show_signature_annotations: true
+          show_symbol_type_heading: true
+          show_symbol_type_toc: true
+          show_if_no_docstring: false
+          signature_crossrefs: true
+          summary: true
+          members_order: source
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
