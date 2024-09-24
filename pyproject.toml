@@ -35,7 +35,7 @@ dependencies = [
 #"Documentation" = "https://red.readthedocs.io/"
 
 [project.optional-dependencies]
-test = [
+dev = [
   "mypy",
   "pytest>=6.1.2",
   "pytest-runner",
@@ -53,8 +53,12 @@ test = [
   "black",
   "mike",
   "mkdocs-bibtex",
+  "build",
+  "twine",
 ]
 
+[project.urls]
+Homepage = "https://fjclark.github.io/red/latest/"
 
 [tool.mypy]
 exclude = 'tests/'
