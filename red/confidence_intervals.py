@@ -10,7 +10,7 @@ from scipy.stats import t as _t
 from .variance import get_variance_initial_sequence as _get_variance_initial_sequence
 
 
-def get_conf_int_initial_sequence(
+def get_conf_int_init_seq(
     data: _npt.NDArray[_np.float64],
     alpha_two_tailed: float = 0.05,
     sequence_estimator: str = "initial_convex",
