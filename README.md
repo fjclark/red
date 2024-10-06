@@ -39,10 +39,10 @@ For both, the equilibration point can be determined either according to the mini
 
 ### Installation
 
-The easiest way to install `red` is using `conda` (or `mamba`):
+The easiest way to install `red` is using `conda` (or `mamba`) (note that the conda-forge/ PyPI name is `red-molsim` to avoid conflicts):
 
 ```bash
-conda install -c conda-forge red
+conda install -c conda-forge red-molsim
 ```
 
 Alternatively, you can install `red` from the Python Package Index (PyPI) using `pip`:
