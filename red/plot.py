@@ -502,6 +502,7 @@ def plot_equilibration_min_sse(
             max_lag_series,
             window_size_series,
             sse_times,
+            time_units=time_units,
             variance_y_label=variance_y_label,
             reciprocal=reciprocal,
         )
