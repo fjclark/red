@@ -123,7 +123,9 @@ def detect_equilibration_init_seq(
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times_valid: _npt.NDArray[_np.int64 | _np.float64] = _np.arange(n_samples, dtype=_np.int64)
+        times_valid: _npt.NDArray[_Union[_np.int64, _np.float64]] = _np.arange(
+            n_samples, dtype=_np.int64
+        )
     else:
         # To satisfy type checking.
         times_valid = times
@@ -276,7 +278,9 @@ def detect_equilibration_window(
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times_valid: _npt.NDArray[_np.int64 | _np.float64] = _np.arange(n_samples, dtype=_np.int64)
+        times_valid: _npt.NDArray[_Union[_np.int64, _np.float64]] = _np.arange(
+            n_samples, dtype=_np.int64
+        )
     else:
         # To satisfy type checking.
         times_valid = times
