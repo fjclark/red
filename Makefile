@@ -5,7 +5,7 @@ PACKAGE_DIR  := red
 # For the CI github actions workflow, we skip "make env" and set up the environment manually. In this case,
 # it's helpful to to set CONDA_ENV_RUN to be empty. However, for the documentation workflow, we want to override
 # this and keep the normal behavior. We override this by setting KEEP_CONDA_ENV_RUN to true in the documentation workflow.
-SKIP_CONDA_ENV = $(and $(GITHUB_ACTIONS),$(not $(KEEP_CONDA_ENV_RUN)))
+SKIP_CONDA_ENV = $(and $(GITHUB_ACTIONS),$(if $(KEEP_CONDA_ENV_RUN),,true))
 CONDA_ENV_RUN = $(if $(SKIP_CONDA_ENV),,conda run --no-capture-output --name $(PACKAGE_NAME))
 
 TEST_ARGS := -v --cov=$(PACKAGE_NAME) --cov-report=term --cov-report=xml --junitxml=unit.xml --color=yes
