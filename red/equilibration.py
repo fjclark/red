@@ -123,7 +123,7 @@ def detect_equilibration_init_seq(
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times_valid: _npt.NDArray[_np.float64] = _np.arange(n_samples, dtype=_np.float64)
+        times_valid: _npt.NDArray[_np.int64 | _np.float64] = _np.arange(n_samples, dtype=_np.int64)
     else:
         # To satisfy type checking.
         times_valid = times
@@ -276,7 +276,7 @@ def detect_equilibration_window(
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times_valid: _npt.NDArray[_np.float64] = _np.arange(n_samples, dtype=_np.float64)
+        times_valid: _npt.NDArray[_np.int64 | _np.float64] = _np.arange(n_samples, dtype=_np.int64)
     else:
         # To satisfy type checking.
         times_valid = times
@@ -395,7 +395,7 @@ def get_paired_t_p_timeseries(
 
     # Convert times to indices if necessary.
     if times is None:
-        times = _np.arange(n_samples, dtype=_np.float64)
+        times = _np.arange(n_samples, dtype=_np.int64)
 
     # Check that times is match the number of samples.
     if n_samples != len(times):

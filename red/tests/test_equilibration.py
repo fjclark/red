@@ -27,6 +27,9 @@ def test_detect_equilibration_init_seq(example_timeseries, example_times, tmpdir
     # Compute the equilibration index.
     equil_idx, equil_g, equil_ess = detect_equilibration_init_seq(data=example_timeseries)
 
+    # Make sure that the index is a numpy int64
+    assert isinstance(equil_idx, np.int64)
+
     # Check that the equilibration index is correct.
     assert equil_idx == 398
     assert equil_g == pytest.approx(4.292145845594654, abs=1e-4)
