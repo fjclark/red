@@ -4,6 +4,7 @@ from typing import Any as _Any
 from typing import List as _List
 from typing import Optional as _Optional
 from typing import Tuple as _Tuple
+from typing import Union as _Union
 
 import matplotlib.pyplot as _plt
 import numpy as _np
@@ -22,7 +23,7 @@ PLT_STYLE = "ggplot"
 def plot_timeseries(
     ax: _Axes,
     data: _npt.NDArray[_np.float64],
-    times: _npt.NDArray[_np.float64],
+    times: _npt.NDArray[_Union[_np.int64, _np.float64]],
     n_blocks: int = 100,
     time_units: str = "ns",
     y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
@@ -203,7 +204,7 @@ def plot_sse(
     sse: _npt.NDArray[_np.float64],
     max_lags: _Optional[_npt.NDArray[_np.float64]],
     window_sizes: _Optional[_npt.NDArray[_np.float64]],
-    times: _npt.NDArray[_np.float64],
+    times: _npt.NDArray[_Union[_np.int64, _np.float64]],
     time_units: str = "ns",
     variance_y_label: str = r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
     reciprocal: bool = True,
@@ -409,8 +410,8 @@ def plot_equilibration_min_sse(
     subplot_spec: _gridspec.SubplotSpec,
     data: _npt.NDArray[_np.float64],
     sse_series: _npt.NDArray[_np.float64],
-    data_times: _npt.NDArray[_np.float64],
-    sse_times: _npt.NDArray[_np.float64],
+    data_times: _npt.NDArray[_Union[_np.int64, _np.float64]],
+    sse_times: _npt.NDArray[_Union[_np.int64, _np.float64]],
     max_lag_series: _Optional[_npt.NDArray[_np.float64]] = None,
     window_size_series: _Optional[_npt.NDArray[_np.float64]] = None,
     time_units: str = "ns",
@@ -502,6 +503,7 @@ def plot_equilibration_min_sse(
             max_lag_series,
             window_size_series,
             sse_times,
+            time_units=time_units,
             variance_y_label=variance_y_label,
             reciprocal=reciprocal,
         )
