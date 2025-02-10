@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 - 2025-02-10
+
+### Fixed
+
+- Added new type hints.
+
 ## [0.1.1] - 2024-10-07
 
 ### Fixed

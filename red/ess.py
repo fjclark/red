@@ -226,7 +226,8 @@ def ess_inter_variance(data: _npt.NDArray[_np.float64]) -> float:
         The effective sample size.
     """
     data = check_data(data, one_dim_allowed=False)
-    n_runs, n_samples = data.shape
+    n_runs: int = data.shape[0]
+    n_samples: int = data.shape[1]
     total_samples = n_runs * n_samples
     return total_samples / statistical_inefficiency_inter_variance(data)
 
@@ -255,6 +256,7 @@ def ess_lugsail_variance(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) 
         The effective sample size.
     """
     data = check_data(data, one_dim_allowed=True)
-    n_runs, n_samples = data.shape
+    n_runs: int = data.shape[0]
+    n_samples: int = data.shape[1]
     total_samples = n_runs * n_samples
     return total_samples / statistical_inefficiency_lugsail_variance(data, n_pow=n_pow)
