@@ -34,7 +34,7 @@ jobs:
           df -h
           ulimit -a
 
-      - uses: mamba-org/setup-micromamba@v1
+      - uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: devtools/conda-envs/test.yaml
           environment-name: red
