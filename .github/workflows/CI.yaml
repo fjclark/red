@@ -33,6 +33,9 @@ jobs:
           uname -a
           df -h
           ulimit -a
+
+      - name: Clear caches
+        run: |
           sudo rm -rf /home/runner/.cache/micromamba
 
       - uses: mamba-org/setup-micromamba@v2
