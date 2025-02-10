@@ -2,6 +2,14 @@
 
 ## 0.1.2 - 2025-02-10
 
+### Added
+
+- Support for Python 3.13.
+
+### Removed
+
+- Support for Python 3.9.
+
 ### Fixed
 
 - Added new type hints.
