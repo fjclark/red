@@ -97,8 +97,6 @@ plugins:
           docstring_style: numpy
           docstring_options:
             ignore_init_summary: true
-            returns_multiple_items: false
-            returns_named_value: false
           docstring_section_style: list
           heading_level: 1
           inherited_members: true

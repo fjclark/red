@@ -5,6 +5,7 @@
 ### Fixed
 
 - Added new type hints.
+- Removed deprecated options from mkdocs.yml.
 
 ## [0.1.1] - 2024-10-07
 
