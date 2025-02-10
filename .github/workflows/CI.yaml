@@ -34,37 +34,42 @@ jobs:
           df -h
           ulimit -a
 
-      - name: Set up Mambaforge
-        uses: conda-incubator/setup-miniconda@v2
+      - uses: mamba-org/setup-micromamba@v2
         with:
-          miniforge-variant: Mambaforge
-          python-version: ${{ matrix.python-version }}
-          auto-update-conda: true
-          activate-environment: red
           environment-file: devtools/conda-envs/test.yaml
+          environment-name: red
+          create-args: >- # beware the >- instead of |, we don't split on newlines but on spaces
+            python=${{ matrix.python-version }}
 
-      - name: Install additional dependencies
+      - name: Install package
+        # conda setup requires this special shell
+        shell: bash -l {0}
         run: |
-          mamba install -y -n red -c conda-forge -c defaults git make
-          sudo apt update && sudo apt install -y git make
-          mamba run -n red python -m pip install . --no-deps
-          mamba list -n red
+          micromamba install -y -n red -c conda-forge -c defaults git make
+          apt update && apt install -y git make
+          python -m pip install . --no-deps
+          micromamba list
 
       - name: Lint
+        # conda setup requires this special shell
+        shell: bash -l {0}
         run: |
-          mamba run -n red make lint
+          make lint
 
       - name: Type check
+        shell: bash -l {0}
         run: |
-          mamba run -n red make type-check
+          make type-check
 
       - name: Run tests
+        shell: bash -l {0}
         run: |
-          mamba run -n red make test
+          make test
 
       - name: Build Docs
+        shell: bash -l {0}
         run: |
-          mamba run -n red make docs-build
+          make docs-build
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
