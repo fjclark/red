@@ -37,6 +37,8 @@ autocorrelation. Setting the window size to 1 will give you White's original Mar
 
 For both, the equilibration point can be determined either according to the minimum of the squared standard error (the default), or the maximum effective sample size, by specifying `method="min_sse"` or `method="max_ess"`.
 
+For testing and more details, please see the associated publication: **Clark, F.; Cole, D. J.; Michel, J. Robust Automated Truncation Point Selection for Molecular Simulations. J. Chem. Theory Comput. 2024. https://doi.org/10.1021/acs.jctc.4c01359.**
+
 ### Installation
 
 The easiest way to install `red` is using `conda` (or `mamba`) (note that the conda-forge/ PyPI name is `red-molsim` to avoid conflicts):
