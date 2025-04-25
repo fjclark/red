@@ -117,7 +117,7 @@ def plot_timeseries(
 def plot_p_values(
     ax: _Axes,
     p_values: _npt.NDArray[_np.float64],
-    times: _npt.NDArray[_np.float64 | _np.int64],
+    times: _npt.NDArray[_Union[_np.float64, _np.int64]],
     p_threshold: float = 0.05,
     time_units: str = "ns",
     threshold_times: _Optional[_npt.NDArray[_np.float64]] = None,
@@ -313,7 +313,7 @@ def plot_equilibration_paired_t_test(
     data: _npt.NDArray[_np.float64],
     p_values: _npt.NDArray[_np.float64],
     data_times: _npt.NDArray[_np.float64],
-    p_times: _npt.NDArray[_np.float64 | _np.int64],
+    p_times: _npt.NDArray[_Union[_np.float64, _np.int64]],
     p_threshold: float = 0.05,
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",

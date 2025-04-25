@@ -349,7 +349,7 @@ def get_paired_t_p_timeseries(
     initial_block_size: float = 0.1,
     final_block_size: float = 0.5,
     t_test_sidedness: str = "two-sided",
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.int64 | _np.float64]]:
+) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_Union[_np.int64, _np.float64]]]:
     """
     Get a timeseries of the p-values from a paired t-test on the differences
     between sample means between intial and final portions of the data. The timeseries
@@ -398,7 +398,7 @@ def get_paired_t_p_timeseries(
     n_runs, n_samples = data.shape
 
     # Convert times to indices if necessary.
-    times_valid: _npt.NDArray[_np.float64 | _np.int64] = (
+    times_valid: _npt.NDArray[_Union[_np.float64, _np.int64]] = (
         _np.arange(n_samples, dtype=_np.int64) if times is None else times
     )
 
@@ -480,7 +480,7 @@ def detect_equilibration_paired_t_test(
     plot_name: _Union[str, _Path] = "equilibration_paired_t_test.png",
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
-) -> _np.int64 | _np.float64:
+) -> _Union[_np.int64, _np.float64]:
     r"""
     Detect the equilibration time of a time series by performing a paired
     t-test between initial and final portions of the time series. This is repeated
@@ -572,7 +572,7 @@ def detect_equilibration_paired_t_test(
         raise EquilibrationNotDetectedError(
             f"No p values are greater than the threshold of {p_threshold}."
         )
-    equil_time: _np.float64 | _np.int64 = times_used[_np.argmax(meets_threshold)]
+    equil_time: _Union[_np.float64, _np.int64] = times_used[_np.argmax(meets_threshold)]
 
     # Plot the p values.
     if plot:
