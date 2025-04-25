@@ -64,6 +64,9 @@ def test_detect_equilibration_init_seq_max_ess(example_timeseries, example_times
         data=example_timeseries, method="max_ess", smooth_lag_times=True
     )
 
+    # Make sure that the index is a numpy int64
+    assert isinstance(equil_idx, np.int64)
+
     # Check that the equilibration index is correct.
     assert equil_idx == 486
     assert equil_g == pytest.approx(6.8237419281169265, abs=1e-4)
@@ -98,6 +101,9 @@ def test_detect_equilibration_window(example_timeseries, example_times, tmpdir):
     assert equil_g == pytest.approx(3.840409864530417, abs=1e-4)
     assert equil_ess == pytest.approx(579.8860222103675, abs=1e-4)
 
+    # Make sure that the index is a numpy int64
+    assert isinstance(equil_idx, np.int64)
+
     # Try also supplying the times. Plot in a temporary directory.
     tmp_output = Path(tmpdir) / "test_plots_min_sse_window"
     # tmp_output = "./test_plots_min_sse_window"
@@ -113,6 +119,40 @@ def test_detect_equilibration_window(example_timeseries, example_times, tmpdir):
     assert equil_ess == pytest.approx(579.8860222103675, abs=1e-4)
     # Check that test_plots_min_sse.png exists.
     assert tmp_output.with_suffix(".png").exists()
+
+
+@pytest.mark.parametrize(
+    "equil_fn, equil_fn_args",
+    [
+        (detect_equilibration_init_seq, {"method": "min_sse"}),
+        (detect_equilibration_window, {"method": "min_sse"}),
+    ],
+)
+def test_correct_return_type_no_times(equil_fn, equil_fn_args, example_timeseries):
+    """
+    Test that we return a numpy int64 for the equilibration index when
+    no times are supplied. This ensures that the index can be directly used
+    for truncation of the timeseries.
+    """
+    equil_idx, _, _ = equil_fn(data=example_timeseries, **equil_fn_args)
+    assert isinstance(equil_idx, np.int64)
+
+
+@pytest.mark.parametrize(
+    "equil_fn, equil_fn_args",
+    [
+        (detect_equilibration_init_seq, {"method": "min_sse"}),
+        (detect_equilibration_window, {"method": "min_sse"}),
+    ],
+)
+def test_correct_return_type_with_times(equil_fn, equil_fn_args, example_timeseries, example_times):
+    """
+    Test that we return a float for the equilibration index when
+    times are supplied. This ensures that the index can be directly used
+    for truncation of the timeseries.
+    """
+    equil_idx, _, _ = equil_fn(data=example_timeseries, times=example_times, **equil_fn_args)
+    assert isinstance(equil_idx, np.float64)
 
 
 def test_detect_equilibration_window_max_ess(example_timeseries, example_times):
@@ -162,6 +202,7 @@ def test_detect_equilibration_paired_t(gaussian_noise, example_timeseries):
     # Check the index for the correlated timeseries.
     idx = detect_equilibration_paired_t_test(example_timeseries)
     assert idx == 328
+    assert isinstance(idx, np.int64)
 
     # Try stupid inputs and check that we get input errors.
     with pytest.raises(InvalidInputError):

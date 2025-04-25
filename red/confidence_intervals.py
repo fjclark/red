@@ -77,4 +77,4 @@ def get_conf_int_init_seq(
 
     ci = t_val * sem
 
-    return ci  # type: ignore[no-any-return]
+    return float(ci)

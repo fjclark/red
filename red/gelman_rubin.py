@@ -49,7 +49,7 @@ def gelman_rubin(data: _npt.NDArray[_np.float64]) -> float:
     # Compute GR diagnostic.
     gelman_rubin_diagnostic = _np.sqrt(combined_variance_est / intra_run_variance_est)
 
-    return gelman_rubin_diagnostic  # type: ignore[no-any-return]
+    return float(gelman_rubin_diagnostic)
 
 
 def stable_gelman_rubin(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) -> float:
@@ -75,4 +75,4 @@ def stable_gelman_rubin(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) -
     # Compute GR diagnostic.
     gelman_rubin_diagnostic = _np.sqrt(combined_variance_est / intra_run_variance_est)
 
-    return gelman_rubin_diagnostic  # type: ignore[no-any-return]
+    return float(gelman_rubin_diagnostic)

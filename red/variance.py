@@ -16,6 +16,7 @@ from typing import Callable as _Callable
 from typing import Optional as _Optional
 from typing import Tuple as _Tuple
 from typing import Union as _Union
+from typing import cast as _cast
 from warnings import warn as _warn
 
 import numba as _numba
@@ -92,7 +93,9 @@ def _compute_autocovariance_fft(
     numpy.ndarray
     The auto-correlation function of the time series.
     """
-    return _acovf(data, adjusted=False, nlag=max_lag, fft=True, demean=False)  # type: ignore[no-any-return]
+    autocov_fn = _acovf(data, adjusted=False, nlag=max_lag, fft=True, demean=False)
+    autocov_fn = autocov_fn.astype(_np.float64, copy=False)
+    return _cast(_npt.NDArray[_np.float64], autocov_fn)
 
 
 def _get_autocovariance(
@@ -147,7 +150,7 @@ def _get_autocovariance(
     # FFT is faster for large arrays and slower for shorter arrays.
     compute_autocov_fn = _compute_autocovariance_fft if fft else _compute_autocovariance_no_fft
 
-    return compute_autocov_fn(data, max_lag)  # type: ignore[no-any-return]
+    return compute_autocov_fn(data, max_lag)
 
 
 @_numba.njit(cache=True)  # type: ignore
@@ -384,12 +387,15 @@ def _get_autocovariance_window(
     )
 
     # Get the windowed autocovariance.
-    return autocov[: window_size + 1] * window  # type: ignore[no-any-return]
+    windowed_autocov = autocov[: window_size + 1] * window
+
+    # Cast to satisfy mypy
+    return _cast(_npt.NDArray[_np.float64], windowed_autocov)
 
 
 def _smoothen_max_lag_times(
     max_lag_times: _npt.NDArray[_np.float64],
-) -> _npt.NDArray[_np.float64]:
+) -> _npt.NDArray[_np.int64]:
     """
     Smoothen a list of maximum lag times by a) converting them to a monotinically
     decreasing sequence and b) linearly interpolating between points where the sequence
@@ -423,9 +429,10 @@ def _smoothen_max_lag_times(
     )
 
     # Round the values.
-    max_lag_times_to_use = _np.round(max_lag_times_to_use).astype(int)
+    max_lag_times_to_use = _np.round(max_lag_times_to_use).astype(_np.int64)
 
-    return max_lag_times_to_use
+    # Cast to int64 to satisfy mypy
+    return _cast(_npt.NDArray[_np.int64], max_lag_times_to_use)
 
 
 ####### Public functions #######
@@ -785,7 +792,7 @@ def get_variance_window(
     corr_var = autocov.sum() * 2 - var
 
     # Make sure that the variance is not less than the uncorrelated value.
-    return max(corr_var, var)  # type: ignore[no-any-return]
+    return float(max(corr_var, var))
 
 
 def get_variance_series_window(
@@ -924,7 +931,7 @@ def replicated_batch_means_variance(data: _npt.NDArray[_np.float64], batch_size:
     # Multiply by the batch size.
     batch_means_variance *= batch_size
 
-    return batch_means_variance  # type: ignore[no-any-return]
+    return float(batch_means_variance)
 
 
 def lugsail_variance(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) -> float:
@@ -1000,7 +1007,7 @@ def inter_run_variance(data: _npt.NDArray[_np.float64]) -> float:
     _, n_samples = data.shape
     inter_run_variance *= n_samples
 
-    return inter_run_variance  # type: ignore[no-any-return]
+    return float(inter_run_variance)
 
 
 def intra_run_variance(data: _npt.NDArray[_np.float64]) -> float:
@@ -1026,4 +1033,4 @@ def intra_run_variance(data: _npt.NDArray[_np.float64]) -> float:
     # Compute the mean intra-run variance estimate.
     mean_intra_run_variance = _np.mean(intra_run_variance)
 
-    return mean_intra_run_variance  # type: ignore[no-any-return]
+    return float(mean_intra_run_variance)

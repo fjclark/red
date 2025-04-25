@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.1.2 - 2025-02-10
+## [0.1.3] - 2025-04-25
+
+### Fixed
+
+- Issues with type hints - all ``# type: ignore[no-return-any]`` statements have been removed.
+
+## [0.1.2] - 2025-02-10
 
 ### Fixed
 

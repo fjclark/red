@@ -20,7 +20,7 @@ from ..plot import (
 from . import example_times, example_timeseries
 
 # Set to True to save the plots.
-SAVE_PLOTS = False
+SAVE_PLOTS = True
 
 
 def test_plot_timeseries(example_timeseries, example_times):
