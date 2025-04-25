@@ -117,7 +117,7 @@ def plot_timeseries(
 def plot_p_values(
     ax: _Axes,
     p_values: _npt.NDArray[_np.float64],
-    times: _npt.NDArray[_np.float64],
+    times: _npt.NDArray[_np.float64 | _np.int64],
     p_threshold: float = 0.05,
     time_units: str = "ns",
     threshold_times: _Optional[_npt.NDArray[_np.float64]] = None,
@@ -157,16 +157,15 @@ def plot_p_values(
     if p_values.shape[0] != times.shape[0]:
         raise InvalidInputError("p_values must have the same length as the number of samples.")
 
-    if threshold_times is None:
-        threshold_times = times
+    threshold_times_valid = times if threshold_times is None else threshold_times
 
     # Plot the p-values.
     ax.scatter(times, p_values, color="black", label="p-value")
 
     # Plot the p-value threshold.
     ax.plot(
-        threshold_times,
-        _np.full(threshold_times.shape, p_threshold),
+        threshold_times_valid,
+        _np.full(threshold_times_valid.shape, p_threshold),
         color="black",
         linestyle="-",
         linewidth=0.5,
@@ -175,7 +174,7 @@ def plot_p_values(
 
     # Shade the region where the p-value is less than the threshold.
     ax.fill_between(
-        threshold_times,
+        threshold_times_valid,
         0,
         p_threshold,
         alpha=0.3,
@@ -314,7 +313,7 @@ def plot_equilibration_paired_t_test(
     data: _npt.NDArray[_np.float64],
     p_values: _npt.NDArray[_np.float64],
     data_times: _npt.NDArray[_np.float64],
-    p_times: _npt.NDArray[_np.float64],
+    p_times: _npt.NDArray[_np.float64 | _np.int64],
     p_threshold: float = 0.05,
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",

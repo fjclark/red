@@ -349,7 +349,7 @@ def get_paired_t_p_timeseries(
     initial_block_size: float = 0.1,
     final_block_size: float = 0.5,
     t_test_sidedness: str = "two-sided",
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
+) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.int64 | _np.float64]]:
     """
     Get a timeseries of the p-values from a paired t-test on the differences
     between sample means between intial and final portions of the data. The timeseries
@@ -398,11 +398,12 @@ def get_paired_t_p_timeseries(
     n_runs, n_samples = data.shape
 
     # Convert times to indices if necessary.
-    if times is None:
-        times = _np.arange(n_samples, dtype=_np.int64)
+    times_valid: _npt.NDArray[_np.float64 | _np.int64] = (
+        _np.arange(n_samples, dtype=_np.int64) if times is None else times
+    )
 
     # Check that times is match the number of samples.
-    if n_samples != len(times):
+    if n_samples != len(times_valid):
         raise InvalidInputError("Times must have the same length as the number of samples.")
 
     # Check that user inputs are valid.
@@ -440,9 +441,9 @@ def get_paired_t_p_timeseries(
     n_discard = round(n_samples * fractional_block_size)
 
     # Calculate the p values with their indices.
-    p_vals = _np.zeros(n_repeats)
+    p_vals = _np.zeros(n_repeats, dtype=_np.float64)
     p_val_indices = _np.zeros(n_repeats, dtype=int)
-    time_vals = _np.zeros(n_repeats)
+    time_vals = _np.zeros(n_repeats, dtype=times_valid.dtype)
 
     # Loop over and calculate the p values.
     for i in range(n_repeats):
@@ -461,7 +462,7 @@ def get_paired_t_p_timeseries(
         # Compute the paired t-test.
         p_vals[i] = _ttest_rel(initial_block, final_block, alternative=t_test_sidedness)[1]
         p_val_indices[i] = idx
-        time_vals[i] = times[idx]
+        time_vals[i] = times_valid[idx]
 
     return p_vals, time_vals
 
@@ -479,7 +480,7 @@ def detect_equilibration_paired_t_test(
     plot_name: _Union[str, _Path] = "equilibration_paired_t_test.png",
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
-) -> int:
+) -> _np.int64 | _np.float64:
     r"""
     Detect the equilibration time of a time series by performing a paired
     t-test between initial and final portions of the time series. This is repeated
@@ -536,10 +537,11 @@ def detect_equilibration_paired_t_test(
 
     Returns
     -------
-    int
-        The time point at which the time series is equilibrated.
+    np.float64 | np.int64
+        The time (or index, if no times are supplied) at which
+        the time series is equilibrated.
     """
-    # Validate dtata.
+    # Validate data.
     data = check_data(data, one_dim_allowed=False)
     n_runs, n_samples = data.shape
 
@@ -547,7 +549,7 @@ def detect_equilibration_paired_t_test(
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times = _np.arange(n_samples, dtype=_np.float64)
+        times = _np.arange(n_samples, dtype=_np.int64)
 
     # Check that user options (not checked in get_paired_t_p_timeseries) are valid.
     if p_threshold <= 0 or p_threshold > 0.7:
@@ -570,7 +572,7 @@ def detect_equilibration_paired_t_test(
         raise EquilibrationNotDetectedError(
             f"No p values are greater than the threshold of {p_threshold}."
         )
-    equil_time = times_used[_np.argmax(meets_threshold)]
+    equil_time: _np.float64 | _np.int64 = times_used[_np.argmax(meets_threshold)]
 
     # Plot the p values.
     if plot:
@@ -590,4 +592,4 @@ def detect_equilibration_paired_t_test(
 
         fig.savefig(str(plot_name), dpi=300, bbox_inches="tight")
 
-    return equil_time  # type: ignore[no-any-return]
+    return equil_time
