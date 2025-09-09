@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.4] - 2025-09-09
+
+### Fixed
+
+- Cast return type to satisfy mypy.
+
 ## [0.1.3] - 2025-04-25
 
 ### Fixed
