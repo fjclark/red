@@ -2,6 +2,7 @@
 
 from pathlib import Path as _Path
 from typing import Callable as _Callable
+from typing import Literal as _Literal
 from typing import Optional as _Optional
 from typing import Tuple as _Tuple
 from typing import Union as _Union
@@ -200,6 +201,7 @@ def detect_equilibration_window(
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
     plot_window_size: bool = True,
+    backend: _Literal["numba", "numpy"] = "numba",
 ) -> _Tuple[_Union[float, int], float, float]:
     r"""
     Detect the equilibration time of a time series by finding the minimum
@@ -258,6 +260,10 @@ def detect_equilibration_window(
     plot_window_size : bool, optional, default=True
         Whether to plot the window size used to estimate the variance.
 
+    backend : str, optional, default="numba"
+        The backend to use for computation. Can be "numba" (faster, requires numba)
+        or "numpy" (pure numpy, no numba dependency).
+
     Returns
     -------
     equil_time: float | int
@@ -292,6 +298,7 @@ def detect_equilibration_window(
         window_size_fn=window_size_fn,
         window_size=window_size,
         frac_padding=frac_padding,
+        backend=backend,
     )
 
     # Get the corresponding times (or indices).

@@ -115,7 +115,7 @@ def get_ess_series_window(
     kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
     window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
     window_size: _Optional[int] = None,
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
+) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.int64]]:
     """
     Compute a series of effective sample sizes for a time series as data
     is discarded from the beginning of the time series. The squared standard

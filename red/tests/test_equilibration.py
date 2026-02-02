@@ -121,6 +121,37 @@ def test_detect_equilibration_window(example_timeseries, example_times, tmpdir):
     assert tmp_output.with_suffix(".png").exists()
 
 
+def test_detect_equilibration_window_backends(example_timeseries, example_times):
+    """
+    Test that numba and numpy backends yield the same results.
+    """
+    # Use the mean time to make this faster.
+    example_timeseries = example_timeseries.mean(axis=0)
+
+    # Compute with numba backend
+    equil_idx_numba, equil_g_numba, equil_ess_numba = detect_equilibration_window(
+        data=example_timeseries,
+        times=example_times,
+        method="min_sse",
+        plot=False,
+        backend="numba",
+    )
+
+    # Compute with numpy backend
+    equil_idx_numpy, equil_g_numpy, equil_ess_numpy = detect_equilibration_window(
+        data=example_timeseries,
+        times=example_times,
+        method="min_sse",
+        plot=False,
+        backend="numpy",
+    )
+
+    # Check that results match
+    assert equil_idx_numba == equil_idx_numpy
+    assert equil_g_numba == pytest.approx(equil_g_numpy, rel=1e-10)
+    assert equil_ess_numba == pytest.approx(equil_ess_numpy, rel=1e-10)
+
+
 @pytest.mark.parametrize(
     "equil_fn, equil_fn_args",
     [

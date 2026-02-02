@@ -1,6 +1,7 @@
 """Functions to calculate the squared standard error series."""
 
 from typing import Callable as _Callable
+from typing import Literal as _Literal
 from typing import Optional as _Optional
 from typing import Tuple as _Tuple
 
@@ -90,7 +91,8 @@ def get_sse_series_window(
     window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
     window_size: _Optional[int] = None,
     frac_padding: float = 0.1,
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
+    backend: _Literal["numba", "numpy"] = "numba",
+) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.int64]]:
     """
     Compute a series of squared standard errors for a time series as data
     is discarded from the beginning of the time series. The squared standard
@@ -118,6 +120,10 @@ def get_sse_series_window(
         for the first 90% of the time series. This helps to avoid noise in the
         variance when there are few data points.
 
+    backend : str, optional, default="numba"
+        The backend to use for computation. Can be "numba" (faster, requires numba)
+        or "numpy" (pure numpy, no numba dependency).
+
     Returns
     -------
     np.ndarray
@@ -137,6 +143,7 @@ def get_sse_series_window(
         window_size_fn=window_size_fn,
         window_size=window_size,
         frac_padding=frac_padding,
+        backend=backend,
     )
 
     # Compute the squared standard error series by dividing the variance series by
