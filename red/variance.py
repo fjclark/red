@@ -13,10 +13,6 @@ is equivalent to using a Bartlett window.
 """
 
 from typing import Callable as _Callable
-from typing import Optional as _Optional
-from typing import Tuple as _Tuple
-from typing import Union as _Union
-from typing import cast as _cast
 from warnings import warn as _warn
 
 import numba as _numba
@@ -31,7 +27,7 @@ from ._validation import check_data as _check_data
 # No need to thoroughly validate input as this is done in the public functions.
 
 
-@_numba.njit(cache=True)  # type: ignore
+@_numba.njit(cache=True)
 def _compute_autocovariance_no_fft(
     data: _npt.NDArray[_np.float64], max_lag: int
 ) -> _npt.NDArray[_np.float64]:
@@ -95,13 +91,13 @@ def _compute_autocovariance_fft(
     """
     autocov_fn = _acovf(data, adjusted=False, nlag=max_lag, fft=True, demean=False)
     autocov_fn = autocov_fn.astype(_np.float64, copy=False)
-    return _cast(_npt.NDArray[_np.float64], autocov_fn)
+    return autocov_fn
 
 
 def _get_autocovariance(
     data: _npt.NDArray[_np.float64],
-    max_lag: _Union[None, int] = None,
-    mean: _Union[None, float] = None,
+    max_lag: None | int = None,
+    mean: None | float = None,
     fft: bool = False,
 ) -> _npt.NDArray[_np.float64]:
     """
@@ -153,7 +149,7 @@ def _get_autocovariance(
     return compute_autocov_fn(data, max_lag)
 
 
-@_numba.njit(cache=True)  # type: ignore
+@_numba.njit(cache=True)
 def _get_gamma_cap(
     autocov_series: _npt.NDArray[_np.float64],
 ) -> _npt.NDArray[_np.float64]:
@@ -190,7 +186,7 @@ def _get_gamma_cap(
     return gamma
 
 
-@_numba.njit(cache=True)  # type: ignore
+@_numba.njit(cache=True)
 def _get_initial_positive_sequence(
     gamma_cap: _npt.NDArray[_np.float64],
     min_max_lag_time: int = 3,
@@ -226,7 +222,7 @@ def _get_initial_positive_sequence(
     return gamma_cap
 
 
-@_numba.njit(cache=True)  # type: ignore
+@_numba.njit(cache=True)
 def _get_initial_monotone_sequence(
     gamma_cap: _npt.NDArray[_np.float64],
     min_max_lag_time: int = 3,
@@ -262,7 +258,7 @@ def _get_initial_monotone_sequence(
     return gamma_cap
 
 
-@_numba.njit(cache=True)  # type: ignore
+@_numba.njit(cache=True)
 def _get_initial_convex_sequence(
     gamma_cap: _npt.NDArray[_np.float64],
     min_max_lag_time: int = 3,
@@ -338,12 +334,12 @@ def _get_initial_convex_sequence(
             gamma_con[j] = gamma_con[j - 1] + mean_pooled_value
             j += 1
 
-    return _cast(_npt.NDArray[_np.float64], gamma_con)
+    return gamma_con
 
 
 def _get_autocovariance_window(
     data: _npt.NDArray[_np.float64],
-    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,
     window_size: int = 10,
 ) -> _npt.NDArray[_np.float64]:
     """
@@ -389,8 +385,7 @@ def _get_autocovariance_window(
     # Get the windowed autocovariance.
     windowed_autocov = autocov[: window_size + 1] * window
 
-    # Cast to satisfy mypy
-    return _cast(_npt.NDArray[_np.float64], windowed_autocov)
+    return windowed_autocov
 
 
 def _smoothen_max_lag_times(
@@ -431,8 +426,7 @@ def _smoothen_max_lag_times(
     # Round the values.
     max_lag_times_to_use = _np.round(max_lag_times_to_use).astype(_np.int64)
 
-    # Cast to int64 to satisfy mypy
-    return _cast(_npt.NDArray[_np.int64], max_lag_times_to_use)
+    return max_lag_times_to_use
 
 
 ####### Public functions #######
@@ -442,9 +436,9 @@ def get_variance_initial_sequence(
     data: _npt.NDArray[_np.float64],
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
-    max_max_lag_time: _Optional[int] = None,
-    autocov: _Optional[_npt.NDArray[_np.float64]] = None,
-) -> _Tuple[float, int, _npt.NDArray[_np.float64]]:
+    max_max_lag_time: int | None = None,
+    autocov: _npt.NDArray[_np.float64] | None = None,
+) -> tuple[float, int, _npt.NDArray[_np.float64]]:
     """
     Calculate the variance of a time series using initial sequence methods.
     See Geyer, 1992: https://www.jstor.org/stable/2246094.
@@ -607,10 +601,10 @@ def get_variance_series_initial_sequence(
     data: _npt.NDArray[_np.float64],
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
-    max_max_lag_time: _Optional[int] = None,
+    max_max_lag_time: int | None = None,
     smooth_lag_times: bool = False,
     frac_padding: float = 0.1,
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
+) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """
     Repeatedly calculate the variance of a time series while discarding increasing
     numbers of samples from the start of the time series. The variance is calculated
@@ -737,7 +731,7 @@ def get_variance_series_initial_sequence(
 
 def get_variance_window(
     data: _npt.NDArray[_np.float64],
-    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,
     window_size: int = 10,
 ) -> float:
     """
@@ -797,11 +791,11 @@ def get_variance_window(
 
 def get_variance_series_window(
     data: _npt.NDArray[_np.float64],
-    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
-    window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
-    window_size: _Optional[int] = None,
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,
+    window_size_fn: _Callable[[int], int] | None = lambda x: round(x**0.5),
+    window_size: int | None = None,
     frac_padding: float = 0.1,
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
+) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """
     Repeatedly calculate the variance of a time series while discarding increasing
     numbers of samples from the start of the time series. The variance is calculated
@@ -963,8 +957,8 @@ def lugsail_variance(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) -> f
 
     # Get the two batch sizes.
     _, n_samples = data.shape
-    batch_size_large = int(_np.floor(n_samples**n_pow))  # type: ignore
-    batch_size_small = int(_np.floor(batch_size_large / 3))  # type: ignore
+    batch_size_large = int(_np.floor(n_samples**n_pow))
+    batch_size_small = int(_np.floor(batch_size_large / 3))
 
     # Make sure that the batch sizes are valid.
     if batch_size_large == batch_size_small or batch_size_small < 1:

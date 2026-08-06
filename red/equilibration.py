@@ -2,9 +2,6 @@
 
 from pathlib import Path as _Path
 from typing import Callable as _Callable
-from typing import Optional as _Optional
-from typing import Tuple as _Tuple
-from typing import Union as _Union
 
 import matplotlib.pyplot as _plt
 import numpy as _np
@@ -21,19 +18,19 @@ from .sse import get_sse_series_init_seq, get_sse_series_window
 
 def detect_equilibration_init_seq(
     data: _npt.NDArray[_np.float64],
-    times: _Optional[_npt.NDArray[_np.float64]] = None,
+    times: _npt.NDArray[_np.float64] | None = None,
     method: str = "min_sse",
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
-    max_max_lag_time: _Optional[int] = None,
+    max_max_lag_time: int | None = None,
     smooth_lag_times: bool = False,
     frac_padding: float = 0.1,
     plot: bool = False,
-    plot_name: _Union[str, _Path] = "equilibration_sse_init_seq.png",
+    plot_name: str | _Path = "equilibration_sse_init_seq.png",
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
     plot_max_lags: bool = True,
-) -> _Tuple[_Union[float, int], float, float]:
+) -> tuple[float | int, float, float]:
     r"""
     Detect the equilibration time of a time series by finding the minimum
     squared standard error (SSE), or maximum effective sample size (ESS)
@@ -123,9 +120,7 @@ def detect_equilibration_init_seq(
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times_valid: _npt.NDArray[_Union[_np.int64, _np.float64]] = _np.arange(
-            n_samples, dtype=_np.int64
-        )
+        times_valid: _npt.NDArray[_np.int64 | _np.float64] = _np.arange(n_samples, dtype=_np.int64)
     else:
         # To satisfy type checking.
         times_valid = times
@@ -189,18 +184,18 @@ def detect_equilibration_init_seq(
 
 def detect_equilibration_window(
     data: _npt.NDArray[_np.float64],
-    times: _Optional[_npt.NDArray[_np.float64]] = None,
+    times: _npt.NDArray[_np.float64] | None = None,
     method: str = "min_sse",
-    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
-    window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
-    window_size: _Optional[int] = None,
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,
+    window_size_fn: _Callable[[int], int] | None = lambda x: round(x**0.5),
+    window_size: int | None = None,
     frac_padding: float = 0.1,
     plot: bool = False,
-    plot_name: _Union[str, _Path] = "equilibration_sse_window.png",
+    plot_name: str | _Path = "equilibration_sse_window.png",
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
     plot_window_size: bool = True,
-) -> _Tuple[_Union[float, int], float, float]:
+) -> tuple[float | int, float, float]:
     r"""
     Detect the equilibration time of a time series by finding the minimum
     squared standard error (SSE) or maximum effective sample size (ESS)
@@ -278,9 +273,7 @@ def detect_equilibration_window(
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times_valid: _npt.NDArray[_Union[_np.int64, _np.float64]] = _np.arange(
-            n_samples, dtype=_np.int64
-        )
+        times_valid: _npt.NDArray[_np.int64 | _np.float64] = _np.arange(n_samples, dtype=_np.int64)
     else:
         # To satisfy type checking.
         times_valid = times
@@ -295,7 +288,7 @@ def detect_equilibration_window(
     )
 
     # Get the corresponding times (or indices).
-    sse_times = times_valid[: len(sse_vals)]  # type: ignore
+    sse_times = times_valid[: len(sse_vals)]
 
     # Convert the SSE to 1/ESS if requested (divide by uncorrelated variance).
     if method == "max_ess":
@@ -343,13 +336,13 @@ def detect_equilibration_window(
 
 def get_paired_t_p_timeseries(
     data: _npt.NDArray[_np.float64],
-    times: _Optional[_npt.NDArray[_np.float64]] = None,
+    times: _npt.NDArray[_np.int64 | _np.float64] | None = None,
     fractional_block_size: float = 0.125,
     fractional_test_end: float = 0.5,
     initial_block_size: float = 0.1,
     final_block_size: float = 0.5,
     t_test_sidedness: str = "two-sided",
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_Union[_np.int64, _np.float64]]]:
+) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.int64 | _np.float64]]:
     """
     Get a timeseries of the p-values from a paired t-test on the differences
     between sample means between intial and final portions of the data. The timeseries
@@ -398,7 +391,7 @@ def get_paired_t_p_timeseries(
     n_runs, n_samples = data.shape
 
     # Convert times to indices if necessary.
-    times_valid: _npt.NDArray[_Union[_np.float64, _np.int64]] = (
+    times_valid: _npt.NDArray[_np.float64 | _np.int64] = (
         _np.arange(n_samples, dtype=_np.int64) if times is None else times
     )
 
@@ -469,7 +462,7 @@ def get_paired_t_p_timeseries(
 
 def detect_equilibration_paired_t_test(
     data: _npt.NDArray[_np.float64],
-    times: _Optional[_npt.NDArray[_np.float64]] = None,
+    times: _npt.NDArray[_np.float64] | None = None,
     p_threshold: float = 0.05,
     fractional_block_size: float = 0.125,
     fractional_test_end: float = 0.5,
@@ -477,10 +470,10 @@ def detect_equilibration_paired_t_test(
     final_block_size: float = 0.5,
     t_test_sidedness: str = "two-sided",
     plot: bool = False,
-    plot_name: _Union[str, _Path] = "equilibration_paired_t_test.png",
+    plot_name: str | _Path = "equilibration_paired_t_test.png",
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
-) -> _Union[_np.int64, _np.float64]:
+) -> _np.int64 | _np.float64:
     r"""
     Detect the equilibration time of a time series by performing a paired
     t-test between initial and final portions of the time series. This is repeated
@@ -549,7 +542,10 @@ def detect_equilibration_paired_t_test(
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times = _np.arange(n_samples, dtype=_np.int64)
+        times_valid: _npt.NDArray[_np.int64 | _np.float64] = _np.arange(n_samples, dtype=_np.int64)
+    else:
+        # To satisfy type checking.
+        times_valid = times
 
     # Check that user options (not checked in get_paired_t_p_timeseries) are valid.
     if p_threshold <= 0 or p_threshold > 0.7:
@@ -558,7 +554,7 @@ def detect_equilibration_paired_t_test(
     # Get the p value timeseries and n_discard.
     p_vals, times_used = get_paired_t_p_timeseries(
         data=data,
-        times=times,
+        times=times_valid,
         fractional_block_size=fractional_block_size,
         fractional_test_end=fractional_test_end,
         initial_block_size=initial_block_size,
@@ -572,7 +568,7 @@ def detect_equilibration_paired_t_test(
         raise EquilibrationNotDetectedError(
             f"No p values are greater than the threshold of {p_threshold}."
         )
-    equil_time: _Union[_np.float64, _np.int64] = times_used[_np.argmax(meets_threshold)]
+    equil_time: _np.float64 | _np.int64 = times_used[_np.argmax(meets_threshold)]
 
     # Plot the p values.
     if plot:
@@ -583,7 +579,7 @@ def detect_equilibration_paired_t_test(
             subplot_spec=gridspec_obj[0],
             data=data,
             p_values=p_vals,
-            data_times=times,
+            data_times=times_valid,
             p_times=times_used,
             p_threshold=p_threshold,
             time_units=time_units,

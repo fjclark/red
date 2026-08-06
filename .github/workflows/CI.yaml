@@ -20,12 +20,16 @@ jobs:
     name: Test on ${{ matrix.os }}, Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ['3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.11', '3.12', '3.13', '3.14']
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
+        with:
+          # versioningit derives the version from git tags/history
+          fetch-depth: 0
 
       - name: Additional info about the build
         shell: bash
@@ -34,50 +38,37 @@ jobs:
           df -h
           ulimit -a
 
-      - uses: mamba-org/setup-micromamba@v1
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9.0.0
         with:
-          environment-file: devtools/conda-envs/test.yaml
-          environment-name: red
-          create-args: >- # beware the >- instead of |, we don't split on newlines but on spaces
-            python=${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+
+      - name: Install just
+        uses: extractions/setup-just@v4
 
       - name: Install package
-        # conda setup requires this special shell
-        shell: bash -l {0}
-        run: |
-          micromamba install -y -n red -c conda-forge -c defaults git make
-          apt update && apt install -y git make
-          python -m pip install . --no-deps
-          micromamba list
+        run: uv sync
 
       - name: Lint
-        # conda setup requires this special shell
-        shell: bash -l {0}
-        run: |
-          make lint
+        run: just lint
 
       - name: Type check
-        shell: bash -l {0}
-        run: |
-          make type-check
+        run: just type-check
 
       - name: Run tests
-        shell: bash -l {0}
-        run: |
-          make test
+        run: just test
 
       - name: Build Docs
-        shell: bash -l {0}
-        run: |
-          make docs-build
+        run: just docs-build
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v7.0.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Run codacy-coverage-reporter
-        uses: codacy/codacy-coverage-reporter-action@v1
+        uses: codacy/codacy-coverage-reporter-action@v1.3.0
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: coverage.xml

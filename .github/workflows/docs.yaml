@@ -9,15 +9,21 @@ jobs:
   deploy-docs:
 
     runs-on: ubuntu-latest
-    container: condaforge/mambaforge:latest
 
     steps:
-    - name: Prepare container
-      run: |
-        apt update && apt install -y git make
-
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7.0.1
+      with:
+        # versioningit derives the version from git tags/history
+        fetch-depth: 0
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v9.0.0
+      with:
+        enable-cache: true
+
+    - name: Install just
+      uses: extractions/setup-just@v4
 
     - name: Determine Version
       shell: bash
@@ -32,6 +38,9 @@ jobs:
           exit 1
         fi
 
+    - name: Install package
+      run: uv sync
+
     - name: Build and Deploy Documentation
       run: |
         git config --global user.name 'GitHub Actions'
@@ -41,7 +50,4 @@ jobs:
 
         git fetch --all --prune
 
-        export KEEP_CONDA_ENV_RUN=1
-        make env
-
-        make docs-deploy VERSION="$VERSION"
+        just docs-deploy "$VERSION"
