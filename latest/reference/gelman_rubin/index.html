@@ -1109,14 +1109,14 @@
             <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;gelman_rubin&lt;/span&gt; (&lt;code&gt;red.gelman_rubin.gelman_rubin&lt;/code&gt;)" href="#red.gelman_rubin.gelman_rubin">gelman_rubin</a></code></b>
             –
             <div class="doc-md-description">
-              <p>Compute the Gelman-Rubin diagnostic according to</p>
+              <p>Compute the Gelman-Rubin diagnostic.</p>
             </div>
           </li>
           <li class="doc-section-item field-body">
             <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;stable_gelman_rubin&lt;/span&gt; (&lt;code&gt;red.gelman_rubin.stable_gelman_rubin&lt;/code&gt;)" href="#red.gelman_rubin.stable_gelman_rubin">stable_gelman_rubin</a></code></b>
             –
             <div class="doc-md-description">
-              <p>Compute the stable Gelman-Rubin diagnostic according to</p>
+              <p>Compute the stable Gelman-Rubin diagnostic.</p>
             </div>
           </li>
     </ul>
@@ -1149,9 +1149,9 @@
 
     <div class="doc doc-contents ">
 
-        <p>Compute the Gelman-Rubin diagnostic according to
-equation 4 in  Statist. Sci. 36(4): 518-529
-(November 2021). DOI: 10.1214/20-STS812</p>
+        <p>Compute the Gelman-Rubin diagnostic.</p>
+<p>Uses equation 4 in Statist. Sci. 36(4): 518-529 (November 2021).
+DOI: 10.1214/20-STS812.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1217,11 +1217,12 @@ runs.</p>
 <span class="normal"><a href="#__codelineno-0-49">49</a></span>
 <span class="normal"><a href="#__codelineno-0-50">50</a></span>
 <span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">def</span><span class="w"> </span><span class="nf">gelman_rubin</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">_npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">_np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="sd">    Compute the Gelman-Rubin diagnostic according to</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="sd">    equation 4 in  Statist. Sci. 36(4): 518-529</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">    (November 2021). DOI: 10.1214/20-STS812</span>
+<span class="normal"><a href="#__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#__codelineno-0-53">53</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">def</span><span class="w"> </span><span class="nf">gelman_rubin</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">_npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">_np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the Gelman-Rubin diagnostic.</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="sd">    Uses equation 4 in Statist. Sci. 36(4): 518-529 (November 2021).</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">    DOI: 10.1214/20-STS812.</span>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>
 </span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">    Parameters</span>
 </span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">    ----------</span>
@@ -1234,24 +1235,25 @@ runs.</p>
 </span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="sd">    -------</span>
 </span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">    float</span>
 </span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">        The Gelman-Rubin diagnostic.</span>
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="c1"># Check that the data is valid.</span>
-</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">_check_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">one_dim_allowed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="n">_</span><span class="p">,</span> <span class="n">n_samples</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
-</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a>
-</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="c1"># Compute the variance estimates.</span>
-</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="n">intra_run_variance_est</span> <span class="o">=</span> <span class="n">_intra_run_variance</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="n">inter_run_variance_est</span> <span class="o">=</span> <span class="n">_inter_run_variance</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a>
-</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="c1"># Get combined variance estimate.</span>
-</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="n">combined_variance_est</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a>        <span class="n">n_samples</span> <span class="o">-</span> <span class="mi">1</span>
-</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="p">)</span> <span class="o">/</span> <span class="n">n_samples</span> <span class="o">*</span> <span class="n">intra_run_variance_est</span> <span class="o">+</span> <span class="n">inter_run_variance_est</span> <span class="o">/</span> <span class="n">n_samples</span>
-</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a>
-</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="c1"># Compute GR diagnostic.</span>
-</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="n">gelman_rubin_diagnostic</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">combined_variance_est</span> <span class="o">/</span> <span class="n">intra_run_variance_est</span><span class="p">)</span>
-</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">gelman_rubin_diagnostic</span><span class="p">)</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="c1"># Check that the data is valid.</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">_check_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">one_dim_allowed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="n">_</span><span class="p">,</span> <span class="n">n_samples</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="c1"># Compute the variance estimates.</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="n">intra_run_variance_est</span> <span class="o">=</span> <span class="n">_intra_run_variance</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="n">inter_run_variance_est</span> <span class="o">=</span> <span class="n">_inter_run_variance</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="c1"># Get combined variance estimate.</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="n">combined_variance_est</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a>        <span class="n">n_samples</span> <span class="o">-</span> <span class="mi">1</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="p">)</span> <span class="o">/</span> <span class="n">n_samples</span> <span class="o">*</span> <span class="n">intra_run_variance_est</span> <span class="o">+</span> <span class="n">inter_run_variance_est</span> <span class="o">/</span> <span class="n">n_samples</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="c1"># Compute GR diagnostic.</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="n">gelman_rubin_diagnostic</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">combined_variance_est</span> <span class="o">/</span> <span class="n">intra_run_variance_est</span><span class="p">)</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">gelman_rubin_diagnostic</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1273,16 +1275,14 @@ runs.</p>
 
     <div class="doc doc-contents ">
 
-        <p>Compute the stable Gelman-Rubin diagnostic according to
-equation 7 in  Statist. Sci. 36(4): 518-529
-(November 2021). DOI: 10.1214/20-STS812. This is applicable to
-a single run.</p>
+        <p>Compute the stable Gelman-Rubin diagnostic.</p>
+<p>Uses equation 7 in Statist. Sci. 36(4): 518-529 (November 2021).
+DOI: 10.1214/20-STS812. This is applicable to a single run.</p>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>red/gelman_rubin.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-56">56</a></span>
 <span class="normal"><a href="#__codelineno-0-57">57</a></span>
 <span class="normal"><a href="#__codelineno-0-58">58</a></span>
 <span class="normal"><a href="#__codelineno-0-59">59</a></span>
@@ -1304,12 +1304,11 @@ a single run.</p>
 <span class="normal"><a href="#__codelineno-0-75">75</a></span>
 <span class="normal"><a href="#__codelineno-0-76">76</a></span>
 <span class="normal"><a href="#__codelineno-0-77">77</a></span>
-<span class="normal"><a href="#__codelineno-0-78">78</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="k">def</span><span class="w"> </span><span class="nf">stable_gelman_rubin</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">_npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">_np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">n_pow</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">    Compute the stable Gelman-Rubin diagnostic according to</span>
-</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="sd">    equation 7 in  Statist. Sci. 36(4): 518-529</span>
-</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="sd">    (November 2021). DOI: 10.1214/20-STS812. This is applicable to</span>
-</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">    a single run.</span>
+<span class="normal"><a href="#__codelineno-0-78">78</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="k">def</span><span class="w"> </span><span class="nf">stable_gelman_rubin</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">_npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">_np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">n_pow</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the stable Gelman-Rubin diagnostic.</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="sd">    Uses equation 7 in Statist. Sci. 36(4): 518-529 (November 2021).</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">    DOI: 10.1214/20-STS812. This is applicable to a single run.</span>
 </span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="c1"># Validate the data.</span>
 </span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">_check_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">one_dim_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
