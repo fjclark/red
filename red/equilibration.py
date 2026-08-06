@@ -34,13 +34,12 @@ def detect_equilibration_init_seq(
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
     plot_max_lags: bool = True,
 ) -> _Tuple[_Union[float, int], float, float]:
-    r"""
-    Detect the equilibration time of a time series by finding the minimum
-    squared standard error (SSE), or maximum effective sample size (ESS)
-    of the time series, using initial sequence estimators of the variance.
-    This is done by computing the SSE at each time point, discarding all
-    samples before the time point. The index of the time point with
-    the minimum SSE or maximum ESS is taken to be the point of equilibration.
+    r"""Detect the equilibration time of a time series by finding the minimum SSE or maximum ESS.
+
+    The variance is estimated using initial sequence estimators. This is done by computing
+    the squared standard error (SSE) at each time point, discarding all samples before the
+    time point. The index of the time point with the minimum SSE, or maximum effective
+    sample size (ESS), is taken to be the point of equilibration.
 
     Parameters
     ----------
@@ -108,6 +107,7 @@ def detect_equilibration_init_seq(
 
     equil_ess: float
         The effective sample size at the equilibration point.
+
     """
     # Check that data is valid.
     data = check_data(data, one_dim_allowed=True)
@@ -201,13 +201,12 @@ def detect_equilibration_window(
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
     plot_window_size: bool = True,
 ) -> _Tuple[_Union[float, int], float, float]:
-    r"""
-    Detect the equilibration time of a time series by finding the minimum
-    squared standard error (SSE) or maximum effective sample size (ESS)
-    of the time series, using window estimators of the variance. This is
-    done by computing the SSE at each time point, discarding all samples
-    before the time point. The index of the time point with the minimum
-    SSE is taken to be the point of equilibration.
+    r"""Detect the equilibration time of a time series by finding the minimum SSE or maximum ESS.
+
+    The variance is estimated using window estimators. This is done by computing the
+    squared standard error (SSE) at each time point, discarding all samples before the time
+    point. The index of the time point with the minimum SSE, or maximum effective sample
+    size (ESS), is taken to be the point of equilibration.
 
     Parameters
     ----------
@@ -269,6 +268,7 @@ def detect_equilibration_window(
 
     equil_ess: float
         The effective sample size at the equilibration point.
+
     """
     # Check that data is valid.
     data = check_data(data, one_dim_allowed=True)
@@ -350,11 +350,11 @@ def get_paired_t_p_timeseries(
     final_block_size: float = 0.5,
     t_test_sidedness: str = "two-sided",
 ) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_Union[_np.int64, _np.float64]]]:
-    """
-    Get a timeseries of the p-values from a paired t-test on the differences
-    between sample means between intial and final portions of the data. The timeseries
-    is obtained by repeatedly discarding more data from the time series between
-    calculations of the p-value.
+    """Get a timeseries of the p-values from a paired t-test.
+
+    The p-values come from a paired t-test on the differences between sample means between
+    initial and final portions of the data. The timeseries is obtained by repeatedly
+    discarding more data from the time series between calculations of the p-value.
 
     Parameters
     ----------
@@ -392,6 +392,7 @@ def get_paired_t_p_timeseries(
 
     np.ndarray
         The times at which the p-values were calculated.
+
     """
     # Check that the data is valid.
     data = check_data(data, one_dim_allowed=False)
@@ -481,14 +482,14 @@ def detect_equilibration_paired_t_test(
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
 ) -> _Union[_np.int64, _np.float64]:
-    r"""
-    Detect the equilibration time of a time series by performing a paired
-    t-test between initial and final portions of the time series. This is repeated
-    , discarding more data from the time series between repeats. If the p-value
-    is greater than the threshold, there is no significant evidence that the data is
-    no equilibrated and the timeseries is taken to be equilibrated at this time
-    point. This test may be useful when we care only about systematic bias in the
-    data, and do not care about detecting inter-run differences.
+    r"""Detect the equilibration time of a time series by performing a paired t-test.
+
+    A paired t-test is performed between initial and final portions of the time series.
+    This is repeated, discarding more data from the time series between repeats. If the
+    p-value is greater than the threshold, there is no significant evidence that the data
+    is not equilibrated and the timeseries is taken to be equilibrated at this time point.
+    This test may be useful when we care only about systematic bias in the data, and do
+    not care about detecting inter-run differences.
 
     Parameters
     ----------
@@ -540,6 +541,7 @@ def detect_equilibration_paired_t_test(
     np.float64 | np.int64
         The time (or index, if no times are supplied) at which
         the time series is equilibrated.
+
     """
     # Validate data.
     data = check_data(data, one_dim_allowed=False)

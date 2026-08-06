@@ -1,5 +1,4 @@
-"""
-Functions to calculate the variance of a time series, accounting for autocorrelation.
+"""Functions to calculate the variance of a time series, accounting for autocorrelation.
 
 Methods implemented:
 
@@ -35,8 +34,8 @@ from ._validation import check_data as _check_data
 def _compute_autocovariance_no_fft(
     data: _npt.NDArray[_np.float64], max_lag: int
 ) -> _npt.NDArray[_np.float64]:
-    """
-    Calculate the auto-covariance as a function of lag time for a time series.
+    """Calculate the auto-covariance as a function of lag time for a time series.
+
     Avoids using statsmodel's acovf function as using numpy's dot function and jit
     gives a substantial speedup.
 
@@ -54,6 +53,7 @@ def _compute_autocovariance_no_fft(
     -------
     numpy.ndarray
         The auto-correlation function of the time series.
+
     """
     # Don't use statsmodel's acovf as we can get a substantial speedup by using
     # numpy's dot function and jit.
@@ -74,10 +74,11 @@ def _compute_autocovariance_no_fft(
 def _compute_autocovariance_fft(
     data: _npt.NDArray[_np.float64], max_lag: int
 ) -> _npt.NDArray[_np.float64]:
-    """
-    Calculate the autocovariance using the FFT method, as implemented in statsmodels.
+    """Calculate the autocovariance using the FFT method, as implemented in statsmodels.
+
     Note that we can speed this up for large arrays by rewriting to directly use numpy's fft
     function and using jit with rocket-fft https://github.com/styfenschaer/rocket-fft.
+
     Parameters
     ----------
     data : numpy.ndarray
@@ -92,6 +93,7 @@ def _compute_autocovariance_fft(
     -------
     numpy.ndarray
     The auto-correlation function of the time series.
+
     """
     autocov_fn = _acovf(data, adjusted=False, nlag=max_lag, fft=True, demean=False)
     autocov_fn = autocov_fn.astype(_np.float64, copy=False)
@@ -104,8 +106,7 @@ def _get_autocovariance(
     mean: _Union[None, float] = None,
     fft: bool = False,
 ) -> _npt.NDArray[_np.float64]:
-    """
-    Calculate the auto-covariance as a function of lag time for a time series.
+    """Calculate the auto-covariance as a function of lag time for a time series.
 
     Parameters
     ----------
@@ -130,6 +131,7 @@ def _get_autocovariance(
     -------
     numpy.ndarray
         The auto-correlation function of the time series.
+
     """
     # Copy the data so we don't modify the original.
     data = data.copy()
@@ -157,8 +159,7 @@ def _get_autocovariance(
 def _get_gamma_cap(
     autocov_series: _npt.NDArray[_np.float64],
 ) -> _npt.NDArray[_np.float64]:
-    """
-    Compute the capitial gamma function from the auto-covariance function.
+    """Compute the capitial gamma function from the auto-covariance function.
 
     Parameters
     ----------
@@ -169,6 +170,7 @@ def _get_gamma_cap(
     -------
     numpy.ndarray
         The capital gamma function of the time series.
+
     """
     # Get the length of the time series.
     n_samples = autocov_series.shape[0]
@@ -195,8 +197,8 @@ def _get_initial_positive_sequence(
     gamma_cap: _npt.NDArray[_np.float64],
     min_max_lag_time: int = 3,
 ) -> _npt.NDArray[_np.float64]:
-    """ "
-    Get the initial positive sequence from the capital gamma function of a time series.
+    """Get the initial positive sequence from the capital gamma function of a time series.
+
     See Geyer, 1992: https://www.jstor.org/stable/2246094.
 
     Parameters
@@ -212,6 +214,7 @@ def _get_initial_positive_sequence(
     -------
     numpy.ndarray
         The initial positive sequence.
+
     """
     # Make a copy of gamma_cap so we don't modify the original.
     # gamma_cap = _deepcopy(gamma_cap)
@@ -231,8 +234,8 @@ def _get_initial_monotone_sequence(
     gamma_cap: _npt.NDArray[_np.float64],
     min_max_lag_time: int = 3,
 ) -> _npt.NDArray[_np.float64]:
-    """
-    Get the initial monotone sequence from the capital gamma function of a time series.
+    """Get the initial monotone sequence from the capital gamma function of a time series.
+
     See Geyer, 1992: https://www.jstor.org/stable/2246094.
 
     Parameters
@@ -247,6 +250,7 @@ def _get_initial_monotone_sequence(
     -------
     numpy.ndarray
         The initial monotone sequence.
+
     """
     # Make a copy of gamma_cap so we don't modify the original.
     gamma_cap = gamma_cap.copy()
@@ -267,8 +271,8 @@ def _get_initial_convex_sequence(
     gamma_cap: _npt.NDArray[_np.float64],
     min_max_lag_time: int = 3,
 ) -> _npt.NDArray[_np.float64]:
-    """
-    Get the initial convex sequence from the capital gamma function of a time series.
+    """Get the initial convex sequence from the capital gamma function of a time series.
+
     See Geyer, 1992: https://www.jstor.org/stable/2246094.
 
     Parameters
@@ -290,6 +294,7 @@ def _get_initial_convex_sequence(
     MIT License.
     YEAR: 2005, 2009, 2010, 2012
     COPYRIGHT HOLDER: Charles J. Geyer and Leif T. Johnson
+
     """
     # Make a copy of gamma_cap so we don't modify the original.
     gamma_con = gamma_cap.copy()
@@ -346,8 +351,7 @@ def _get_autocovariance_window(
     kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
     window_size: int = 10,
 ) -> _npt.NDArray[_np.float64]:
-    """
-    Calculate the autocovariance of a time series using window estimators.
+    """Calculate the autocovariance of a time series using window estimators.
 
     Parameters
     ----------
@@ -366,6 +370,7 @@ def _get_autocovariance_window(
     -------
     np.ndarray
         The autocovariance of the time series as a function of lag time.
+
     """
     n_runs, n_samples = data.shape
     if n_samples < window_size:
@@ -396,10 +401,11 @@ def _get_autocovariance_window(
 def _smoothen_max_lag_times(
     max_lag_times: _npt.NDArray[_np.float64],
 ) -> _npt.NDArray[_np.int64]:
-    """
-    Smoothen a list of maximum lag times by a) converting them to a monotinically
-    decreasing sequence and b) linearly interpolating between points where the sequence
-    changes. This may be useful when the max lag times are noisy.
+    """Smoothen a list of maximum lag times.
+
+    This is done by a) converting them to a monotonically decreasing sequence and b)
+    linearly interpolating between points where the sequence changes. This may be useful
+    when the max lag times are noisy.
 
     Parameters
     ----------
@@ -410,6 +416,7 @@ def _smoothen_max_lag_times(
     -------
     numpy.ndarray
         The smoothened maximum lag times.
+
     """
     # Get a monotinically decreasing sequence.
     max_lag_times_monotonic = _get_initial_monotone_sequence(max_lag_times, min_max_lag_time=0)
@@ -445,8 +452,8 @@ def get_variance_initial_sequence(
     max_max_lag_time: _Optional[int] = None,
     autocov: _Optional[_npt.NDArray[_np.float64]] = None,
 ) -> _Tuple[float, int, _npt.NDArray[_np.float64]]:
-    """
-    Calculate the variance of a time series using initial sequence methods.
+    """Calculate the variance of a time series using initial sequence methods.
+
     See Geyer, 1992: https://www.jstor.org/stable/2246094.
 
     Parameters
@@ -482,6 +489,7 @@ def get_variance_initial_sequence(
 
     numpy.ndarray
         The auto-covariance function of the time series.
+
     """
     # Validate the data.
     data = _check_data(data, one_dim_allowed=True)
@@ -611,10 +619,11 @@ def get_variance_series_initial_sequence(
     smooth_lag_times: bool = False,
     frac_padding: float = 0.1,
 ) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
-    """
-    Repeatedly calculate the variance of a time series while discarding increasing
-    numbers of samples from the start of the time series. The variance is calculated
-    using initial sequence methods. See Geyer, 1992: https://www.jstor.org/stable/2246094.
+    """Repeatedly calculate the variance of a time series while discarding samples.
+
+    Increasing numbers of samples are discarded from the start of the time series. The
+    variance is calculated using initial sequence methods. See Geyer, 1992:
+    https://www.jstor.org/stable/2246094.
 
     Parameters
     ----------
@@ -653,6 +662,7 @@ def get_variance_series_initial_sequence(
 
     numpy.ndarray
         The maximum lag time used when calculating the auto-correlated variance.
+
     """
     # Check that the data is valid.
     data = _check_data(data, one_dim_allowed=True)
@@ -740,8 +750,7 @@ def get_variance_window(
     kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
     window_size: int = 10,
 ) -> float:
-    """
-    Calculate the variance of a time series using window estimators.
+    """Calculate the variance of a time series using window estimators.
 
     Parameters
     ----------
@@ -759,6 +768,7 @@ def get_variance_window(
     -------
     float
         The estimated variance of the time series.
+
     """
     # Check that the data is valid.
     data = _check_data(data, one_dim_allowed=True)
@@ -802,10 +812,10 @@ def get_variance_series_window(
     window_size: _Optional[int] = None,
     frac_padding: float = 0.1,
 ) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
-    """
-    Repeatedly calculate the variance of a time series while discarding increasing
-    numbers of samples from the start of the time series. The variance is calculated
-    using window estimators.
+    """Repeatedly calculate the variance of a time series while discarding samples.
+
+    Increasing numbers of samples are discarded from the start of the time series. The
+    variance is calculated using window estimators.
 
     Parameters
     ----------
@@ -836,6 +846,7 @@ def get_variance_series_window(
 
     numpy.ndarray
         The window size used at each index.
+
     """
     # Check that the data is valid.
     data = _check_data(data, one_dim_allowed=True)
@@ -888,8 +899,8 @@ def get_variance_series_window(
 
 
 def replicated_batch_means_variance(data: _npt.NDArray[_np.float64], batch_size: int) -> float:
-    """
-    Estimate the variance of a time series using the replicated batch means method.
+    """Estimate the variance of a time series using the replicated batch means method.
+
     See section 3.1 in Statist. Sci. 36(4): 518-529 (November 2021).
     DOI: 10.1214/20-STS812 .
 
@@ -905,6 +916,7 @@ def replicated_batch_means_variance(data: _npt.NDArray[_np.float64], batch_size:
     -------
     float
         The estimated variance.
+
     """
     data = _check_data(data, one_dim_allowed=True)
 
@@ -935,8 +947,8 @@ def replicated_batch_means_variance(data: _npt.NDArray[_np.float64], batch_size:
 
 
 def lugsail_variance(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) -> float:
-    """
-    Estimate the variance of a time series using the lugsail method.
+    """Estimate the variance of a time series using the lugsail method.
+
     See section 3.2 in Statist. Sci. 36(4): 518-529 (November 2021).
     DOI: 10.1214/20-STS812 .
 
@@ -953,6 +965,7 @@ def lugsail_variance(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) -> f
     -------
     float
         The estimated variance.
+
     """
     # Check that the data is valid.
     data = _check_data(data, one_dim_allowed=True)
@@ -983,9 +996,7 @@ def lugsail_variance(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) -> f
 
 
 def inter_run_variance(data: _npt.NDArray[_np.float64]) -> float:
-    """
-    Compute the variance based on the inter-run differences
-    between means.
+    """Compute the variance based on the inter-run differences between means.
 
     Parameters
     ----------
@@ -996,6 +1007,7 @@ def inter_run_variance(data: _npt.NDArray[_np.float64]) -> float:
     -------
     float
         The estimated variance.
+
     """
     # Check that the data is valid.
     data = _check_data(data, one_dim_allowed=False)
@@ -1011,8 +1023,7 @@ def inter_run_variance(data: _npt.NDArray[_np.float64]) -> float:
 
 
 def intra_run_variance(data: _npt.NDArray[_np.float64]) -> float:
-    """
-    Compute the average intra-run variance estimate.
+    """Compute the average intra-run variance estimate.
 
     Parameters
     ----------
@@ -1023,6 +1034,7 @@ def intra_run_variance(data: _npt.NDArray[_np.float64]) -> float:
     -------
     float
         The mean intra-run variance estimate.
+
     """
     # Check that the data is valid.
     data = _check_data(data, one_dim_allowed=True)
