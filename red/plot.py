@@ -1,10 +1,6 @@
 """Plotting functions."""
 
 from typing import Any as _Any
-from typing import List as _List
-from typing import Optional as _Optional
-from typing import Tuple as _Tuple
-from typing import Union as _Union
 
 import matplotlib.pyplot as _plt
 import numpy as _np
@@ -23,7 +19,7 @@ PLT_STYLE = "ggplot"
 def plot_timeseries(
     ax: _Axes,
     data: _npt.NDArray[_np.float64],
-    times: _npt.NDArray[_Union[_np.int64, _np.float64]],
+    times: _npt.NDArray[_np.int64 | _np.float64],
     n_blocks: int = 100,
     time_units: str = "ns",
     y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
@@ -117,10 +113,10 @@ def plot_timeseries(
 def plot_p_values(
     ax: _Axes,
     p_values: _npt.NDArray[_np.float64],
-    times: _npt.NDArray[_Union[_np.float64, _np.int64]],
+    times: _npt.NDArray[_np.float64 | _np.int64],
     p_threshold: float = 0.05,
     time_units: str = "ns",
-    threshold_times: _Optional[_npt.NDArray[_Union[_np.int64, _np.float64]]] = None,
+    threshold_times: _npt.NDArray[_np.int64 | _np.float64] | None = None,
 ) -> None:
     """
     Plot the p-values of the paired t-test.
@@ -201,13 +197,13 @@ def plot_p_values(
 def plot_sse(
     ax: _Axes,
     sse: _npt.NDArray[_np.float64],
-    max_lags: _Optional[_npt.NDArray[_np.float64]],
-    window_sizes: _Optional[_npt.NDArray[_np.float64]],
-    times: _npt.NDArray[_Union[_np.int64, _np.float64]],
+    max_lags: _npt.NDArray[_np.float64] | None,
+    window_sizes: _npt.NDArray[_np.float64] | None,
+    times: _npt.NDArray[_np.int64 | _np.float64],
     time_units: str = "ns",
     variance_y_label: str = r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
     reciprocal: bool = True,
-) -> _Tuple[_List[_Artist], _List[_Any]]:
+) -> tuple[list[_Artist], list[_Any]]:
     r"""
     Plot the squared standard error (SSE) estimate against time.
 
@@ -268,14 +264,14 @@ def plot_sse(
         ax.plot(times, to_plot, color="black", label=label)
 
         # If lags or window sizes were supplied, plot them on a second y axis.
-        ax2: _Optional[_Axes] = None
-        lag_data = window_sizes if window_sizes is not None else max_lags
-        if lag_data is not None:
+        ax2: _Axes | None = None
+        secondary_series = window_sizes if window_sizes is not None else max_lags
+        if secondary_series is not None:
             label = "Window Size" if window_sizes is not None else "Max Lag Index"
             ax2 = ax.twinx()
             # Get the second colour from the colour cycle.
             ax2.set_prop_cycle(color=[_plt.rcParams["axes.prop_cycle"].by_key()["color"][1]])
-            ax2.plot(times, lag_data, alpha=0.8, label=label)
+            ax2.plot(times, secondary_series, alpha=0.8, label=label)
             # Remove the horizontal lines.
             ax2.yaxis.grid(False)
 
@@ -313,12 +309,12 @@ def plot_equilibration_paired_t_test(
     subplot_spec: _gridspec.SubplotSpec,
     data: _npt.NDArray[_np.float64],
     p_values: _npt.NDArray[_np.float64],
-    data_times: _npt.NDArray[_Union[_np.int64, _np.float64]],
-    p_times: _npt.NDArray[_Union[_np.float64, _np.int64]],
+    data_times: _npt.NDArray[_np.int64 | _np.float64],
+    p_times: _npt.NDArray[_np.float64 | _np.int64],
     p_threshold: float = 0.05,
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
-) -> _Tuple[_Axes, _Axes]:
+) -> tuple[_Axes, _Axes]:
     r"""
     Plot the p-values of the paired t-test against time, underneath the
     time series data.
@@ -410,15 +406,15 @@ def plot_equilibration_min_sse(
     subplot_spec: _gridspec.SubplotSpec,
     data: _npt.NDArray[_np.float64],
     sse_series: _npt.NDArray[_np.float64],
-    data_times: _npt.NDArray[_Union[_np.int64, _np.float64]],
-    sse_times: _npt.NDArray[_Union[_np.int64, _np.float64]],
-    max_lag_series: _Optional[_npt.NDArray[_np.float64]] = None,
-    window_size_series: _Optional[_npt.NDArray[_np.float64]] = None,
+    data_times: _npt.NDArray[_np.int64 | _np.float64],
+    sse_times: _npt.NDArray[_np.int64 | _np.float64],
+    max_lag_series: _npt.NDArray[_np.float64] | None = None,
+    window_size_series: _npt.NDArray[_np.float64] | None = None,
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
     variance_y_label: str = r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
     reciprocal: bool = True,
-) -> _Tuple[_Axes, _Axes]:
+) -> tuple[_Axes, _Axes]:
     r"""
     Plot the (reciprocal of the) squared standard error (SSE)
     estimates against time, underneath the time series data.

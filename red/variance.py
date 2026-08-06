@@ -13,9 +13,6 @@ is equivalent to using a Bartlett window.
 """
 
 from typing import Callable as _Callable
-from typing import Optional as _Optional
-from typing import Tuple as _Tuple
-from typing import Union as _Union
 from warnings import warn as _warn
 
 import numba as _numba
@@ -99,8 +96,8 @@ def _compute_autocovariance_fft(
 
 def _get_autocovariance(
     data: _npt.NDArray[_np.float64],
-    max_lag: _Union[None, int] = None,
-    mean: _Union[None, float] = None,
+    max_lag: None | int = None,
+    mean: None | float = None,
     fft: bool = False,
 ) -> _npt.NDArray[_np.float64]:
     """
@@ -439,9 +436,9 @@ def get_variance_initial_sequence(
     data: _npt.NDArray[_np.float64],
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
-    max_max_lag_time: _Optional[int] = None,
-    autocov: _Optional[_npt.NDArray[_np.float64]] = None,
-) -> _Tuple[float, int, _npt.NDArray[_np.float64]]:
+    max_max_lag_time: int | None = None,
+    autocov: _npt.NDArray[_np.float64] | None = None,
+) -> tuple[float, int, _npt.NDArray[_np.float64]]:
     """
     Calculate the variance of a time series using initial sequence methods.
     See Geyer, 1992: https://www.jstor.org/stable/2246094.
@@ -604,10 +601,10 @@ def get_variance_series_initial_sequence(
     data: _npt.NDArray[_np.float64],
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
-    max_max_lag_time: _Optional[int] = None,
+    max_max_lag_time: int | None = None,
     smooth_lag_times: bool = False,
     frac_padding: float = 0.1,
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
+) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """
     Repeatedly calculate the variance of a time series while discarding increasing
     numbers of samples from the start of the time series. The variance is calculated
@@ -795,10 +792,10 @@ def get_variance_window(
 def get_variance_series_window(
     data: _npt.NDArray[_np.float64],
     kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,
-    window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
-    window_size: _Optional[int] = None,
+    window_size_fn: _Callable[[int], int] | None = lambda x: round(x**0.5),
+    window_size: int | None = None,
     frac_padding: float = 0.1,
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
+) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """
     Repeatedly calculate the variance of a time series while discarding increasing
     numbers of samples from the start of the time series. The variance is calculated

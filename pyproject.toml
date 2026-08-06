@@ -59,9 +59,7 @@ dev = [
 [project.urls]
 Homepage = "https://fjclark.github.io/red/latest/"
 
-# ty has no single `strict = true` toggle; maximum strictness is expressed via
-# the runes below (all rules -> error, conservative equality narrowing, and a
-# non-zero exit on any warning).
+# Configure ty to be strict.
 [tool.ty.environment]
 python-version = "3.11"
 
