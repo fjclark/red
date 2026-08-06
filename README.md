@@ -76,21 +76,17 @@ my_timeseries = ...
 # of the first sample after equilibration, g is the statistical
 # inefficiency of the equilibrated sample, and ess is the effective sample
 # size of the equilibrated sample.
-idx, g, ess = red.detect_equilibration_window(my_timeseries,
-                                              method="min_sse",
-                                              plot=True)
+idx, g, ess = red.detect_equilibration_window(my_timeseries, method="min_sse", plot=True)
 
 # Alternatively, use Geyer's initial convex sequence method to account
 # for autocorrelation.
-idx, g, ess = red.detect_equilibration_init_seq(my_timeseries,
-                                                method="min_sse",
-                                                plot=True)
+idx, g, ess = red.detect_equilibration_init_seq(my_timeseries, method="min_sse", plot=True)
 
 # We can also determine equilibration in the same way as in
 # pymbar.timeseries.detect_equilibration(my_timeseries, fast=False)
-idx, g, ess = red.detect_equilibration_init_seq(my_timeseries,
-                                                method="max_ess",
-                                                sequence_estimator="positive")
+idx, g, ess = red.detect_equilibration_init_seq(
+    my_timeseries, method="max_ess", sequence_estimator="positive"
+)
 ```
 
 #### Uncertainty Quantification
@@ -99,7 +95,6 @@ idx, g, ess = red.detect_equilibration_init_seq(my_timeseries,
 # Estimate the 95 % confidence interval, accounting for autocorrelation using Geyer's initial
 # convex sequence method.
 ci_95 = red.get_conf_int_init_seq(my_timeseries, alpha_two_tailed=0.05)
-
 ```
 
 For more examples, see the [documentation](https://fjclark.github.io/red/latest/examples/).

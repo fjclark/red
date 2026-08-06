@@ -204,8 +204,7 @@ def plot_sse(
     variance_y_label: str = r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
     reciprocal: bool = True,
 ) -> tuple[list[_Artist], list[_Any]]:
-    """
-    Plot the squared standard error (SSE) estimate against time.
+    r"""Plot the squared standard error (SSE) estimate against time.
 
     Parameters
     ----------
@@ -229,7 +228,7 @@ def plot_sse(
 
     variance_y_label : str, optional
         The y-axis label for the variance. The default is
-        "$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$".
+        "$\frac{1}{\\sigma^2(\\Delta G)}$ / kcal$^{-2}$ mol$^2$".
 
     reciprocal : bool, optional, default=True
         Whether to plot the reciprocal of the SSE.
@@ -316,7 +315,7 @@ def plot_equilibration_paired_t_test(
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
 ) -> tuple[_Axes, _Axes]:
-    """Plot the p-values of the paired t-test against time.
+    r"""Plot the p-values of the paired t-test against time.
 
     The p-values are plotted underneath the time series data.
 
