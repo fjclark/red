@@ -131,7 +131,7 @@ distance-dirty = "{base_version}+{distance}.{vcs}{rev}.dirty"
 method = "git"  # <- The method name
 # Parameters to pass to the method:
 match = ["*"]
-default-tag = "0.1.4"
+default-tag = "0.2.0"
 
 [tool.versioningit.write]
 file = "red/_version.py"

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 2026-08-06
+## 0.2.0 - 2026-08-06
 
 - Switch to from conda, make, and mypy to uv, just, and ty. Modernise type hinting and switch to Python > 3.11.
 - Drop polyfill.io due to security issues.
