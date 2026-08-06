@@ -549,7 +549,12 @@ def detect_equilibration_paired_t_test(
     if times is None:
         time_units = "index"
         # Convert times to indices.
-        times = _np.arange(n_samples, dtype=_np.int64)
+        times_valid: _npt.NDArray[_Union[_np.int64, _np.float64]] = _np.arange(
+            n_samples, dtype=_np.int64
+        )
+    else:
+        # To satisfy type checking.
+        times_valid = times
 
     # Check that user options (not checked in get_paired_t_p_timeseries) are valid.
     if p_threshold <= 0 or p_threshold > 0.7:
@@ -583,7 +588,7 @@ def detect_equilibration_paired_t_test(
             subplot_spec=gridspec_obj[0],
             data=data,
             p_values=p_vals,
-            data_times=times,
+            data_times=times_valid,
             p_times=times_used,
             p_threshold=p_threshold,
             time_units=time_units,

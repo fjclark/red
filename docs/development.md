@@ -2,27 +2,28 @@
 
 ## Writing Code
 
-To create a development environment, you must have [`mamba` installed](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html).
+To create a development environment, you must have [`uv` installed](https://docs.astral.sh/uv/getting-started/installation/) and [`just` installed](https://github.com/casey/just#installation).
 
-A development conda environment can be created and activated with:
+A development environment can be created (and pre-commit hooks installed) with:
 
 ```shell
-make env
-mamba activate red
+just install
 ```
 
-Some handy `make` commands are available:
+This creates a virtual environment in `.venv`. Prefix commands with `uv run`, or activate the environment with `source .venv/bin/activate`.
+
+Some handy `just` commands are available:
 ```shell
-make lint # Lint the codebase with Ruff
-make format # Format the codebase with Ruff
-make type-check # Type-check the codebase with Mypy
-make test # Run the unit tests with Pytest
+just lint # Lint the codebase with Ruff
+just format # Format the codebase with Ruff
+just type-check # Type-check the codebase with Mypy
+just test # Run the unit tests with Pytest
 ```
 
 To serve the documentation locally:
 
 ```shell
-mkdocs serve
+uv run mkdocs serve
 ```
 
 ## Publishing

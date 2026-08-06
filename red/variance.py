@@ -338,7 +338,7 @@ def _get_initial_convex_sequence(
             gamma_con[j] = gamma_con[j - 1] + mean_pooled_value
             j += 1
 
-    return _cast(_npt.NDArray[_np.float64], gamma_con)
+    return gamma_con
 
 
 def _get_autocovariance_window(

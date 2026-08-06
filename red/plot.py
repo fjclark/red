@@ -120,7 +120,7 @@ def plot_p_values(
     times: _npt.NDArray[_Union[_np.float64, _np.int64]],
     p_threshold: float = 0.05,
     time_units: str = "ns",
-    threshold_times: _Optional[_npt.NDArray[_np.float64]] = None,
+    threshold_times: _Optional[_npt.NDArray[_Union[_np.int64, _np.float64]]] = None,
 ) -> None:
     """
     Plot the p-values of the paired t-test.
@@ -312,7 +312,7 @@ def plot_equilibration_paired_t_test(
     subplot_spec: _gridspec.SubplotSpec,
     data: _npt.NDArray[_np.float64],
     p_values: _npt.NDArray[_np.float64],
-    data_times: _npt.NDArray[_np.float64],
+    data_times: _npt.NDArray[_Union[_np.int64, _np.float64]],
     p_times: _npt.NDArray[_Union[_np.float64, _np.int64]],
     p_threshold: float = 0.05,
     time_units: str = "ns",
