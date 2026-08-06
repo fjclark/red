@@ -111,9 +111,9 @@ def get_ess_series_init_seq(
 
 def get_ess_series_window(
     data: _npt.NDArray[_np.float64],
-    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
-    window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
-    window_size: _Optional[int] = None,
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,
+    window_size_fn: _Callable[[int], int] | None = lambda x: round(x**0.5),
+    window_size: int | None = None,
 ) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """Compute a series of effective sample sizes for a time series.
 
