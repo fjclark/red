@@ -40,9 +40,9 @@ def convert_sse_series_to_ess_series(
 
     for i in range(len(sse_series)):
         # Get "biased", rather than n - 1, variance.
-        uncor_vars[i] = data[:, i:].var()  # type: ignore
+        uncor_vars[i] = data[:, i:].var()
 
-    return uncor_vars / sse_series  # type: ignore
+    return uncor_vars / sse_series
 
 
 def get_ess_series_init_seq(
@@ -112,7 +112,7 @@ def get_ess_series_init_seq(
 
 def get_ess_series_window(
     data: _npt.NDArray[_np.float64],
-    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,
     window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
     window_size: _Optional[int] = None,
 ) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:

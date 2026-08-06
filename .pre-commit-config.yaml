@@ -23,7 +23,7 @@ repos:
 
 -   repo: local
     hooks:
-    -   id: mypy
+    -   id: ty
         name: Type check python code
         language: system
         entry: bash

@@ -191,7 +191,7 @@ def detect_equilibration_window(
     data: _npt.NDArray[_np.float64],
     times: _Optional[_npt.NDArray[_np.float64]] = None,
     method: str = "min_sse",
-    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,
     window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
     window_size: _Optional[int] = None,
     frac_padding: float = 0.1,
@@ -295,7 +295,7 @@ def detect_equilibration_window(
     )
 
     # Get the corresponding times (or indices).
-    sse_times = times_valid[: len(sse_vals)]  # type: ignore
+    sse_times = times_valid[: len(sse_vals)]
 
     # Convert the SSE to 1/ESS if requested (divide by uncorrelated variance).
     if method == "max_ess":

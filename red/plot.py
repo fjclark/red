@@ -90,7 +90,7 @@ def plot_timeseries(
     # Trim the data and times so that they are divisible by the block size.
     times = times[:n_samples_end]
     data = data[:, :n_samples_end]
-    data = data.reshape(n_runs, n_blocks, block_size).mean(axis=2)  # type: ignore
+    data = data.reshape(n_runs, n_blocks, block_size).mean(axis=2)
     times = times.reshape(n_blocks, block_size).mean(axis=1)
 
     # Decide the transparency of the individual run lines.
@@ -267,14 +267,15 @@ def plot_sse(
             label = "ESS" if reciprocal else "1/ESS"
         ax.plot(times, to_plot, color="black", label=label)
 
-        # If lags is not None, plot the lag times on a different y axis.
-        if max_lags is not None or window_sizes is not None:
-            label = "Max Lag Index" if window_sizes is None else "Window Size"
-            to_plot = max_lags if window_sizes is None else window_sizes  # type: ignore
+        # If lags or window sizes were supplied, plot them on a second y axis.
+        ax2: _Optional[_Axes] = None
+        lag_data = window_sizes if window_sizes is not None else max_lags
+        if lag_data is not None:
+            label = "Window Size" if window_sizes is not None else "Max Lag Index"
             ax2 = ax.twinx()
             # Get the second colour from the colour cycle.
             ax2.set_prop_cycle(color=[_plt.rcParams["axes.prop_cycle"].by_key()["color"][1]])
-            ax2.plot(times, to_plot, alpha=0.8, label=label)
+            ax2.plot(times, lag_data, alpha=0.8, label=label)
             # Remove the horizontal lines.
             ax2.yaxis.grid(False)
 
@@ -293,7 +294,7 @@ def plot_sse(
 
         # Combine the legends from both axes.
         handles, labels = ax.get_legend_handles_labels()
-        if max_lags is not None or window_sizes is not None:
+        if ax2 is not None:
             handles2, labels2 = ax2.get_legend_handles_labels()
             handles += handles2
             labels += labels2

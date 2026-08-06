@@ -35,14 +35,13 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  "mypy",
+  "ty",
   "pytest>=6.1.2",
   "pytest-runner",
   "pytest-cov",
   "pytest-env",
   "ruff",
   "pre-commit",
-  "types-PyYAML",
   "mkdocs",
   "mkdocs-material",
   "mkdocs-gen-files",
@@ -60,13 +59,23 @@ dev = [
 [project.urls]
 Homepage = "https://fjclark.github.io/red/latest/"
 
-[tool.mypy]
-exclude = 'tests/'
-follow_imports = "silent"
-ignore_missing_imports = true
-strict = true
-disable_error_code = "unused-ignore"
-plugins = "numpy.typing.mypy_plugin"
+# ty has no single `strict = true` toggle; maximum strictness is expressed via
+# the runes below (all rules -> error, conservative equality narrowing, and a
+# non-zero exit on any warning).
+[tool.ty.environment]
+python-version = "3.11"
+
+[tool.ty.src]
+exclude = ["red/tests"]
+
+[tool.ty.rules]
+all = "error"
+
+[tool.ty.analysis]
+strict-equality-semantics = true
+
+[tool.ty.terminal]
+error-on-warning = true
 
 [tool.ruff]
 line-length = 100

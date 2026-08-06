@@ -23,9 +23,9 @@ format:
 test:
     uv run pytest {{test_args}} {{package_dir}}/tests/
 
-# Type check the code with mypy
+# Type check the code with ty
 type-check:
-    uv run mypy --follow-imports=silent --ignore-missing-imports --strict {{package_dir}}
+    uv run ty check {{package_dir}}
 
 # Build the documentation
 docs-build:

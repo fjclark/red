@@ -86,7 +86,7 @@ def get_sse_series_init_seq(
 
 def get_sse_series_window(
     data: _npt.NDArray[_np.float64],
-    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,
     window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
     window_size: _Optional[int] = None,
     frac_padding: float = 0.1,
