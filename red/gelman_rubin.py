@@ -16,7 +16,8 @@ from .variance import (
 
 
 def gelman_rubin(data: _npt.NDArray[_np.float64]) -> float:
-    """
+    """Compute the Gelman-Rubin diagnostic.
+
     Compute the Gelman-Rubin diagnostic according to
     equation 4 in  Statist. Sci. 36(4): 518-529
     (November 2021). DOI: 10.1214/20-STS812
@@ -32,6 +33,7 @@ def gelman_rubin(data: _npt.NDArray[_np.float64]) -> float:
     -------
     float
         The Gelman-Rubin diagnostic.
+
     """
     # Check that the data is valid.
     data = _check_data(data, one_dim_allowed=False)
@@ -53,7 +55,8 @@ def gelman_rubin(data: _npt.NDArray[_np.float64]) -> float:
 
 
 def stable_gelman_rubin(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) -> float:
-    """
+    """Compute the stable Gelman-Rubin diagnostic.
+
     Compute the stable Gelman-Rubin diagnostic according to
     equation 7 in  Statist. Sci. 36(4): 518-529
     (November 2021). DOI: 10.1214/20-STS812. This is applicable to

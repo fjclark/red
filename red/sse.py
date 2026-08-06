@@ -19,7 +19,8 @@ def get_sse_series_init_seq(
     smooth_lag_times: bool = False,
     frac_padding: float = 0.1,
 ) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
-    """
+    """Compute a series of squared standard errors using initial sequence estimators.
+
     Compute a series of squared standard errors for a time series as data
     is discarded from the beginning of the time series. The squared standard
     error is computed using the sequence estimator specified.
@@ -61,6 +62,7 @@ def get_sse_series_init_seq(
 
     np.ndarray
         The maximum lag times used.
+
     """
     # Validate the data.
     data = check_data(data, one_dim_allowed=True)
@@ -91,7 +93,8 @@ def get_sse_series_window(
     window_size: _Optional[int] = None,
     frac_padding: float = 0.1,
 ) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
-    """
+    """Compute a series of squared standard errors using window estimators.
+
     Compute a series of squared standard errors for a time series as data
     is discarded from the beginning of the time series. The squared standard
     error is computed using the window size and kernel specified.
@@ -125,6 +128,7 @@ def get_sse_series_window(
 
     np.ndarray
         The window sizes used.
+
     """
     # Validate the data.
     data = check_data(data, one_dim_allowed=True)

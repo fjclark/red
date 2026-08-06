@@ -28,8 +28,7 @@ def plot_timeseries(
     time_units: str = "ns",
     y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
 ) -> None:
-    r"""
-    Plot the (multi-run) time series data.
+    r"""Plot the (multi-run) time series data.
 
     Parameters
     ----------
@@ -55,6 +54,7 @@ def plot_timeseries(
 
     y_label : str, optional
         The y-axis label. The default is "$\Delta G$ / kcal mol$^{-1}$".
+
     """
     # Check that data is valid.
     data = check_data(data, one_dim_allowed=True)
@@ -122,8 +122,7 @@ def plot_p_values(
     time_units: str = "ns",
     threshold_times: _Optional[_npt.NDArray[_np.float64]] = None,
 ) -> None:
-    """
-    Plot the p-values of the paired t-test.
+    """Plot the p-values of the paired t-test.
 
     Parameters
     ----------
@@ -146,6 +145,7 @@ def plot_p_values(
         The times to plot the p-value threshold at. If None, this is
         set to the times at which the data was sampled. Useful when
         using this plot underneath a time series plot.
+
     """
     # Check that p_values is valid.
     if not isinstance(p_values, _np.ndarray) or not isinstance(times, _np.ndarray):
@@ -208,8 +208,7 @@ def plot_sse(
     variance_y_label: str = r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
     reciprocal: bool = True,
 ) -> _Tuple[_List[_Artist], _List[_Any]]:
-    r"""
-    Plot the squared standard error (SSE) estimate against time.
+    r"""Plot the squared standard error (SSE) estimate against time.
 
     Parameters
     ----------
@@ -245,6 +244,7 @@ def plot_sse(
 
     labels : List[str]
         The labels for the legend.
+
     """
     # Check that sse is valid.
     if not isinstance(sse, _np.ndarray) or not isinstance(times, _np.ndarray):
@@ -318,17 +318,15 @@ def plot_equilibration_paired_t_test(
     time_units: str = "ns",
     data_y_label: str = r"$\Delta G$ / kcal mol$^{-1}$",
 ) -> _Tuple[_Axes, _Axes]:
-    r"""
-    Plot the p-values of the paired t-test against time, underneath the
-    time series data.
+    r"""Plot the p-values of the paired t-test against time, underneath the time series data.
 
     Parameters
     ----------
     fig : plt.Figure
         The figure to plot on.
 
-    gridspec_obj : plt.GridSpec
-        The gridspec to use for the plot.
+    subplot_spec : plt.SubplotSpec
+        The subplot spec to use for the plot.
 
     data : np.ndarray
         The time series data. This should have shape
@@ -361,6 +359,7 @@ def plot_equilibration_paired_t_test(
 
     ax_bottom : Axes
         The axes for the p-values.
+
     """
     with _plt.style.context(PLT_STYLE):
         # We need to split the gridspec into two subplots, one for the time series data (above)
@@ -418,7 +417,8 @@ def plot_equilibration_min_sse(
     variance_y_label: str = r"$\frac{1}{\sigma^2(\Delta G)}$ / kcal$^{-2}$ mol$^2$",
     reciprocal: bool = True,
 ) -> _Tuple[_Axes, _Axes]:
-    r"""
+    r"""Plot the squared standard error (SSE) estimates against time.
+
     Plot the (reciprocal of the) squared standard error (SSE)
     estimates against time, underneath the time series data.
 
@@ -475,6 +475,7 @@ def plot_equilibration_min_sse(
 
     ax_bottom : Axes
         The axes for the p-values.
+
     """
     with _plt.style.context(PLT_STYLE):
         data = check_data(data, one_dim_allowed=True)

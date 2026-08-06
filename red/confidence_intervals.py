@@ -17,7 +17,8 @@ def get_conf_int_init_seq(
     min_max_lag_time: int = 3,
     max_max_lag_time: _Optional[int] = None,
 ) -> float:
-    """
+    """Estimate the confidence interval of the mean using initial sequence methods.
+
     Calculate the confidence interval for the mean of a time
     series using initial sequence methods. See Geyer, 1992:
     https://www.jstor.org/stable/2246094.
@@ -48,6 +49,7 @@ def get_conf_int_init_seq(
     -------
     float
         The standard error of the mean.
+
     """
     # Get the correlated estimate of the variance.
     var_cor, max_lag, acovf = _get_variance_initial_sequence(
