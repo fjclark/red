@@ -18,10 +18,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 # Declare any run-time dependencies that should be installed with the package.
 dependencies = [
-    "importlib-resources;python_version<'3.10'",
     "numpy>=1.20.0",
     "scipy>=1.6.0",
     "matplotlib>=3.3.0",
@@ -34,15 +33,15 @@ dependencies = [
 #"Source" = "https://github.com/fjclark/red/"
 #"Documentation" = "https://red.readthedocs.io/"
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-  "mypy",
+  "ty",
   "pytest>=6.1.2",
   "pytest-runner",
+  "pytest-cov",
   "pytest-env",
   "ruff",
   "pre-commit",
-  "types-PyYAML",
   "mkdocs",
   "mkdocs-material",
   "mkdocs-gen-files",
@@ -60,13 +59,21 @@ dev = [
 [project.urls]
 Homepage = "https://fjclark.github.io/red/latest/"
 
-[tool.mypy]
-exclude = 'tests/'
-follow_imports = "silent"
-ignore_missing_imports = true
-strict = true
-disable_error_code = "unused-ignore"
-plugins = "numpy.typing.mypy_plugin"
+# Configure ty to be strict.
+[tool.ty.environment]
+python-version = "3.11"
+
+[tool.ty.src]
+exclude = ["red/tests"]
+
+[tool.ty.rules]
+all = "error"
+
+[tool.ty.analysis]
+strict-equality-semantics = true
+
+[tool.ty.terminal]
+error-on-warning = true
 
 [tool.ruff]
 line-length = 100
@@ -132,7 +139,7 @@ distance-dirty = "{base_version}+{distance}.{vcs}{rev}.dirty"
 method = "git"  # <- The method name
 # Parameters to pass to the method:
 match = ["*"]
-default-tag = "0.1.1"
+default-tag = "0.2.0"
 
 [tool.versioningit.write]
 file = "red/_version.py"

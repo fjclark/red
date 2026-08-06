@@ -1,6 +1,5 @@
 """Convenience function for computing 95 % confidence intervals."""
 
-from typing import Optional as _Optional
 from warnings import warn as _warn
 
 import numpy as _np
@@ -15,7 +14,7 @@ def get_conf_int_init_seq(
     alpha_two_tailed: float = 0.05,
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
-    max_max_lag_time: _Optional[int] = None,
+    max_max_lag_time: int | None = None,
 ) -> float:
     """Calculate the confidence interval for the mean of a time series.
 

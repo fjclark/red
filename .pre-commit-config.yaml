@@ -11,7 +11,7 @@ repos:
         name: Autoformat python code
         language: system
         entry: bash
-        args: [-c, "make format"]
+        args: [-c, "just format"]
 
 -   repo: local
     hooks:
@@ -19,12 +19,12 @@ repos:
         name: Lint python code
         language: system
         entry: bash
-        args: [-c, "make lint"]
+        args: [-c, "just lint"]
 
 -   repo: local
     hooks:
-    -   id: mypy
+    -   id: ty
         name: Type check python code
         language: system
         entry: bash
-        args: [-c, "make type-check"]
+        args: [-c, "just type-check"]

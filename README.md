@@ -18,11 +18,14 @@
   <a href="https://opensource.org/licenses/MIT">
     <img alt="license" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
+  <a href="https://github.com/astral-sh/uv">
+    <img alt="uv" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json" />
+  </a>
   <a href="https://github.com/astral-sh/ruff">
     <img alt="Ruff" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" />
   </a>
-  <a href="https://mypy-lang.org/">
-    <img alt="Checked with mypy" src="https://www.mypy-lang.org/static/mypy_badge.svg" />
+  <a href="https://github.com/astral-sh/ty">
+    <img alt="Checked with ty" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json" />
   </a>
 </p>
 

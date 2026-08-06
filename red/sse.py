@@ -1,8 +1,6 @@
 """Functions to calculate the squared standard error series."""
 
 from typing import Callable as _Callable
-from typing import Optional as _Optional
-from typing import Tuple as _Tuple
 
 import numpy as _np
 import numpy.typing as _npt
@@ -15,10 +13,10 @@ def get_sse_series_init_seq(
     data: _npt.NDArray[_np.float64],
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
-    max_max_lag_time: _Optional[int] = None,
+    max_max_lag_time: int | None = None,
     smooth_lag_times: bool = False,
     frac_padding: float = 0.1,
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
+) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """Compute a series of squared standard errors for a time series.
 
     Squared standard errors are computed as data is discarded from the beginning of the
@@ -88,11 +86,11 @@ def get_sse_series_init_seq(
 
 def get_sse_series_window(
     data: _npt.NDArray[_np.float64],
-    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
-    window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
-    window_size: _Optional[int] = None,
+    kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,
+    window_size_fn: _Callable[[int], int] | None = lambda x: round(x**0.5),
+    window_size: int | None = None,
     frac_padding: float = 0.1,
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
+) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """Compute a series of squared standard errors for a time series.
 
     Squared standard errors are computed as data is discarded from the beginning of the

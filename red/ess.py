@@ -1,8 +1,6 @@
 """Functions to calculate the statistical inefficiency and effective sample size."""
 
 from typing import Callable as _Callable
-from typing import Optional as _Optional
-from typing import Tuple as _Tuple
 
 import numpy as _np
 import numpy.typing as _npt
@@ -40,19 +38,19 @@ def convert_sse_series_to_ess_series(
 
     for i in range(len(sse_series)):
         # Get "biased", rather than n - 1, variance.
-        uncor_vars[i] = data[:, i:].var()  # type: ignore
+        uncor_vars[i] = data[:, i:].var()
 
-    return uncor_vars / sse_series  # type: ignore
+    return uncor_vars / sse_series
 
 
 def get_ess_series_init_seq(
     data: _npt.NDArray[_np.float64],
     sequence_estimator: str = "initial_convex",
     min_max_lag_time: int = 3,
-    max_max_lag_time: _Optional[int] = None,
+    max_max_lag_time: int | None = None,
     smooth_lag_times: bool = False,
     frac_padding: float = 0.1,
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
+) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """Compute a series of effective sample sizes for a time series.
 
     Effective sample sizes are computed as data is discarded from the beginning of the
@@ -116,7 +114,7 @@ def get_ess_series_window(
     kernel: _Callable[[int], _npt.NDArray[_np.float64]] = _np.bartlett,  # type: ignore
     window_size_fn: _Optional[_Callable[[int], int]] = lambda x: round(x**0.5),
     window_size: _Optional[int] = None,
-) -> _Tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
+) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
     """Compute a series of effective sample sizes for a time series.
 
     Effective sample sizes are computed as data is discarded from the beginning of the
