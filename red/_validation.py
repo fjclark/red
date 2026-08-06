@@ -11,12 +11,11 @@ from ._exceptions import InvalidInputError
 def check_data(
     data: _npt.NDArray[_np.float64], one_dim_allowed: bool = False
 ) -> _npt.NDArray[_np.float64]:
-    """
-    Assert that data passed is a numpy array where
-    the first dimension is the number of chains and
-    the second dimension is the number of samples.
-    If the array is one dimensional, add a second
-    dimension with length 1.
+    """Validate and reshape input data to 2D ``(n_chains, n_samples)``.
+
+    Asserts that the data passed is a numpy array where the first dimension is the number
+    of chains and the second dimension is the number of samples. If the array is one
+    dimensional, a second dimension with length 1 is added.
 
     Parameters
     ----------
@@ -30,6 +29,7 @@ def check_data(
     -------
     np.ndarray
         Data with shape (n_chains, n_samples).
+
     """
     # Check that data is a numpy array.
     if not isinstance(data, _np.ndarray):

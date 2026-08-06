@@ -81,10 +81,18 @@ line-length = 100
 [tool.ruff.lint]
 ignore = ["PLR", "PLW", "C901"]
 select = ["B","C","E","F","W","B9"]
+# Enforce PEP257 docstring conventions (pydocstyle). The numpy convention matches the
+# numpy-style docstrings used throughout the package; it disables D212/D413/D415/D417 by
+# default, so we re-enable those explicitly. D213 is intentionally left disabled by the
+# numpy convention (D212 and D213 are mutually exclusive).
+extend-select = ["D", "D212", "D413", "D415", "D417"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"red/tests/*.py" = ["F401", "F811"]
+"red/tests/*.py" = ["F401", "F811", "D"]
 
 [tool.setuptools]
 # This subkey is a beta stage development and keys may change in the future, see https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html for more details

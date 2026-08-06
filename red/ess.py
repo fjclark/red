@@ -14,21 +14,21 @@ from .variance import inter_run_variance, intra_run_variance, lugsail_variance
 def convert_sse_series_to_ess_series(
     data: _npt.NDArray[_np.float64], sse_series: _npt.NDArray[_np.float64]
 ) -> _npt.NDArray[_np.float64]:
-    """
-    Convert a series of squared standard errors to a series of effective sample sizes.
+    """Convert a series of squared standard errors to a series of effective sample sizes.
 
     Parameters
     ----------
+    data : np.ndarray
+        The time series data with shape (n_chains, n_samples).
+
     sse_series : np.ndarray
         The squared standard error series.
-
-    uncor_vars : np.ndarray
-        The uncorrelated variances.
 
     Returns
     -------
     np.ndarray
         The effective sample size series.
+
     """
     # Validate the data.
     data = check_data(data, one_dim_allowed=True)
@@ -51,10 +51,10 @@ def get_ess_series_init_seq(
     smooth_lag_times: bool = False,
     frac_padding: float = 0.1,
 ) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
-    """
-    Compute a series of effective sample sizes for a time series as data
-    is discarded from the beginning of the time series. The autocorrelation
-    is computed using the sequence estimator specified.
+    """Compute a series of effective sample sizes for a time series.
+
+    Effective sample sizes are computed as data is discarded from the beginning of the
+    time series. The autocorrelation is computed using the sequence estimator specified.
 
     Parameters
     ----------
@@ -93,6 +93,7 @@ def get_ess_series_init_seq(
 
     np.ndarray
         The maximum lag times used.
+
     """
     sse_series, max_lag_times = _get_sse_series_init_seq(
         data,
@@ -114,10 +115,11 @@ def get_ess_series_window(
     window_size_fn: _Callable[[int], int] | None = lambda x: round(x**0.5),
     window_size: int | None = None,
 ) -> tuple[_npt.NDArray[_np.float64], _npt.NDArray[_np.float64]]:
-    """
-    Compute a series of effective sample sizes for a time series as data
-    is discarded from the beginning of the time series. The squared standard
-    error is computed using the window size and kernel specified.
+    """Compute a series of effective sample sizes for a time series.
+
+    Effective sample sizes are computed as data is discarded from the beginning of the
+    time series. The squared standard error is computed using the window size and kernel
+    specified.
 
     Parameters
     ----------
@@ -142,6 +144,7 @@ def get_ess_series_window(
 
     np.ndarray
         The window sizes used.
+
     """
     sse_series, max_lag_times = _get_sse_series_window(
         data, kernel=kernel, window_size_fn=window_size_fn, window_size=window_size
@@ -153,10 +156,10 @@ def get_ess_series_window(
 
 
 def statistical_inefficiency_inter_variance(data: _npt.NDArray[_np.float64]) -> float:
-    """
-    Compute the statistical inefficiency of a time series by dividing
-    the inter-run variance estimate by the intra-run variance estimate.
-    More than one run is required.
+    """Compute the statistical inefficiency of a time series.
+
+    The statistical inefficiency is computed by dividing the inter-run variance estimate
+    by the intra-run variance estimate. More than one run is required.
 
     Parameters
     ----------
@@ -169,6 +172,7 @@ def statistical_inefficiency_inter_variance(data: _npt.NDArray[_np.float64]) -> 
     -------
     float
         The statistical inefficiency.
+
     """
     g = inter_run_variance(data) / intra_run_variance(data)
     # Ensure that the statistical inefficiency is at least 1.
@@ -178,10 +182,11 @@ def statistical_inefficiency_inter_variance(data: _npt.NDArray[_np.float64]) -> 
 def statistical_inefficiency_lugsail_variance(
     data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3
 ) -> float:
-    """
-    Compute the statistical inefficiency of a time series by dividing
-    the lugsail replicated batch means variance estimate by the
-    intra-run variance estimate. This is applicable to a single run.
+    """Compute the statistical inefficiency of a time series.
+
+    The statistical inefficiency is computed by dividing the lugsail replicated batch
+    means variance estimate by the intra-run variance estimate. This is applicable to a
+    single run.
 
     Parameters
     ----------
@@ -198,6 +203,7 @@ def statistical_inefficiency_lugsail_variance(
     -------
     float
         The statistical inefficiency.
+
     """
     g = lugsail_variance(data, n_pow=n_pow) / intra_run_variance(data)
     # Ensure that the statistical inefficiency is at least 1.
@@ -205,11 +211,11 @@ def statistical_inefficiency_lugsail_variance(
 
 
 def ess_inter_variance(data: _npt.NDArray[_np.float64]) -> float:
-    """
-    Compute the effective sample size of a time series by dividing
-    the total number of samples by the statistical inefficiency, where
-    the statistical inefficiency is calculated using the ratio of the
-    inter-run and intra-run variance estimates.
+    """Compute the effective sample size of a time series.
+
+    The effective sample size is computed by dividing the total number of samples by the
+    statistical inefficiency, where the statistical inefficiency is calculated using the
+    ratio of the inter-run and intra-run variance estimates.
 
     Parameters
     ----------
@@ -222,6 +228,7 @@ def ess_inter_variance(data: _npt.NDArray[_np.float64]) -> float:
     -------
     float
         The effective sample size.
+
     """
     data = check_data(data, one_dim_allowed=False)
     n_runs: int = data.shape[0]
@@ -231,11 +238,11 @@ def ess_inter_variance(data: _npt.NDArray[_np.float64]) -> float:
 
 
 def ess_lugsail_variance(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) -> float:
-    """
-    Compute the effective sample size of a time series by dividing
-    the total number of samples by the statistical inefficiency, where
-    the statistical inefficiency is calculated using the ratio of the
-    lugsail replicated batch means and intra-run variance estimates.
+    """Compute the effective sample size of a time series.
+
+    The effective sample size is computed by dividing the total number of samples by the
+    statistical inefficiency, where the statistical inefficiency is calculated using the
+    ratio of the lugsail replicated batch means and intra-run variance estimates.
 
     Parameters
     ----------
@@ -252,6 +259,7 @@ def ess_lugsail_variance(data: _npt.NDArray[_np.float64], n_pow: float = 1 / 3) 
     -------
     float
         The effective sample size.
+
     """
     data = check_data(data, one_dim_allowed=True)
     n_runs: int = data.shape[0]

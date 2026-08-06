@@ -1,4 +1,4 @@
-"""Robust Equilibration Detection"""
+"""Robust Equilibration Detection."""
 
 from ._version import __version__
 from .confidence_intervals import get_conf_int_init_seq
