@@ -1,4 +1,5 @@
 
+
 <p align="center">
   <img src="https://github.com/fjclark/red/assets/90148170/5b0cf397-f902-4a43-9323-6414aa408d1a" width="500">
 </p>
@@ -43,6 +44,8 @@ For both, the equilibration point can be determined either according to the mini
 For testing and more details, please see the associated publication: **Clark, F.; Cole, D. J.; Michel, J. Robust Automated Truncation Point Selection for Molecular Simulations. J. Chem. Theory Comput. 2024. https://doi.org/10.1021/acs.jctc.4c01359.**
 
 ### Installation
+
+This package requires Python >= 3.11.
 
 The easiest way to install `red` is using `conda` (or `mamba`) (note that the conda-forge/ PyPI name is `red-molsim` to avoid conflicts):
 
